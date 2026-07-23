@@ -1,0 +1,11 @@
+{
+  "tier": "DAO_TON",
+  "slug": "dao-ton",
+  "requiredAssets": [
+    "dao-ton-frame.png",
+    "dao-ton-badge.png",
+    "dao-ton-icon.png",
+    "dao-ton-glow.png"
+  ],
+  "note": "Thêm một record tương tự trong AVATAR_RANKS; không sửa component hoặc CSS."
+}

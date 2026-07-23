@@ -1,0 +1,20 @@
+[
+  {
+    "commentId": "b87dec66-55e9-4642-be23-e59cc715dfa2",
+    "userId": "admin-local",
+    "type": "LIKE",
+    "createdAt": "2026-07-17T08:28:35.854Z"
+  },
+  {
+    "commentId": "6a29026c-5e90-439f-bff5-954f373e76fb",
+    "userId": "admin-local",
+    "type": "LIKE",
+    "createdAt": "2026-07-17T08:31:12.578Z"
+  },
+  {
+    "commentId": "ca618600-9266-49e3-b6cf-016e7bb689ab",
+    "userId": "admin-local",
+    "type": "LIKE",
+    "createdAt": "2026-07-17T08:32:04.286Z"
+  }
+]

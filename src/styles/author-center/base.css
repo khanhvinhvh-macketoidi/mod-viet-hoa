@@ -1,0 +1,12 @@
+.author-center-page{
+  --ac-bg:#06101d;--ac-panel:rgba(8,20,34,.86);--ac-panel-soft:rgba(13,30,49,.72);
+  --ac-border:rgba(142,180,214,.18);--ac-text:#eef6ff;--ac-muted:#8ea0b4;
+  position:relative;z-index:10;overflow-x:clip;min-height:100vh;padding:0 0 4rem;
+  background:var(--theme-bg-0,var(--ac-bg));color:var(--theme-text-1,var(--ac-text));
+}
+.author-center-page *{box-sizing:border-box}.author-center-shell{width:100%;margin:0 auto}
+.iv2-kicker{margin:0 0 .25rem;color:var(--realm-main,#d8ae65);font-size:.68rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase}
+.iv2-form-secondary,.iv2-submit{display:inline-flex;align-items:center;justify-content:center;gap:.45rem;min-height:40px;border-radius:11px;padding:.65rem .9rem;font-weight:800;text-decoration:none;cursor:pointer}
+.iv2-form-secondary{border:1px solid var(--ac-border);background:rgba(3,14,31,.28);color:var(--ac-text);backdrop-filter:blur(10px)}
+.iv2-submit{border:1px solid color-mix(in srgb,var(--realm-main) 45%,transparent);background:color-mix(in srgb,var(--realm-main) 14%,transparent);color:var(--realm-main)}
+.iv2-form-secondary:hover,.iv2-submit:hover{transform:translateY(-1px);border-color:color-mix(in srgb,var(--realm-main) 55%,transparent)}

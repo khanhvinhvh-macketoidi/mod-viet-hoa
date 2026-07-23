@@ -1,0 +1,314 @@
+[
+  {
+    "id": "admin-local",
+    "name": "Quản trị viên",
+    "email": "admin@modhub.local",
+    "passwordHash": "$2a$12$aqn.82x67C2OeU4zyfVPAOgpLA2V4JH0Cz/hHvVLvLAO1Nh5NBy72",
+    "role": "ADMIN",
+    "isVip": true,
+    "createdAt": "2026-07-14T05:55:29.198Z",
+    "profileSlug": "quan-tri-vien",
+    "profile": {
+      "displayName": "Tu Sĩ Qua Đường",
+      "avatar": "/uploads/avatars/1784090969789-5da78173-618f-411e-ae5c-f80c6b03a8da.png",
+      "coverImage": "/uploads/profile-covers/1784090979088-4fef1fdd-ac57-4300-bef6-b29f05c05c95.png",
+      "coverPosition": {
+        "x": 50,
+        "y": 42.6
+      },
+      "bio": "Đẹp trai, khoai to =))",
+      "location": "",
+      "website": "",
+      "socialLinks": {
+        "facebook": "https://facebook.com/kensee1903",
+        "youtube": "",
+        "discord": "GiaÝ",
+        "github": "",
+        "steam": ""
+      }
+    },
+    "updatedAt": "2026-07-23T04:07:00.406Z",
+    "isActive": true,
+    "avatarFrameTier": "THAN_THOAI"
+  },
+  {
+    "id": "315ec22d-94eb-4cb6-9110-2b37128c47dc",
+    "name": "macketoidi",
+    "email": "khanhvinh1903@gmail.com",
+    "passwordHash": "$2a$12$X7XRaxU0zrWZ5D3ufqNT0OXs28DMeez2Q210IhxSRMRz3/cChtJEO",
+    "role": "MEMBER",
+    "isVip": false,
+    "createdAt": "2026-07-15T05:06:23.856Z",
+    "profileSlug": "macketoidi",
+    "profile": {
+      "displayName": "macketoidi",
+      "avatar": "/images/default-avatar.png",
+      "coverPosition": {
+        "x": 50,
+        "y": 50
+      },
+      "bio": "",
+      "location": "",
+      "website": "",
+      "socialLinks": {}
+    },
+    "updatedAt": "2026-07-15T05:06:23.856Z",
+    "isActive": true
+  },
+  {
+    "id": "786c92c6-a160-4f52-9166-8002aa1e97b5",
+    "name": "qsghprdyyo",
+    "email": "nqnguyto@immenseignite.info",
+    "passwordHash": "$2a$12$V5Boi6ktX6Ol165.zom.rOEr.PysMMidKZLdkfBu7CaRFbXxn4ivG",
+    "role": "MEMBER",
+    "isVip": false,
+    "createdAt": "2026-07-20T05:42:53.964Z",
+    "profileSlug": "qsghprdyyo",
+    "profile": {
+      "displayName": "qsghprdyyo",
+      "avatar": "/images/default-avatar.png",
+      "coverPosition": {
+        "x": 50,
+        "y": 50
+      },
+      "bio": "",
+      "location": "",
+      "website": "",
+      "socialLinks": {}
+    },
+    "updatedAt": "2026-07-20T05:42:53.964Z",
+    "isActive": true
+  },
+  {
+    "id": "4ed2d874-ca78-4d74-8968-73e1854bb854",
+    "name": "Texas nè",
+    "email": "khanhvinh.ou.tcnh@gmail.com",
+    "passwordHash": "$2a$12$FEczr4EjNwseFpTpWsCN/e.ta1cQq2itqSdayzj2kblwkx.EU82lu",
+    "role": "MEMBER",
+    "isVip": false,
+    "createdAt": "2026-07-22T11:45:56.828Z",
+    "updatedAt": "2026-07-22T11:45:56.828Z",
+    "isActive": true,
+    "profileSlug": "texas-ne",
+    "profile": {
+      "displayName": "Texas nè",
+      "avatar": "/images/default-avatar.png",
+      "coverPosition": {
+        "x": 50,
+        "y": 50
+      },
+      "bio": "",
+      "location": "",
+      "website": "",
+      "socialLinks": {}
+    }
+  },
+  {
+    "id": "1e89a785-0882-4bbb-ab70-300a097e88f1",
+    "name": "GiaÝ",
+    "email": "official.banhcang86@gmail.com",
+    "passwordHash": "$2a$12$aD7nnh0j7rv429A9.btjnuRLNG.VNtbl7Xm29pXMsFah.QPUfhzj6",
+    "role": "MEMBER",
+    "isVip": false,
+    "createdAt": "2026-07-22T11:48:16.606Z",
+    "updatedAt": "2026-07-22T11:48:16.606Z",
+    "isActive": true,
+    "profileSlug": "giay",
+    "profile": {
+      "displayName": "GiaÝ",
+      "avatar": "/images/default-avatar.png",
+      "coverPosition": {
+        "x": 50,
+        "y": 50
+      },
+      "bio": "",
+      "location": "",
+      "website": "",
+      "socialLinks": {}
+    }
+  },
+  {
+    "id": "22caa8b0-65a9-45e0-ad7a-7bd873b9b618",
+    "name": "macketoidi",
+    "email": "khanhvinh190301@gmail.com",
+    "passwordHash": "$2a$12$UzzmXd45XMqLqtYnuAcQLu1zcYFMawkK5W5Mlvf7iZBfHKl5/kN6O",
+    "role": "MEMBER",
+    "isVip": false,
+    "createdAt": "2026-07-22T12:12:31.910Z",
+    "updatedAt": "2026-07-22T12:12:31.910Z",
+    "isActive": true,
+    "profileSlug": "macketoidi-2",
+    "profile": {
+      "displayName": "macketoidi",
+      "avatar": "/images/default-avatar.png",
+      "coverPosition": {
+        "x": 50,
+        "y": 50
+      },
+      "bio": "",
+      "location": "",
+      "website": "",
+      "socialLinks": {}
+    }
+  },
+  {
+    "id": "ede4f826-bf54-4b05-8125-c35ca8d75fae",
+    "name": "VO HO KHANH VINH",
+    "email": "khanhvinh.vh@gmail.com",
+    "passwordHash": "$2a$12$.2nn/mtoTpnsif0f..SqUOH6Hc2W31u5TEPPmKx9.KA/vER2Oidle",
+    "role": "MEMBER",
+    "isVip": false,
+    "createdAt": "2026-07-22T12:21:23.204Z",
+    "updatedAt": "2026-07-22T12:42:07.203Z",
+    "isActive": true,
+    "emailVerificationRequired": false,
+    "profileSlug": "vo-ho-khanh-vinh",
+    "profile": {
+      "displayName": "VO HO KHANH VINH",
+      "avatar": "/images/default-avatar.png",
+      "coverPosition": {
+        "x": 50,
+        "y": 50
+      },
+      "bio": "",
+      "location": "",
+      "website": "",
+      "socialLinks": {}
+    },
+    "emailVerifiedAt": "2026-07-22T12:42:07.203Z"
+  },
+  {
+    "id": "6a15d35b-664f-4191-ae26-ca306abb1d7a",
+    "name": "Giới Đế",
+    "email": "trainer.vinhvhk@gmail.com",
+    "passwordHash": "$2a$12$iJzZYH52rcDevTXUXYHjfe6TR97pjqA9RbDS3rNglsZW48fsFYJw2",
+    "role": "MEMBER",
+    "isVip": false,
+    "createdAt": "2026-07-22T13:21:36.926Z",
+    "updatedAt": "2026-07-22T13:23:48.936Z",
+    "isActive": true,
+    "emailVerificationRequired": false,
+    "profileSlug": "gioi-de",
+    "profile": {
+      "displayName": "Giới Đế",
+      "avatar": "/images/default-avatar.png",
+      "coverPosition": {
+        "x": 50,
+        "y": 50
+      },
+      "bio": "",
+      "location": "",
+      "website": "",
+      "socialLinks": {}
+    },
+    "emailVerifiedAt": "2026-07-22T13:23:48.936Z"
+  },
+  {
+    "id": "3827eb77-5b60-40fa-a86a-83d15cf5b940",
+    "name": "tester02",
+    "email": "khanhvinh190302@gmail.com",
+    "passwordHash": "$2a$12$1TCRljIQD/Fte8bYWqfNwueaokI96WuOEmTUaJNL7gOouXYLsaeGO",
+    "role": "MEMBER",
+    "isVip": false,
+    "createdAt": "2026-07-22T13:33:26.197Z",
+    "updatedAt": "2026-07-22T13:33:26.197Z",
+    "isActive": false,
+    "emailVerificationRequired": true,
+    "emailVerificationTokenHash": "597429601039605a6e5f863386608c1b8559a5c85ed1509cf4458a4fdd5a84de",
+    "emailVerificationExpiresAt": "2026-07-23T13:33:26.197Z",
+    "profileSlug": "tester02",
+    "profile": {
+      "displayName": "tester02",
+      "avatar": "/images/default-avatar.png",
+      "coverPosition": {
+        "x": 50,
+        "y": 50
+      },
+      "bio": "",
+      "location": "",
+      "website": "",
+      "socialLinks": {}
+    }
+  },
+  {
+    "id": "dfc27097-fcfa-4908-be08-d4e549880508",
+    "name": "tester03",
+    "email": "khanhvinh190303@gmail.com",
+    "passwordHash": "$2a$12$9tnwT4cerW7fimO8bj/0nOF24xhSwQWlVM8uZY4t4lzSzvFQw3mHW",
+    "role": "MEMBER",
+    "isVip": false,
+    "createdAt": "2026-07-22T13:39:05.363Z",
+    "updatedAt": "2026-07-22T13:39:05.363Z",
+    "isActive": false,
+    "emailVerificationRequired": true,
+    "emailVerificationTokenHash": "4618a675a588c4befef097b3ccb82be43281c336e4f12e9a36667348c5e40ab2",
+    "emailVerificationExpiresAt": "2026-07-23T13:39:05.363Z",
+    "profileSlug": "tester03",
+    "profile": {
+      "displayName": "tester03",
+      "avatar": "/images/default-avatar.png",
+      "coverPosition": {
+        "x": 50,
+        "y": 50
+      },
+      "bio": "",
+      "location": "",
+      "website": "",
+      "socialLinks": {}
+    }
+  },
+  {
+    "id": "bf181e73-8670-4ba3-bf4a-71dbe4af0490",
+    "name": "vinhvhk",
+    "email": "thuyetnguyen101096@gmail.com",
+    "passwordHash": "$2a$12$s4rCk/zv8RcHwkQfWjf4jeTBnaAoJnldzKZjU2DRtt2T6ICdz6wsu",
+    "role": "MEMBER",
+    "isVip": false,
+    "createdAt": "2026-07-22T13:43:42.431Z",
+    "updatedAt": "2026-07-22T13:43:42.431Z",
+    "isActive": false,
+    "emailVerificationRequired": true,
+    "emailVerificationTokenHash": "ebec59a282d85199d907149950978973e8390f841a789cdfb24819a234b5a310",
+    "emailVerificationExpiresAt": "2026-07-23T13:43:42.431Z",
+    "profileSlug": "vinhvhk",
+    "profile": {
+      "displayName": "vinhvhk",
+      "avatar": "/images/default-avatar.png",
+      "coverPosition": {
+        "x": 50,
+        "y": 50
+      },
+      "bio": "",
+      "location": "",
+      "website": "",
+      "socialLinks": {}
+    }
+  },
+  {
+    "id": "146f4801-ef64-410c-8dd4-96b6e833c581",
+    "name": "Vấn Đạo Sư",
+    "email": "honguyet1960pt@gmail.com",
+    "passwordHash": "$2a$12$qLe7CXr1gbyjiSnKMwGfYu6jJvD2YYOuUSZJm4sZR3h2SCLCdXToW",
+    "role": "MODDER",
+    "isVip": false,
+    "createdAt": "2026-07-23T00:52:14.108Z",
+    "updatedAt": "2026-07-23T06:46:41.591Z",
+    "isActive": true,
+    "emailVerificationRequired": false,
+    "profileSlug": "van-dao-su",
+    "profile": {
+      "displayName": "Vấn Đạo Sư",
+      "avatar": "/images/default-avatar.png",
+      "coverPosition": {
+        "x": 50,
+        "y": 50
+      },
+      "bio": "",
+      "location": "",
+      "website": "",
+      "socialLinks": {}
+    },
+    "emailVerifiedAt": "2026-07-23T00:55:04.931Z",
+    "avatarFrameTier": "MEMBER"
+  }
+]

@@ -1,0 +1,7 @@
+.page { min-height: calc(100vh - 140px); padding: 34px 20px 64px; }
+.shell { width: min(920px, 100%); margin: 0 auto; }
+.header { margin-bottom: 20px; }
+.eyebrow { display: inline-block; margin-bottom: 8px; color: #f2b718; font-size: 13px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
+.header h1 { margin: 0; font-size: clamp(32px, 5vw, 46px); line-height: 1.08; }
+.header p { max-width: 720px; margin: 10px 0 0; color: #90a3c7; line-height: 1.7; }
+

@@ -1,0 +1,143 @@
+.wrapper {
+  position: relative;
+  display: inline-flex;
+}
+
+.bellButton {
+  position: relative;
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(112, 139, 190, 0.24);
+  border-radius: 10px;
+  color: #dbe6fb;
+  background: rgba(20, 35, 62, 0.76);
+  cursor: pointer;
+}
+
+.bellButton b {
+  position: absolute;
+  top: -6px;
+  right: -7px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  display: grid;
+  place-items: center;
+  border: 2px solid #070d1c;
+  border-radius: 999px;
+  color: #1c1404;
+  background: #ffc628;
+  font-size: 10px;
+}
+
+.dropdown {
+  position: absolute;
+  z-index: 1000;
+  top: calc(100% + 10px);
+  right: 0;
+  width: min(390px, calc(100vw - 28px));
+  overflow: hidden;
+  border: 1px solid rgba(112, 139, 190, 0.25);
+  border-radius: 15px;
+  background: #0d1931;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 15px;
+  border-bottom: 1px solid rgba(112, 139, 190, 0.16);
+}
+
+.header button {
+  border: 0;
+  color: #8fb0e8;
+  background: transparent;
+  font: inherit;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.list {
+  max-height: 430px;
+  overflow-y: auto;
+}
+
+.item,
+.unreadItem {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr);
+  gap: 10px;
+  padding: 13px 14px;
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(112, 139, 190, 0.1);
+}
+
+.unreadItem {
+  background: rgba(39, 70, 119, 0.35);
+}
+
+.item:hover,
+.unreadItem:hover {
+  background: rgba(47, 77, 127, 0.4);
+}
+
+.icon {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: #172a4a;
+}
+
+.content {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+.content strong,
+.content span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.content strong {
+  font-size: 13px;
+}
+
+.content span {
+  color: #a8b8d6;
+  font-size: 12px;
+}
+
+.content small {
+  color: #6f85aa;
+  font-size: 11px;
+}
+
+.empty {
+  padding: 28px 18px;
+  color: #8194b6;
+  text-align: center;
+}
+
+.viewAll {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  color: #dce7fb;
+  background: #142441;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 800;
+}

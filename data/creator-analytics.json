@@ -1,0 +1,40 @@
+[
+  {
+    "id": "admin-local:2026-07-17",
+    "creatorId": "admin-local",
+    "date": "2026-07-17",
+    "totalDownloads": 0,
+    "totalViews": 0,
+    "totalFavorites": 0,
+    "totalComments": 7,
+    "totalReviews": 1,
+    "totalFollowers": 1,
+    "createdAt": "2026-07-17T16:24:59.369Z"
+  },
+  {
+    "id": "admin-local:2026-07-18",
+    "creatorId": "admin-local",
+    "date": "2026-07-18",
+    "totalDownloads": 0,
+    "totalViews": 0,
+    "totalFavorites": 1,
+    "totalCollections": 0,
+    "totalComments": 7,
+    "totalReviews": 1,
+    "totalFollowers": 1,
+    "createdAt": "2026-07-18T02:43:59.171Z",
+    "updatedAt": "2026-07-18T03:33:14.789Z"
+  },
+  {
+    "id": "146f4801-ef64-410c-8dd4-96b6e833c581:2026-07-23",
+    "creatorId": "146f4801-ef64-410c-8dd4-96b6e833c581",
+    "date": "2026-07-23",
+    "totalDownloads": 0,
+    "totalViews": 0,
+    "totalFavorites": 0,
+    "totalComments": 0,
+    "totalReviews": 0,
+    "totalFollowers": 0,
+    "createdAt": "2026-07-23T08:14:48.617Z"
+  }
+]

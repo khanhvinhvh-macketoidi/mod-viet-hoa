@@ -1,0 +1,31 @@
+{
+  "migration": "user-profile-v1",
+  "completedAt": "2026-07-15T00:11:11.091Z",
+  "completedByUserId": "admin-local",
+  "result": {
+    "executedAt": "2026-07-15T00:11:11.091Z",
+    "backup": {
+      "directory": "E:\\Mod QCBH\\Website\\mod-library-phase1\\data\\backups\\user-profile-migration-2026-07-15T00-11-11-079Z",
+      "usersFile": "E:\\Mod QCBH\\Website\\mod-library-phase1\\data\\backups\\user-profile-migration-2026-07-15T00-11-11-079Z\\users.json",
+      "modsFile": "E:\\Mod QCBH\\Website\\mod-library-phase1\\data\\backups\\user-profile-migration-2026-07-15T00-11-11-079Z\\mods.json"
+    },
+    "usersTotal": 1,
+    "usersUpdated": 1,
+    "modsTotal": 2,
+    "modsLinked": 0,
+    "modsAlreadyLinked": 0,
+    "unmatchedMods": [
+      {
+        "modId": "45a9726d-7d54-48f1-a9c6-f53a0935c3df",
+        "modTitle": "Tesst",
+        "author": "⭐ Tác giả: Ngô Mệnh Khách (吾命客) ⭐ Việt hóa: © Ken Võ"
+      },
+      {
+        "modId": "f2f8da87-04ca-44de-b815-35316f58da07",
+        "modTitle": "「 ✦ Việt Hóa ✦ 」TÁNG SƯ",
+        "author": "⭐ Tác giả: Ngô Mệnh Khách (吾命客) ⭐ Việt hóa: © Ken Võ"
+      }
+    ],
+    "ambiguousMods": []
+  }
+}

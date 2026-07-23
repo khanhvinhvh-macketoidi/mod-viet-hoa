@@ -1,0 +1,72 @@
+[
+  {
+    "id": "9e38ea5d-9179-4747-96a0-6ca08a0eff8e",
+    "modId": "4c207f24-d70c-4b5d-800f-3a38f773bfb2",
+    "version": "2.0",
+    "gameVersion": "All version",
+    "changelog": "Phiên bản hiện tại được nhập từ dữ liệu mod cũ.",
+    "fileName": "3334313052_Auto_attack.rar",
+    "storedFileName": "7df62a93-4ee1-4b0e-89f0-91d0fc5c74f6-3334313052_Auto_attack.rar",
+    "fileSize": 1452349,
+    "downloads": 2,
+    "isCurrent": true,
+    "createdByUserId": "admin-local",
+    "createdAt": "2026-07-17T04:59:26.329Z"
+  },
+  {
+    "id": "8c2d0b33-8e5d-4c04-b7f3-06912cec861b",
+    "modId": "8f488db6-243b-49bc-9303-e8cb477c8344",
+    "version": "1.0",
+    "gameVersion": "All version",
+    "changelog": "Phiên bản hiện tại được nhập từ dữ liệu mod cũ.",
+    "fileName": "Mod_KWXZ8I_thang_cap_bi_tich.rar",
+    "storedFileName": "070fda0d-439c-49e3-b03d-b145eaac8024-Mod_KWXZ8I_thang_cap_bi_tich.rar",
+    "fileSize": 6095077,
+    "downloads": 2,
+    "isCurrent": true,
+    "createdByUserId": "admin-local",
+    "createdAt": "2026-07-17T04:42:05.735Z"
+  },
+  {
+    "id": "1427c441-3c18-4773-9f39-a1bb81d2e158",
+    "modId": "45a9726d-7d54-48f1-a9c6-f53a0935c3df",
+    "version": "1.0",
+    "gameVersion": "All version",
+    "changelog": "Phiên bản hiện tại được nhập từ dữ liệu mod cũ.",
+    "fileName": "Mod_Tang_su_VH_by_Ken.zip",
+    "storedFileName": "666ea83d-32cb-47e2-a6b7-97e0c513a882-Mod_Tang_su_VH_by_Ken.zip",
+    "fileSize": 130872092,
+    "downloads": 2,
+    "isCurrent": true,
+    "createdByUserId": "admin-local",
+    "createdAt": "2026-07-17T05:08:47.194Z"
+  },
+  {
+    "id": "300d4840-6731-454e-976b-a5b86713b9d3",
+    "modId": "631be878-07a2-428f-897e-fddb08768384",
+    "version": "1.0",
+    "gameVersion": "All version",
+    "changelog": "Phiên bản hiện tại được nhập từ dữ liệu mod cũ.",
+    "fileName": "Mod_d86I8k_Linh_dien_bi_canh.rar",
+    "storedFileName": "7234265b-c3b7-4fc1-9205-219ea191af73-Mod_d86I8k_Linh_dien_bi_canh.rar",
+    "fileSize": 29839477,
+    "downloads": 1,
+    "isCurrent": false,
+    "createdByUserId": "admin-local",
+    "createdAt": "2026-07-17T04:47:13.475Z"
+  },
+  {
+    "id": "37bcfd1c-0f49-49ee-be15-c5fd66b002c8",
+    "modId": "631be878-07a2-428f-897e-fddb08768384",
+    "version": "2.0",
+    "gameVersion": "All version",
+    "changelog": "- Điều chỉnh ModExportData.cache để hiển thị tiếng Việt trong game.\r\n- Đã text chạy ổn định.",
+    "fileName": "Mod_d86I8k_Linh_dien_bi_canh.zip",
+    "storedFileName": "34eb3aa2-e170-4e6e-baef-38abac1a651d-Mod_d86I8k_Linh_dien_bi_canh.zip",
+    "fileSize": 31254518,
+    "downloads": 0,
+    "isCurrent": true,
+    "createdByUserId": "admin-local",
+    "createdAt": "2026-07-23T05:21:01.376Z"
+  }
+]

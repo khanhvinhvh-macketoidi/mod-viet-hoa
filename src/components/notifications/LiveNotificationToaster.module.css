@@ -1,0 +1,157 @@
+.viewport {
+  position: fixed;
+  z-index: 2000;
+  top: 84px;
+  right: 20px;
+  width: min(390px, calc(100vw - 32px));
+  display: grid;
+  gap: 12px;
+  pointer-events: none;
+}
+
+.toast {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 38px;
+  border: 1px solid rgba(119, 150, 207, 0.3);
+  border-radius: 16px;
+  color: #eef4ff;
+  background: linear-gradient(145deg, rgba(20, 37, 69, 0.98), rgba(9, 21, 44, 0.99));
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.45);
+  pointer-events: auto;
+  transform-origin: top right;
+  animation: toastEnter 280ms cubic-bezier(0.2, 0.9, 0.25, 1) both;
+}
+
+.mainButton {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+  padding: 14px 4px 15px 14px;
+  border: 0;
+  color: inherit;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+.mainButton:hover {
+  background: rgba(81, 119, 184, 0.1);
+}
+
+.icon {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  background: linear-gradient(145deg, rgba(53, 83, 137, 0.75), rgba(29, 51, 91, 0.85));
+  font-size: 21px;
+}
+
+.content {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.content strong,
+.content span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.content strong {
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.content span {
+  color: #b3c2de;
+  font-size: 13px;
+}
+
+.content small {
+  color: #768bad;
+  font-size: 11px;
+}
+
+.closeButton {
+  width: 32px;
+  height: 32px;
+  align-self: start;
+  margin: 8px 6px 0 0;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 9px;
+  color: #8fa3c5;
+  background: transparent;
+  font-size: 21px;
+  cursor: pointer;
+}
+
+.closeButton:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.progress {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 3px;
+  transform-origin: left;
+  background: linear-gradient(90deg, #f4b819, #ffd75b);
+  animation-name: toastProgress;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
+.toast:hover .progress {
+  animation-play-state: paused;
+}
+
+@keyframes toastEnter {
+  from {
+    opacity: 0;
+    transform: translateX(32px) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes toastProgress {
+  from {
+    transform: scaleX(1);
+  }
+
+  to {
+    transform: scaleX(0);
+  }
+}
+
+@media (max-width: 640px) {
+  .viewport {
+    top: auto;
+    right: 12px;
+    bottom: 14px;
+    left: 12px;
+    width: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toast,
+  .progress {
+    animation: none;
+  }
+}

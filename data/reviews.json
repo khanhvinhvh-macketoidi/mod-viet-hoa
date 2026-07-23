@@ -1,0 +1,42 @@
+[
+  {
+    "id": "3dc5c620-1c0d-4254-b7c5-01e73f1d3e96",
+    "modId": "45a9726d-7d54-48f1-a9c6-f53a0935c3df",
+    "userId": "admin-local",
+    "userName": "Quản trị viên",
+    "rating": 5,
+    "content": "Hay mà text nhiều quá, hy vọng tác sớm sửa lại",
+    "createdAt": "2026-07-14T11:20:17.021Z",
+    "updatedAt": "2026-07-14T11:21:25.504Z"
+  },
+  {
+    "id": "da793f58-6c19-4aec-b79e-0f8957f40bd2",
+    "modId": "f2f8da87-04ca-44de-b815-35316f58da07",
+    "userId": "admin-local",
+    "userName": "Quản trị viên",
+    "rating": 5,
+    "content": "AAA",
+    "createdAt": "2026-07-14T13:39:57.843Z",
+    "updatedAt": "2026-07-14T13:39:57.843Z"
+  },
+  {
+    "id": "10bdd596-0489-4648-af5a-4ad93193ca24",
+    "modId": "4c207f24-d70c-4b5d-800f-3a38f773bfb2",
+    "userId": "146f4801-ef64-410c-8dd4-96b6e833c581",
+    "userName": "Vấn Đạo Sư",
+    "rating": 5,
+    "content": "Bổ ích",
+    "createdAt": "2026-07-23T00:58:07.787Z",
+    "updatedAt": "2026-07-23T00:58:07.787Z"
+  },
+  {
+    "id": "506f5093-1555-4255-8606-de4495204424",
+    "modId": "631be878-07a2-428f-897e-fddb08768384",
+    "userId": "146f4801-ef64-410c-8dd4-96b6e833c581",
+    "userName": "Vấn Đạo Sư",
+    "rating": 4,
+    "content": "Hình như lỗi rồi ad ơi",
+    "createdAt": "2026-07-23T04:07:31.543Z",
+    "updatedAt": "2026-07-23T04:07:31.543Z"
+  }
+]

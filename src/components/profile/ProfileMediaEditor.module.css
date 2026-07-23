@@ -1,0 +1,219 @@
+.panel {
+  display: grid;
+  gap: 20px;
+  margin-bottom: 18px;
+  padding: 22px;
+  border: 1px solid rgba(111, 139, 192, 0.2);
+  border-radius: 18px;
+  background:
+    linear-gradient(180deg, rgba(19, 32, 60, 0.97), rgba(12, 23, 46, 0.97));
+}
+
+.sectionTitle h2 {
+  margin: 0;
+  font-size: 21px;
+}
+
+.sectionTitle p {
+  margin: 7px 0 0;
+  color: #8fa2c5;
+  line-height: 1.6;
+}
+
+.avatarSection {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.avatarFrame {
+  width: 118px;
+  height: 118px;
+  flex: 0 0 auto;
+  overflow: hidden;
+  border: 4px solid #21385f;
+  border-radius: 22px;
+  background: #162846;
+}
+
+.avatarFrame img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.avatarInfo {
+  display: grid;
+  justify-items: start;
+  gap: 7px;
+}
+
+.avatarInfo span,
+.coverHeader span {
+  color: #8195ba;
+  font-size: 13px;
+}
+
+.uploadButton,
+.savePositionButton,
+.removeButton {
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 15px;
+  border-radius: 10px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.uploadButton {
+  position: relative;
+  margin-top: 4px;
+  color: #191305;
+  background: linear-gradient(180deg, #ffd03c, #eda900);
+}
+
+.uploadButton input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+}
+
+.coverSection {
+  display: grid;
+  gap: 12px;
+}
+
+.coverHeader {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.coverHeader > div:first-child {
+  display: grid;
+  gap: 5px;
+}
+
+.coverActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.removeButton {
+  border: 1px solid rgba(255, 102, 102, 0.35);
+  color: #ffb2b2;
+  background: rgba(99, 22, 32, 0.54);
+}
+
+.coverPreview {
+  position: relative;
+  min-height: 260px;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  border: 1px solid #30476f;
+  border-radius: 15px;
+  color: #7186aa;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(238, 181, 29, 0.12), transparent 30%),
+    linear-gradient(135deg, #192d4f, #09162d);
+  background-repeat: no-repeat;
+  background-size: cover;
+  touch-action: none;
+  user-select: none;
+}
+
+.draggable {
+  cursor: grab;
+}
+
+.draggable:active {
+  cursor: grabbing;
+}
+
+.dragHint {
+  position: absolute;
+  left: 50%;
+  bottom: 14px;
+  transform: translateX(-50%);
+  padding: 7px 11px;
+  border-radius: 999px;
+  color: #eef4ff;
+  background: rgba(3, 9, 24, 0.7);
+  font-size: 12px;
+  font-weight: 800;
+  pointer-events: none;
+}
+
+.positionRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  color: #8195ba;
+  font-size: 13px;
+}
+
+.savePositionButton {
+  border: 1px solid #36527e;
+  color: #dce7fb;
+  background: #1b2d4e;
+}
+
+.savePositionButton:disabled,
+.removeButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.error,
+.success {
+  padding: 13px 15px;
+  border-radius: 12px;
+  font-weight: 700;
+}
+
+.error {
+  color: #ffb0b0;
+  border: 1px solid rgba(255, 74, 74, 0.32);
+  background: rgba(111, 20, 31, 0.52);
+}
+
+.success {
+  color: #72e6bb;
+  border: 1px solid rgba(34, 211, 148, 0.28);
+  background: rgba(10, 91, 65, 0.45);
+}
+
+@media (max-width: 680px) {
+  .panel {
+    padding: 16px;
+  }
+
+  .avatarSection,
+  .coverHeader,
+  .positionRow {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .coverPreview {
+    min-height: 190px;
+  }
+
+  .savePositionButton,
+  .coverActions,
+  .uploadButton,
+  .removeButton {
+    width: 100%;
+  }
+}

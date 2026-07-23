@@ -1,0 +1,68 @@
+{
+  "version": 1,
+  "earlyPhasePercent": 33.3333,
+  "middlePhasePercent": 66.6667,
+  "realms": [
+    {
+      "id": "LUYEN_KHI",
+      "name": "Luyện Khí",
+      "requiredXp": 4050,
+      "className": "realm-luyen-khi"
+    },
+    {
+      "id": "TRUC_CO",
+      "name": "Trúc Cơ",
+      "requiredXp": 8100,
+      "className": "realm-truc-co"
+    },
+    {
+      "id": "KET_TINH",
+      "name": "Kết Tinh",
+      "requiredXp": 15000,
+      "className": "realm-ket-tinh"
+    },
+    {
+      "id": "KIM_DAN",
+      "name": "Kim Đan",
+      "requiredXp": 30000,
+      "className": "realm-kim-dan"
+    },
+    {
+      "id": "CU_LINH",
+      "name": "Cụ Linh",
+      "requiredXp": 60000,
+      "className": "realm-cu-linh"
+    },
+    {
+      "id": "NGUYEN_ANH",
+      "name": "Nguyên Anh",
+      "requiredXp": 120000,
+      "className": "realm-nguyen-anh"
+    },
+    {
+      "id": "HOA_THAN",
+      "name": "Hóa Thần",
+      "requiredXp": 250000,
+      "className": "realm-hoa-than"
+    },
+    {
+      "id": "NGO_DAO",
+      "name": "Ngộ Đạo",
+      "requiredXp": 500000,
+      "className": "realm-ngo-dao"
+    },
+    {
+      "id": "VU_HOA",
+      "name": "Vũ Hóa",
+      "requiredXp": 1000000,
+      "className": "realm-vu-hoa"
+    },
+    {
+      "id": "DANG_TIEN",
+      "name": "Đăng Tiên",
+      "requiredXp": 2000000,
+      "className": "realm-dang-tien"
+    }
+  ],
+  "updatedAt": "1970-01-01T00:00:00.000Z"
+}

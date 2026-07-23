@@ -1,0 +1,28 @@
+{
+  email YOUR_EMAIL@example.com
+}
+
+www.modviethoa.vn {
+  redir https://modviethoa.vn{uri} permanent
+}
+
+modviethoa.vn {
+  encode zstd gzip
+
+  @blocked path /data/* /storage/* /.env* /.git/*
+  respond @blocked 404
+
+  reverse_proxy 127.0.0.1:3000 {
+    header_up Host {host}
+    header_up X-Real-IP {remote_host}
+    header_up X-Forwarded-Proto {scheme}
+  }
+
+  log {
+    output file logs/access.log {
+      roll_size 20mb
+      roll_keep 10
+      roll_keep_for 720h
+    }
+  }
+}

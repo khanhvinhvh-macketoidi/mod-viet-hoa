@@ -1,0 +1,110 @@
+[
+  {
+    "id": "e9363a12-b96e-4070-b3a7-e08bdd93b7c7",
+    "modId": "45a9726d-7d54-48f1-a9c6-f53a0935c3df",
+    "userId": "admin-local",
+    "userName": "Quản trị viên",
+    "content": "Test bình luận",
+    "createdAt": "2026-07-14T10:39:07.238Z",
+    "updatedAt": "2026-07-14T10:39:07.238Z"
+  },
+  {
+    "id": "b3c67bad-d7a7-4427-95f9-1bf8ab23c8a1",
+    "modId": "45a9726d-7d54-48f1-a9c6-f53a0935c3df",
+    "userId": "admin-local",
+    "userName": "Quản trị viên",
+    "content": "ádsadá",
+    "createdAt": "2026-07-14T10:39:36.726Z",
+    "updatedAt": "2026-07-14T10:39:36.726Z"
+  },
+  {
+    "id": "b87dec66-55e9-4642-be23-e59cc715dfa2",
+    "modId": "4c207f24-d70c-4b5d-800f-3a38f773bfb2",
+    "userId": "admin-local",
+    "userName": "Giới Đế",
+    "mentionedUserIds": [],
+    "content": "Mod này quá imba rồi",
+    "moderationStatus": "VISIBLE",
+    "isLocked": false,
+    "createdAt": "2026-07-17T06:00:38.756Z",
+    "updatedAt": "2026-07-17T06:00:38.756Z"
+  },
+  {
+    "id": "6a29026c-5e90-439f-bff5-954f373e76fb",
+    "modId": "4c207f24-d70c-4b5d-800f-3a38f773bfb2",
+    "userId": "315ec22d-94eb-4cb6-9110-2b37128c47dc",
+    "userName": "macketoidi",
+    "parentId": "b87dec66-55e9-4642-be23-e59cc715dfa2",
+    "mentionedUserIds": [],
+    "content": "@Giới Đế test chưa hữu?",
+    "moderationStatus": "VISIBLE",
+    "isLocked": false,
+    "createdAt": "2026-07-17T06:01:53.348Z",
+    "updatedAt": "2026-07-17T06:01:53.348Z"
+  },
+  {
+    "id": "ca618600-9266-49e3-b6cf-016e7bb689ab",
+    "modId": "4c207f24-d70c-4b5d-800f-3a38f773bfb2",
+    "userId": "admin-local",
+    "userName": "Giới Đế",
+    "parentId": "6a29026c-5e90-439f-bff5-954f373e76fb",
+    "mentionedUserIds": [
+      "315ec22d-94eb-4cb6-9110-2b37128c47dc"
+    ],
+    "content": "@macketoidi mới test sơ à, tự đánh tự chạy ok á",
+    "moderationStatus": "VISIBLE",
+    "isLocked": false,
+    "createdAt": "2026-07-17T06:02:24.756Z",
+    "updatedAt": "2026-07-17T06:02:24.756Z"
+  },
+  {
+    "id": "7050066f-bcd7-4d2f-b283-cf2d630ec87d",
+    "modId": "4c207f24-d70c-4b5d-800f-3a38f773bfb2",
+    "userId": "315ec22d-94eb-4cb6-9110-2b37128c47dc",
+    "userName": "macketoidi",
+    "parentId": "ca618600-9266-49e3-b6cf-016e7bb689ab",
+    "mentionedUserIds": [],
+    "content": "@Giới Đế Để vô test thử, cám ơn hữu",
+    "moderationStatus": "VISIBLE",
+    "isLocked": false,
+    "createdAt": "2026-07-17T06:03:52.203Z",
+    "updatedAt": "2026-07-17T06:03:52.203Z"
+  },
+  {
+    "id": "1f6fa100-64ad-4912-8728-5acd82002584",
+    "modId": "4c207f24-d70c-4b5d-800f-3a38f773bfb2",
+    "userId": "315ec22d-94eb-4cb6-9110-2b37128c47dc",
+    "userName": "macketoidi",
+    "parentId": "7050066f-bcd7-4d2f-b283-cf2d630ec87d",
+    "mentionedUserIds": [],
+    "content": "test @macketoidi",
+    "moderationStatus": "VISIBLE",
+    "isLocked": false,
+    "createdAt": "2026-07-17T06:08:12.688Z",
+    "updatedAt": "2026-07-17T06:08:12.688Z"
+  },
+  {
+    "id": "a0e1042d-92e4-4465-9d64-a751c7426eb9",
+    "modId": "631be878-07a2-428f-897e-fddb08768384",
+    "userId": "146f4801-ef64-410c-8dd4-96b6e833c581",
+    "userName": "Vấn Đạo Sư",
+    "mentionedUserIds": [],
+    "content": "Bị chữ 0 không à",
+    "moderationStatus": "VISIBLE",
+    "isLocked": false,
+    "createdAt": "2026-07-23T04:14:27.836Z",
+    "updatedAt": "2026-07-23T04:14:27.836Z"
+  },
+  {
+    "id": "898beebe-7608-47ef-8387-7d5560dfba0d",
+    "modId": "631be878-07a2-428f-897e-fddb08768384",
+    "userId": "146f4801-ef64-410c-8dd4-96b6e833c581",
+    "userName": "Vấn Đạo Sư",
+    "mentionedUserIds": [],
+    "content": "Tưởng game lỗi, hóa ra mod lỗi",
+    "moderationStatus": "VISIBLE",
+    "isLocked": false,
+    "createdAt": "2026-07-23T04:14:56.734Z",
+    "updatedAt": "2026-07-23T04:14:56.734Z"
+  }
+]

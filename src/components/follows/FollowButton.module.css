@@ -1,0 +1,46 @@
+.wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.followButton,
+.followingButton {
+  min-height: 42px;
+  padding: 0 17px;
+  border-radius: 11px;
+  font: inherit;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.followButton {
+  border: 0;
+  color: #191305;
+  background:
+    linear-gradient(180deg, #ffd03c, #eda900);
+}
+
+.followingButton {
+  border: 1px solid #45638f;
+  color: #dce8fb;
+  background: #203657;
+}
+
+.followButton:disabled,
+.followingButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.62;
+}
+
+.count {
+  color: #91a4c8;
+  font-size: 13px;
+}
+
+.message {
+  width: 100%;
+  color: #79e5bd;
+  font-size: 12px;
+}

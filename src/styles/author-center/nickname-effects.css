@@ -1,0 +1,149 @@
+/* P6.1.0 — Realm-consistent nickname system.
+   The nickname hue remains a direct visual code for the current realm. */
+
+@keyframes p610-realm-glow-breathe {
+  0%, 100% { filter: brightness(.97); }
+  50% { filter: brightness(1.08); }
+}
+
+@keyframes p610-realm-shimmer {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 220% 50%; }
+}
+
+.author-center-page .realm-nickname {
+  color: var(--realm-main) !important;
+  text-shadow:
+    0 0 5px color-mix(in srgb, var(--realm-main) 78%, transparent),
+    0 0 14px var(--realm-glow),
+    0 3px 15px rgba(0,0,0,.72);
+}
+
+/* Luyện Khí — white, restrained, no motion. */
+.author-center-page.realm-luyen-khi .realm-nickname {
+  color: #f8fafc !important;
+  text-shadow:
+    0 0 4px rgba(248,250,252,.68),
+    0 0 11px rgba(255,255,255,.24),
+    0 3px 15px rgba(0,0,0,.72);
+  animation: none !important;
+}
+
+/* Trúc Cơ — green. */
+.author-center-page.realm-truc-co .realm-nickname {
+  color: #58f27b !important;
+  text-shadow:
+    0 0 5px rgba(88,242,123,.74),
+    0 0 15px rgba(24,185,77,.35),
+    0 3px 15px rgba(0,0,0,.72);
+  animation: p610-realm-glow-breathe 5.8s ease-in-out infinite;
+}
+
+/* Kết Tinh — blue. */
+.author-center-page.realm-ket-tinh .realm-nickname {
+  color: #46d8ff !important;
+  text-shadow:
+    0 0 6px rgba(70,216,255,.78),
+    0 0 17px rgba(22,137,255,.38),
+    0 3px 15px rgba(0,0,0,.72);
+  animation: p610-realm-glow-breathe 5.4s ease-in-out infinite;
+}
+
+/* Kim Đan — gold. */
+.author-center-page.realm-kim-dan .realm-nickname {
+  background: linear-gradient(90deg,#ffd95a,#ff9f1c,#ffd95a);
+  background-size: 220% 100%;
+  color: transparent !important;
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  text-shadow:
+    0 0 6px rgba(255,217,90,.78),
+    0 0 17px rgba(255,159,28,.42),
+    0 3px 15px rgba(0,0,0,.72);
+  animation: p610-realm-shimmer 6.8s linear infinite;
+}
+
+/* Cụ Linh — purple. */
+.author-center-page.realm-cu-linh .realm-nickname {
+  color: #b58cff !important;
+  text-shadow:
+    0 0 7px rgba(181,140,255,.82),
+    0 0 19px rgba(114,60,255,.44),
+    0 3px 15px rgba(0,0,0,.72);
+  animation: p610-realm-glow-breathe 4.9s ease-in-out infinite;
+}
+
+/* Nguyên Anh — rose red. */
+.author-center-page.realm-nguyen-anh .realm-nickname {
+  color: #ff79a5 !important;
+  text-shadow:
+    0 0 7px rgba(255,121,165,.84),
+    0 0 20px rgba(255,51,95,.45),
+    0 3px 15px rgba(0,0,0,.72);
+  animation: p610-realm-glow-breathe 4.6s ease-in-out infinite;
+}
+
+/* Hóa Thần — orange-red. */
+.author-center-page.realm-hoa-than .realm-nickname {
+  color: #ff9b45 !important;
+  text-shadow:
+    0 0 7px rgba(255,155,69,.9),
+    0 0 19px rgba(255,61,18,.53),
+    0 0 30px rgba(255,76,22,.24),
+    0 3px 15px rgba(0,0,0,.72);
+  animation: p610-realm-glow-breathe 4.2s ease-in-out infinite;
+}
+
+/* Ngộ Đạo — indigo-blue. */
+.author-center-page.realm-ngo-dao .realm-nickname {
+  background: linear-gradient(90deg,#55e6ff,#9a69ff,#55e6ff);
+  background-size: 220% 100%;
+  color: transparent !important;
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  text-shadow:
+    0 0 8px rgba(85,230,255,.78),
+    0 0 21px rgba(154,105,255,.50),
+    0 3px 15px rgba(0,0,0,.72);
+  animation: p610-realm-shimmer 7.4s linear infinite;
+}
+
+/* Vũ Hóa — jade cyan with metallic highlight. */
+.author-center-page.realm-vu-hoa .realm-nickname {
+  background: linear-gradient(90deg,#65fff2,#e6ff75,#b7fff7,#65fff2);
+  background-size: 240% 100%;
+  color: transparent !important;
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  text-shadow:
+    0 0 8px rgba(101,255,242,.88),
+    0 0 22px rgba(96,255,224,.50),
+    0 0 31px rgba(230,255,117,.18),
+    0 3px 15px rgba(0,0,0,.72);
+  animation: p610-realm-shimmer 6.6s linear infinite;
+}
+
+/* Đăng Tiên — white-gold divine light. */
+.author-center-page.realm-dang-tien .realm-nickname {
+  background: linear-gradient(90deg,#fffbe8,#ffd45b,#ffffff,#fff0a6,#fffbe8);
+  background-size: 250% 100%;
+  color: transparent !important;
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  text-shadow:
+    0 0 8px rgba(255,251,232,.92),
+    0 0 21px rgba(255,212,91,.62),
+    0 0 36px rgba(255,238,156,.30),
+    0 3px 15px rgba(0,0,0,.72);
+  animation: p610-realm-shimmer 5.8s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .author-center-page .realm-nickname {
+    animation: none !important;
+  }
+}
