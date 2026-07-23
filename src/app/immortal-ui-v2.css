@@ -80,28 +80,40 @@ body {
 }
 
 .iv2-mist::before,
-.iv2-mist::after {
-  content: "";
-  position: absolute;
-  width: 42rem;
-  height: 14rem;
-  border-radius: 999px;
-  filter: blur(80px);
-  opacity: 0.36;
-  animation: iv2-drift 20s ease-in-out infinite alternate;
+.iv2-mist::after{
+    content:"";
+    position:absolute;
+    inset:0;
+
+    background-repeat:repeat-x;
+    background-position:center;
+    background-size:2200px auto;
+
+    pointer-events:none;
 }
 
-.iv2-mist::before {
-  left: -16rem;
-  top: 25vh;
-  background: rgba(54, 215, 255, 0.13);
+.iv2-mist::before{
+
+    background-image:url("/images/effects/clouds.webp");
+
+    opacity:.18;
+
+    animation:iv2Clouds 180s linear infinite;
+
 }
 
-.iv2-mist::after {
-  right: -15rem;
-  top: 52vh;
-  background: rgba(143, 112, 255, 0.11);
-  animation-delay: -8s;
+.iv2-mist::after{
+
+    background-image:url("/images/effects/mist.webp");
+
+    opacity:.28;
+
+    transform:scale(1.08);
+
+    filter:blur(2px);
+
+    animation:iv2Fog 130s linear infinite reverse;
+
 }
 
 @keyframes iv2-stars {
@@ -368,6 +380,30 @@ body {
     pointer-events:none;
 }
 
+.iv2-hero::after{
+
+    content:"";
+
+    position:absolute;
+
+    left:0;
+    right:0;
+    bottom:0;
+
+    height:22%;
+
+    background:linear-gradient(
+        to bottom,
+        transparent,
+        rgba(2,8,18,.18),
+        rgba(2,8,18,.45),
+        rgba(2,8,18,.78),
+        rgba(2,8,18,.95)
+    );
+
+    pointer-events:none;
+}
+
 .iv2-hero-orb {
   position: absolute;
   right: 8%;
@@ -481,4 +517,85 @@ body {
     linear-gradient(180deg, rgba(6,16,29,.38), rgba(3,7,18,.82)),
     radial-gradient(circle at 18% 0%, rgba(54,215,255,.06), transparent 28rem),
     radial-gradient(circle at 80% 8%, rgba(143,112,255,.06), transparent 28rem);
+}
+@keyframes ivClouds{
+
+    from{
+
+        transform:translateX(0);
+
+    }
+
+    to{
+
+        transform:translateX(-900px);
+
+    }
+
+}
+.iv2-aura{
+
+    position:fixed;
+
+    inset:0;
+
+    pointer-events:none;
+
+    z-index:-1;
+
+}
+
+.iv2-aura::before{
+
+    content:"";
+
+    position:absolute;
+
+    left:50%;
+
+    top:8%;
+
+    width:900px;
+
+    height:900px;
+
+    transform:translateX(-50%);
+
+    background:
+
+        radial-gradient(
+
+            circle,
+
+            rgba(110,220,255,.08),
+
+            transparent 70%
+
+        );
+
+    filter:blur(80px);
+
+}
+@keyframes iv2Clouds{
+
+    from{
+        background-position:0 0;
+    }
+
+    to{
+        background-position:-2200px 0;
+    }
+
+}
+
+@keyframes iv2Fog{
+
+    from{
+        background-position:0 0;
+    }
+
+    to{
+        background-position:2200px 0;
+    }
+
 }

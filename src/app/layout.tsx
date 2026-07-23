@@ -8,6 +8,7 @@ import PublicStructuredData from '@/components/public/PublicStructuredData';
 import ThemeScript from '@/lib/theme/ThemeScript';
 import LiveNotificationToaster from '@/components/notifications/LiveNotificationToaster';
 import WelcomeGate from '@/components/beta/WelcomeGate';
+import AtmosphereEffects from "@/components/effects/AtmosphereEffects";
 import { DEFAULT_DESCRIPTION, SITE_NAME, SITE_URL } from '@/lib/seo';
 
 const bodyFont = Be_Vietnam_Pro({
@@ -111,6 +112,7 @@ export default function RootLayout({
         <div className="iv2-shell">
           <div className="iv2-stars" aria-hidden="true" />
           <div className="iv2-mist" aria-hidden="true" />
+          <AtmosphereEffects />
           <LiveNotificationToaster />
           <WelcomeGate />
           <Header />
