@@ -61,7 +61,7 @@ export default async function CreatorDashboardPage() {
       <header className="overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-slate-900 via-slate-900 to-amber-950/40 p-6 shadow-2xl shadow-black/20 sm:p-8">
         <div className="flex flex-col justify-between gap-6 md:flex-row md:items-center">
           <div>
-            <p className="text-xs font-black uppercase tracking-[0.24em] text-amber-400">Milestone 13.1</p>
+            <p className="text-xs font-black uppercase tracking-[0.24em] text-amber-400">TÔNG SƯ CÁC</p>
             <h1 className="mt-3 text-3xl font-black tracking-tight sm:text-4xl">Xin chào, {displayName}</h1>
             <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-400 sm:text-base">
               Theo dõi hiệu suất, hoạt động cộng đồng và quản lý nhanh các bản mod của đạo hữu.
@@ -101,7 +101,7 @@ export default async function CreatorDashboardPage() {
             <Link href="/mods/upload" className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 p-4 font-bold transition hover:border-amber-300/25 hover:bg-white/10">
               <span className="flex items-center gap-3"><Plus className="h-5 w-5 text-amber-300" />Đăng mod mới</span><ChevronRight className="h-4 w-4 text-slate-600" />
             </Link>
-            <Link href="/creator/mods" className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 p-4 font-bold transition hover:border-amber-300/25 hover:bg-white/10">
+            <Link href="/admin/mods" className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 p-4 font-bold transition hover:border-amber-300/25 hover:bg-white/10">
               <span className="flex items-center gap-3"><Boxes className="h-5 w-5 text-amber-300" />Quản lý mod</span><ChevronRight className="h-4 w-4 text-slate-600" />
             </Link>
             <Link href="/creator/mods" className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 p-4 font-bold transition hover:border-amber-300/25 hover:bg-white/10">
@@ -121,7 +121,7 @@ export default async function CreatorDashboardPage() {
               <h2 className="text-xl font-black">Mod nổi bật</h2>
               <p className="mt-1 text-sm text-slate-500">Xếp theo tổng lượt tải.</p>
             </div>
-            <Link href="/creator/mods" className="text-sm font-bold text-amber-300 hover:text-amber-200">Xem tất cả</Link>
+            <Link href="/admin/mods" className="text-sm font-bold text-amber-300 hover:text-amber-200">Xem tất cả</Link>
           </div>
 
           <div className="mt-5 grid gap-3">

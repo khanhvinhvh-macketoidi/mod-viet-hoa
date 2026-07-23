@@ -58,7 +58,7 @@ function EmptyState({ hasFilters }: { hasFilters: boolean }) {
       <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-400">
         {hasFilters
           ? 'Hãy thử đổi từ khóa hoặc bỏ bớt bộ lọc.'
-          : 'Đăng mod đầu tiên để bắt đầu quản lý nội dung trong Creator Workspace.'}
+          : 'Đăng mod đầu tiên để bắt đầu quản lý nội dung trong Tông Sư Các.'}
       </p>
       {!hasFilters && (
         <Link
@@ -203,7 +203,7 @@ export default function CreatorWorkspace({ data }: { data: CreatorWorkspaceData 
       <header className="overflow-hidden rounded-3xl border border-white/10 bg-[radial-gradient(circle_at_top_right,rgba(251,191,36,0.16),transparent_42%),linear-gradient(135deg,rgba(15,23,42,0.96),rgba(2,6,23,0.98))] p-6 sm:p-8">
         <div className="grid min-w-0 gap-6 xl:grid-cols-[minmax(0,1fr)_auto] xl:items-end">
           <div className="min-w-0">
-            <p className="text-xs font-black uppercase tracking-[0.24em] text-amber-400">Creator Workspace</p>
+            <p className="text-xs font-black uppercase tracking-[0.24em] text-amber-400">Tông Sư Các</p>
             <h1 className="mt-3 break-words text-3xl font-black leading-tight sm:text-4xl">
               Mod của {data.creatorName}
             </h1>
