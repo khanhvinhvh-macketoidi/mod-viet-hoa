@@ -22,13 +22,51 @@
 html{scroll-behavior:smooth;background:var(--x-bg-950)}
 body{
   min-height:100vh;margin:0;overflow-x:hidden;
-  background:
-    radial-gradient(circle at 18% -10%,rgb(90 156 131 / .12),transparent 34rem),
-    radial-gradient(circle at 86% 8%,rgb(202 166 101 / .09),transparent 30rem),
-    linear-gradient(180deg,var(--x-bg-900),var(--x-bg-950) 72%);
+  background:#020812;
   color:var(--x-ink);
   font-family:var(--font-body),"Segoe UI",Arial,sans-serif;
   text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;
+}
+
+/*
+ * P7.4E.1 — Dùng pseudo-element cố định thay vì background trực tiếp trên body.
+ * Cách này không bị các theme con hoặc section riêng ghi đè.
+ */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-3;
+  pointer-events:none;
+  background:
+    linear-gradient(
+      180deg,
+      rgb(2 8 18 / .34) 0%,
+      rgb(2 8 18 / .48) 42%,
+      rgb(2 8 18 / .72) 76%,
+      rgb(2 8 18 / .88) 100%
+    ),
+    radial-gradient(
+      ellipse at 50% 14%,
+      transparent 0 24%,
+      rgb(1 7 17 / .14) 58%,
+      rgb(1 7 17 / .54) 100%
+    ),
+    url("/images/author-center/cultivation-mountains.webp?v=p74e1");
+  background-position:center top;
+  background-repeat:no-repeat;
+  background-size:cover;
+}
+
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-2;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 14% 8%,rgb(54 215 255 / .08),transparent 30rem),
+    radial-gradient(circle at 84% 18%,rgb(143 112 255 / .07),transparent 32rem);
 }
 ::selection{background:rgb(202 166 101 / .35);color:#fff9ed}
 a{color:inherit;text-decoration:none}
@@ -96,6 +134,15 @@ input:focus,textarea:focus,select:focus{
 }
 
 
+body > header,
+body > main,
+body > footer {
+  position:relative;
+  z-index:0;
+}
 
-
-
+@media (max-width:900px){
+  body::before{
+    background-position:58% top;
+  }
+}
