@@ -174,7 +174,7 @@ export async function migrateUsers(): Promise<UserProfileMigrationResult> {
   } catch (error) {
     await restoreMigrationBackup(backup);
     throw new Error(
-      `Migration thất bại và dữ liệu đã được khôi phục: ${
+      `Chuyển đổi thất bại và dữ liệu đã được khôi phục: ${
         error instanceof Error ? error.message : 'Lỗi không xác định'
       }`,
     );

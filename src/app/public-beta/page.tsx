@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Thông tin Public Beta',
-  description: 'Trạng thái Public Beta và phạm vi hỗ trợ của MOD Thư Viện.',
+  title: 'Thông tin giai đoạn thử nghiệm',
+  description: 'Trạng thái thử nghiệm và phạm vi hỗ trợ của MOD Thư Viện.',
   robots: { index: true, follow: true },
 };
 
@@ -12,7 +12,7 @@ export default function PublicBetaPage() {
   return (
     <LegalPage
       eyebrow="Trạng thái phát hành"
-      title="MOD Thư Viện đang ở Public Beta"
+      title="MOD Thư Viện đang trong giai đoạn thử nghiệm công khai"
       intro="Các chức năng cốt lõi đã hoạt động, nhưng nền tảng vẫn đang được kiểm thử với người dùng thực tế."
     >
       <section>
@@ -21,7 +21,7 @@ export default function PublicBetaPage() {
           <li>Đăng ký, đăng nhập và hồ sơ người dùng.</li>
           <li>Thư viện mod, upload, tải xuống và phân quyền.</li>
           <li>Luận bàn, luận đạo, theo dõi và truyền âm.</li>
-          <li>Health check, backup tự động và chẩn đoán production.</li>
+          <li>Kiểm tra tình trạng hệ thống, sao lưu tự động và chẩn đoán môi trường vận hành.</li>
         </ul>
       </section>
 

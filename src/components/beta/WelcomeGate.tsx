@@ -81,7 +81,7 @@ export default function WelcomeGate() {
           type="button"
           onClick={dismiss}
           className="absolute right-4 top-4 z-10 grid h-10 w-10 place-items-center rounded-xl text-[#7892a5] transition hover:bg-white/5 hover:text-white"
-          aria-label="Đóng lời chào Open Beta"
+          aria-label="Đóng lời chào Thử nghiệm mở"
         >
           <X size={18} />
         </button>
@@ -96,7 +96,7 @@ export default function WelcomeGate() {
           </h2>
 
           <p className="mt-5 text-sm leading-7 text-[#a5bdcf] sm:text-base">
-            MOD Việt Hóa hiện đang trong giai đoạn <strong className="text-[#f2db93]">Open Beta</strong>.
+            MOD Việt Hóa hiện đang trong giai đoạn <strong className="text-[#f2db93]">Thử nghiệm mở</strong>.
             Trong thời gian này, đạo hữu có thể bắt gặp một vài tính năng đang được hoàn thiện,
             những thay đổi thường xuyên hoặc một số lỗi nhỏ ngoài dự kiến.
           </p>
@@ -122,7 +122,7 @@ export default function WelcomeGate() {
             </button>
 
             <Link href="/beta" onClick={rememberAccepted} className="iv2-button iv2-button-secondary min-h-11 flex-1">
-              <BookOpenText size={17} /> Tìm hiểu Open Beta
+              <BookOpenText size={17} /> Tìm hiểu giai đoạn thử nghiệm
             </Link>
           </div>
         </div>

@@ -197,7 +197,7 @@ export async function getCreatorDashboardData(
     id: `follow:${follow.id}`,
     type: 'FOLLOW',
     title: `${getDisplayName(usersById.get(follow.followerId), 'Một thành viên')} đã kết giao với đạo hữu`,
-    description: 'Follower mới của Creator Studio',
+    description: 'Một đồng đạo mới vừa kết giao',
     href: creator.profileSlug ? `/authors/${creator.profileSlug}` : '/profile',
     createdAt: follow.createdAt,
   }));

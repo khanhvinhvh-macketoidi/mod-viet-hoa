@@ -35,7 +35,7 @@ export async function POST(
   const comment = await getCommentById(id);
 
   if (!comment) {
-    return new Response('Comment not found', {
+    return new Response('Không tìm thấy luận bàn', {
       status: 404,
     });
   }

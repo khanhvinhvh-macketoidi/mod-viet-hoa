@@ -70,7 +70,7 @@ export default function AdminMigrationCenter() {
       cache: 'no-store',
     });
     const data = await response.json();
-    if (!response.ok) throw new Error(data.message || 'Không thể đọc migration.');
+    if (!response.ok) throw new Error(data.message || 'Không thể đọc dữ liệu chuyển đổi.');
     setCompleted(Boolean(data.completed));
     setState(data.state ?? null);
   }, []);
@@ -123,20 +123,20 @@ export default function AdminMigrationCenter() {
   );
 
   async function runMigration() {
-    if (!window.confirm('Chạy migration một lần? Dữ liệu sẽ được backup trước khi ghi.')) return;
+    if (!window.confirm('Thực hiện chuyển đổi? Dữ liệu sẽ được sao lưu trước khi ghi.')) return;
     setBusy(true);
     setError('');
     setNotice('');
     try {
       const response = await fetch('/api/admin/migrations/user-profile', { method: 'POST' });
       const data = await response.json();
-      if (!response.ok) throw new Error(data.message || 'Migration thất bại.');
+      if (!response.ok) throw new Error(data.message || 'Chuyển đổi thất bại.');
       setCompleted(true);
       setState(data.state);
-      setNotice('Migration User Profile đã hoàn tất.');
+      setNotice('Chuyển đổi dữ liệu Đạo Tịch đã hoàn tất.');
       await loadMapping();
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : 'Migration thất bại.');
+      setError(caught instanceof Error ? caught.message : 'Chuyển đổi thất bại.');
     } finally {
       setBusy(false);
     }
@@ -182,16 +182,16 @@ export default function AdminMigrationCenter() {
         <div className={styles.panel}>
           <div className={styles.header}>
             <div>
-              <h2>User Profile Migration v1</h2>
+              <h2>Chuyển đổi dữ liệu Đạo Tịch v1</h2>
               <p>Chuẩn hóa hồ sơ, tạo profileSlug duy nhất, liên kết authorId và sao lưu dữ liệu.</p>
             </div>
             <button className={styles.primary} disabled={completed || busy} onClick={runMigration}>
-              {busy ? 'Đang migration...' : completed ? 'Đã chạy migration' : 'Chạy migration một lần'}
+              {busy ? 'Đang chuyển đổi...' : completed ? 'Đã chuyển đổi' : 'Thực hiện chuyển đổi'}
             </button>
           </div>
 
           <div className={styles.status}>
-            <strong>{completed ? 'Migration đã hoàn tất' : 'Migration chưa chạy'}</strong>
+            <strong>{completed ? 'Chuyển đổi đã hoàn tất' : 'Chưa thực hiện chuyển đổi'}</strong>
             {state?.completedAt && <span>{formatDate(state.completedAt)}</span>}
           </div>
 
@@ -204,7 +204,7 @@ export default function AdminMigrationCenter() {
           </div>
 
           {result?.backup?.directory && (
-            <div className={styles.backup}><strong>Thư mục backup</strong><code>{result.backup.directory}</code></div>
+            <div className={styles.backup}><strong>Thư mục sao lưu</strong><code>{result.backup.directory}</code></div>
           )}
         </div>
       )}
@@ -212,7 +212,7 @@ export default function AdminMigrationCenter() {
       {tab === 'mapping' && (
         <div className={styles.panel}>
           <div className={styles.header}>
-            <div><h2>Manual Author Mapping</h2><p>Chọn đúng tài khoản cho mod chưa có authorId. Tên tác giả cũ vẫn được giữ nguyên.</p></div>
+            <div><h2>Ghép tác giả thủ công</h2><p>Chọn đúng tài khoản cho mod chưa có authorId. Tên tác giả cũ vẫn được giữ nguyên.</p></div>
             <button className={styles.secondary} onClick={() => loadMapping().catch((e) => setError(e.message))}>Làm mới</button>
           </div>
 
@@ -253,12 +253,12 @@ export default function AdminMigrationCenter() {
 
       {tab === 'log' && (
         <div className={styles.panel}>
-          <h2>Migration Log</h2>
+          <h2>Nhật ký chuyển đổi</h2>
           <div className={styles.logs}>
-            <article><b>✓</b><div><strong>Migration User Profile</strong><p>{completed ? `Hoàn tất lúc ${formatDate(state?.completedAt)}.` : 'Chưa chạy.'}</p></div></article>
+            <article><b>✓</b><div><strong>Chuyển đổi dữ liệu Đạo Tịch</strong><p>{completed ? `Hoàn tất lúc ${formatDate(state?.completedAt)}.` : 'Chưa chạy.'}</p></div></article>
             <article><b>✓</b><div><strong>Chuẩn hóa đạo tịch</strong><p>{result?.usersUpdated ?? 0} đạo tịch đã được cập nhật.</p></div></article>
             <article><b>{pending ? '!' : '✓'}</b><div><strong>Liên kết tác giả</strong><p>{pending ? `${pending} mod còn chờ xử lý.` : 'Toàn bộ mod đã có authorId.'}</p></div></article>
-            <article><b>✓</b><div><strong>Backup</strong><p>{result?.backup?.directory || 'Chưa có thông tin.'}</p></div></article>
+            <article><b>✓</b><div><strong>Sao lưu</strong><p>{result?.backup?.directory || 'Chưa có thông tin.'}</p></div></article>
           </div>
         </div>
       )}

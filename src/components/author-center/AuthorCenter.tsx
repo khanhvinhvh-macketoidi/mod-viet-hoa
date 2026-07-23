@@ -87,7 +87,7 @@ export default function AuthorCenter({
   const publicProfilePath = profileSlug ? `/authors/${profileSlug}` : undefined;
 
   const socialLinks = [
-    website && { href: website, label: 'Website', icon: Globe2 },
+    website && { href: website, label: 'Trang web cá nhân', icon: Globe2 },
     facebook && { href: facebook, label: 'Facebook', icon: Share2 },
     youtube && { href: youtube, label: 'YouTube', icon: Play },
     github && { href: github, label: 'GitHub', icon: Code2 },

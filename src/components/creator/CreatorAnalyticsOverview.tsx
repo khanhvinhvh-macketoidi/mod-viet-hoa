@@ -60,7 +60,7 @@ function sanitizeDisplayName(value: string | null | undefined): string {
     .replace(/\s+/g, " ")
     .trim();
 
-  return cleaned || "Creator";
+  return cleaned || "Tông Sư";
 }
 
 function subtractDays(date: Date, days: number): Date {
@@ -159,10 +159,10 @@ function AnalyticsChart({
         <div>
           <BarChart3 className="mx-auto h-9 w-9 text-slate-600" />
           <p className="mt-4 font-bold text-slate-300">
-            Đang xây dựng lịch sử Analytics
+            Đang xây dựng lịch sử phân tích
           </p>
           <p className="mt-2 max-w-md text-sm leading-6 text-slate-500">
-            Mỗi ngày mở Creator Studio, hệ thống sẽ lưu một snapshot mới. Biểu
+            Mỗi ngày mở Tông Sư Các, hệ thống sẽ lưu một bản ghi mới. Biểu
             đồ tăng trưởng xuất hiện sau khi có ít nhất hai ngày dữ liệu.
           </p>
         </div>
@@ -305,7 +305,7 @@ export default function CreatorAnalyticsOverview({
         <div className="flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between">
           <div>
             <p className="text-xs font-black uppercase tracking-[0.24em] text-amber-400">
-              Creator Analytics
+              Phân tích Tông Sư
             </p>
             <h1 className="mt-3 text-3xl font-black tracking-tight sm:text-4xl">
               Hiệu suất của {creatorDisplayName}
@@ -357,10 +357,10 @@ export default function CreatorAnalyticsOverview({
           <div className="rounded-2xl border border-white/10 bg-slate-950/45 p-4 lg:col-span-2">
             <CalendarDays className="h-5 w-5 text-amber-300" />
             <p className="mt-3 text-xs font-black uppercase tracking-wider text-slate-500">
-              Dữ liệu Analytics
+              Dữ liệu phân tích
             </p>
             <p className="mt-1 text-lg font-black">
-              {data.snapshots.length} ngày snapshot
+              {data.snapshots.length} ngày ghi nhận
             </p>
             <p className="mt-1 text-xs text-slate-500">
               Cập nhật gần nhất:{" "}
@@ -411,7 +411,7 @@ export default function CreatorAnalyticsOverview({
                   Tăng trưởng {activeMetricLabel.toLowerCase()}
                 </h2>
                 <p className="mt-1 text-sm text-slate-500">
-                  Dữ liệu cộng dồn theo snapshot trong {period} ngày gần nhất.
+                  Dữ liệu cộng dồn theo bản ghi trong {period} ngày gần nhất.
                 </p>
               </div>
               <div className="text-right">
@@ -578,7 +578,7 @@ export default function CreatorAnalyticsOverview({
         <article className="min-w-0 overflow-hidden rounded-3xl border border-white/10 bg-slate-900/70 p-5 sm:p-6">
           <h2 className="text-xl font-black">Phiên bản nổi bật</h2>
           <p className="mt-1 text-sm text-slate-500">
-            Top release theo lượt tải đã ghi nhận.
+            Các phiên bản dẫn đầu theo lượt tải đã ghi nhận.
           </p>
           <div className="mt-5 grid gap-3">
             {data.topVersions.length ? (
@@ -608,7 +608,7 @@ export default function CreatorAnalyticsOverview({
             ) : (
               <div className="rounded-2xl border border-dashed border-white/10 p-8 text-center text-sm text-slate-500">
                 Chưa có dữ liệu tải theo phiên bản. Các lượt tải mới qua Version
-                Download API sẽ được ghi nhận tại đây.
+                Lượt tải qua hệ thống sẽ được ghi nhận tại đây.
               </div>
             )}
           </div>

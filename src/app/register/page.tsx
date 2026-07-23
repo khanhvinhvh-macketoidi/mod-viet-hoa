@@ -155,7 +155,7 @@ function RegisterForm() {
           }}
         >
           <label>
-            Website
+            Trang web cá nhân
             <input
               name="website"
               tabIndex={-1}

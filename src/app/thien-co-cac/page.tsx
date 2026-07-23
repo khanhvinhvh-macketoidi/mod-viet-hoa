@@ -73,7 +73,7 @@ export default function ThienCoCacPage() {
       <GuideSection icon={<ScrollText size={21} />} kicker="Nhập môn" title="MOD Việt Hóa là gì?">
         <p>
           MOD Việt Hóa là không gian cộng đồng để lưu giữ, chia sẻ và phát triển mod, bản Việt hóa
-          cùng công cụ hỗ trợ game. Website hiện ở giai đoạn{' '}
+          cùng công cụ hỗ trợ game. Trang web cá nhân hiện ở giai đoạn{' '}
           <strong>{SITE_INFO.stageLabel} v{SITE_INFO.version}</strong>, nên một số tính năng vẫn tiếp tục
           được hoàn thiện dựa trên góp ý của cộng đồng.
         </p>
@@ -138,11 +138,11 @@ export default function ThienCoCacPage() {
           <Step number="01" title="Khai mở quyền Tông Sư" text="Đạt Trúc Cơ · Sơ kỳ hoặc được Giới Đế cấp quyền sớm tại Author Center." />
           <Step number="02" title="Mở trang Đăng mod" text="Chọn Đăng mod trên Header hoặc truy cập /mods/upload." />
           <Step number="03" title="Điền thông tin bí tịch" text="Thêm tên mod, mô tả, game, danh mục, ảnh bìa, thư viện ảnh và hướng dẫn cài đặt." />
-          <Step number="04" title="Phát hành và quản lý" text="Sau khi đăng, vào Creator Center để chỉnh sửa, thêm phiên bản, changelog và theo dõi số liệu." />
+          <Step number="04" title="Phát hành và quản lý" text="Sau khi đăng, vào Tông Sư Các để chỉnh sửa, thêm phiên bản, nhật ký thay đổi và theo dõi số liệu." />
         </div>
         <div className="mt-6 flex flex-wrap gap-3">
           <Link href="/mods/upload" className="iv2-button iv2-button-primary">Bắt đầu đăng mod <ArrowRight size={17} /></Link>
-          <Link href="/creator" className="iv2-button iv2-button-secondary">Mở Creator Center</Link>
+          <Link href="/creator" className="iv2-button iv2-button-secondary">Mở Tông Sư Các</Link>
         </div>
       </GuideSection>
 

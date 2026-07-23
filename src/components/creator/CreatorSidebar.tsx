@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   BarChart3,
-  Bell,
   Boxes,
   Gauge,
   HeartHandshake,
@@ -17,7 +16,6 @@ const items = [
   { href: '/creator/mods', label: 'Mod của tôi', icon: Boxes },
   { href: '/creator/analytics', label: 'Phân tích', icon: BarChart3 },
   { href: '/creator/followers', label: 'Đồng đạo', icon: HeartHandshake },
-  { href: '/creator/notifications', label: 'Truyền âm', icon: Bell },
   { href: '/creator/settings', label: 'Thiết lập', icon: Settings },
 ];
 

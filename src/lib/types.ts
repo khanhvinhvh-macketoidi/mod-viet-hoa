@@ -78,7 +78,7 @@ export interface UserProfile {
   /** Khu vực hiển thị công khai, không phải địa chỉ chi tiết. */
   location?: string;
 
-  /** Website cá nhân hoặc trang dự án. */
+  /** Trang web cá nhân cá nhân hoặc trang dự án. */
   website?: string;
 
   /** Các liên kết mạng xã hội công khai. */
