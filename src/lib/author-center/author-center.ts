@@ -93,7 +93,7 @@ export const AVATAR_FRAME_OPTIONS: Array<{
   name: string;
   description: string;
 }> = [
-  { id: 'MEMBER', name: 'Phàm Nhân', description: 'Thân phận khởi đầu dành cho mọi đạo hữu.' },
+  { id: 'MEMBER', name: 'Thành viên', description: 'Khung avatar tiêu chuẩn.' },
   { id: 'NHAN_KIET', name: 'Nhân Kiệt', description: 'Khung bạc dành cho thành viên sôi nổi hoặc người ủng hộ.' },
   { id: 'THIEN_KIEU', name: 'Thiên Kiêu', description: 'Khung vàng dành cho thành viên cao cấp.' },
   { id: 'THAN_THOAI', name: 'Thần Thoại', description: 'Khung danh dự tối cao, chỉ Admin cấp.' },
@@ -186,7 +186,7 @@ export function getAvatarFrameTier(
 export function getAvatarFrameName(tier: AvatarFrameTier): string {
   return (
     AVATAR_FRAME_OPTIONS.find((item) => item.id === tier)?.name ??
-    'Phàm Nhân'
+    'Thành viên'
   );
 }
 
