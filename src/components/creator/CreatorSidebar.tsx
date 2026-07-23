@@ -27,11 +27,11 @@ export default function CreatorSidebar() {
   return (
     <aside className="rounded-3xl border border-white/10 bg-slate-950/70 p-4 shadow-2xl shadow-black/20 backdrop-blur-xl lg:sticky lg:top-6 lg:h-fit">
       <div className="px-3 py-3">
-        <p className="text-xs font-black uppercase tracking-[0.24em] text-amber-400">Creator Studio</p>
+        <p className="text-xs font-black uppercase tracking-[0.24em] text-amber-400">Tông Sư Các</p>
         <p className="mt-2 text-sm text-slate-400">Quản lý nội dung và hiệu suất mod.</p>
       </div>
 
-      <Link href="/admin/mods/new" className="mt-3 flex min-h-12 items-center justify-center gap-2 whitespace-nowrap rounded-2xl bg-amber-400 px-4 py-3 font-black text-slate-950 transition hover:bg-amber-300">
+      <Link href="/mods/upload" className="mt-3 flex min-h-12 items-center justify-center gap-2 whitespace-nowrap rounded-2xl bg-amber-400 px-4 py-3 font-black text-slate-950 transition hover:bg-amber-300">
         <Upload className="h-4 w-4 shrink-0" /> <span>Đăng mod mới</span>
       </Link>
 
