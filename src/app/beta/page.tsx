@@ -28,7 +28,14 @@ export const metadata: Metadata = {
 export default function BetaPage() {
   return (
     <div className="iv2-container py-12 sm:py-16 lg:py-20">
-      <section className="relative overflow-hidden rounded-[32px] border border-[#36d7ff]/16 bg-[#061321]/82 px-6 py-10 text-center shadow-[0_24px_90px_rgba(0,0,0,.38)] backdrop-blur-xl sm:px-10 sm:py-14">
+      <section
+  className="
+    relative
+    overflow-hidden
+    bg-[#07101d]
+    isolate
+  "
+>
         <div className="pointer-events-none absolute left-1/2 top-0 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#36d7ff]/10 blur-3xl" />
         <div className="relative mx-auto max-w-3xl">
           <p className="iv2-kicker">Thiên địa sơ khai · Cộng đồng đồng hành</p>

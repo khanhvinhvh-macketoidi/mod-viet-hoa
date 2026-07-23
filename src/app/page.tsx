@@ -15,7 +15,7 @@ export default async function Home() {
 
   return (
     <>
-      <section className="iv2-hero">
+      <section className="iv2-hero hero-top-cover">
         <div className="iv2-hero-orb" aria-hidden="true" />
 
         <div className="iv2-container relative z-10 grid min-h-[620px] items-center py-20 lg:grid-cols-[1.15fr_.85fr]">
