@@ -1,0 +1,17 @@
+[Unit]
+Description=MOD Thu Vien Next.js
+After=network.target
+
+[Service]
+Type=simple
+User=modlibrary
+WorkingDirectory=/var/www/mod-library
+EnvironmentFile=/var/www/mod-library/.env.production
+ExecStart=/usr/bin/npm run start
+Restart=always
+RestartSec=5
+StandardOutput=append:/var/www/mod-library/logs/systemd.log
+StandardError=append:/var/www/mod-library/logs/systemd-error.log
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,191 @@
+.immortal-header {
+  border-bottom: 1px solid rgba(57, 214, 255, 0.12);
+  background:
+    linear-gradient(180deg, rgba(7, 16, 27, 0.94), rgba(7, 16, 27, 0.78));
+  box-shadow: 0 12px 42px rgba(0, 0, 0, 0.22);
+  backdrop-filter: blur(22px) saturate(135%);
+}
+
+.immortal-header::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 -1px;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(57, 214, 255, 0.32),
+    rgba(91, 140, 255, 0.26),
+    transparent
+  );
+}
+
+.immortal-header__glow {
+  pointer-events: none;
+  position: absolute;
+  left: 10%;
+  top: -5rem;
+  width: 28rem;
+  height: 8rem;
+  border-radius: 999px;
+  background: rgba(57, 214, 255, 0.10);
+  filter: blur(55px);
+}
+
+.immortal-logo-mark {
+  position: relative;
+  display: grid;
+  height: 42px;
+  width: 42px;
+  flex: none;
+  place-items: center;
+  overflow: visible;
+  border: 1px solid rgba(57, 214, 255, 0.28);
+  border-radius: 14px;
+  background:
+    linear-gradient(145deg, rgba(57, 214, 255, 0.14), rgba(139, 108, 255, 0.10)),
+    rgba(7, 16, 27, 0.88);
+  color: #65e1ff;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 10px 28px rgba(34, 174, 220, 0.16);
+  transition: 180ms ease;
+}
+
+.group:hover .immortal-logo-mark {
+  border-color: rgba(57, 214, 255, 0.52);
+  color: #b7f4ff;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.10),
+    0 14px 34px rgba(57, 214, 255, 0.24);
+}
+
+.immortal-logo-mark__pulse {
+  position: absolute;
+  inset: -5px;
+  z-index: -1;
+  border: 1px solid rgba(57, 214, 255, 0.16);
+  border-radius: 17px;
+  opacity: 0;
+  animation: immortal-logo-pulse 3.8s ease-out infinite;
+}
+
+@keyframes immortal-logo-pulse {
+  0% {
+    transform: scale(0.88);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.55;
+  }
+  75%,
+  100% {
+    transform: scale(1.22);
+    opacity: 0;
+  }
+}
+
+.immortal-nav-underline {
+  position: absolute;
+  inset: auto 20% 4px;
+  height: 1px;
+  transform: scaleX(0);
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, #39d6ff, transparent);
+  box-shadow: 0 0 12px rgba(57, 214, 255, 0.7);
+  transition: transform 180ms ease;
+}
+
+.group:hover .immortal-nav-underline {
+  transform: scaleX(1);
+}
+
+.immortal-header-action {
+  display: grid;
+  min-height: 40px;
+  place-items: center;
+  border-radius: 12px;
+  transition: background-color 160ms ease;
+}
+
+.immortal-header-action:hover {
+  background: rgba(57, 214, 255, 0.06);
+}
+
+.immortal-footer {
+  position: relative;
+  overflow: hidden;
+  margin-top: 5rem;
+  border-top: 1px solid rgba(57, 214, 255, 0.13);
+  background:
+    linear-gradient(180deg, rgba(7, 16, 27, 0.70), rgba(5, 8, 18, 0.98)),
+    radial-gradient(circle at 20% 0%, rgba(57, 214, 255, 0.08), transparent 28rem),
+    radial-gradient(circle at 78% 10%, rgba(139, 108, 255, 0.08), transparent 28rem);
+}
+
+.immortal-footer::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(57, 214, 255, 0.42),
+    rgba(139, 108, 255, 0.34),
+    transparent
+  );
+}
+
+.immortal-footer__aurora {
+  pointer-events: none;
+  position: absolute;
+  left: 50%;
+  top: -8rem;
+  width: 48rem;
+  height: 15rem;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    rgba(57, 214, 255, 0.10),
+    rgba(91, 140, 255, 0.08),
+    rgba(139, 108, 255, 0.10)
+  );
+  filter: blur(68px);
+}
+
+.immortal-footer__particles {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  opacity: 0.22;
+  background-image:
+    radial-gradient(circle, rgba(57, 214, 255, 0.6) 0 1px, transparent 1.3px),
+    radial-gradient(circle, rgba(139, 108, 255, 0.48) 0 1px, transparent 1.4px);
+  background-position: 0 0, 48px 36px;
+  background-size: 110px 110px, 154px 154px;
+  mask-image: linear-gradient(to bottom, black, transparent 80%);
+}
+
+@media (max-width: 640px) {
+  .immortal-header .xianxia-container {
+    min-height: 64px;
+  }
+
+  .immortal-logo-mark {
+    height: 38px;
+    width: 38px;
+    border-radius: 12px;
+  }
+
+  .immortal-footer {
+    margin-top: 3.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .immortal-logo-mark__pulse {
+    animation: none;
+  }
+}

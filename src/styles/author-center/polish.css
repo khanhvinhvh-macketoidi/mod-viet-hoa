@@ -1,0 +1,169 @@
+/* P6.1.7 — Profile refinements and controlled hero fade.
+   This file intentionally avoids changing the established hero/grid/sidebar geometry. */
+
+/* 1) Tu vi footer: place current phase above the remaining XP, at right. */
+.author-center-page .cultivation-progress__footer.cultivation-progress__footer--right {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-end !important;
+  justify-content: flex-start !important;
+  gap: .16rem !important;
+  width: 100%;
+  margin-top: -.12rem;
+  text-align: right;
+}
+
+.author-center-page .cultivation-progress__phase-context {
+  display: block !important;
+  color: color-mix(in srgb, var(--realm-main) 72%, var(--theme-text-3));
+  font-size: .56rem;
+  font-weight: 760;
+  letter-spacing: .015em;
+  text-shadow: 0 0 8px color-mix(in srgb, var(--realm-main) 20%, transparent);
+}
+
+.author-center-page .cultivation-progress__footer--right > strong {
+  display: block;
+  color: var(--realm-main);
+  font-size: .58rem;
+  line-height: 1.2;
+}
+
+/* 2) Identity sweep stays above the card contents but remains clipped to the card. */
+.author-center-page .identity-summary--than-thoai {
+  position: relative !important;
+  overflow: hidden !important;
+  isolation: isolate;
+}
+
+.author-center-page .identity-summary--than-thoai::after {
+  z-index: 8 !important;
+  pointer-events: none !important;
+  mix-blend-mode: screen;
+}
+
+.author-center-page .identity-summary--than-thoai > * {
+  position: relative;
+  z-index: 2 !important;
+}
+
+/* 3) Hero artwork.
+   Extend the background through the stat strip, then fade only inside the
+   transition band before the lower content area. */
+.author-center-page .cultivation-hero {
+  position: relative;
+  isolation: isolate;
+  background: transparent !important;
+}
+
+/* Disable legacy hero overlay pseudo-elements that can sit above later sections. */
+.author-center-page .cultivation-hero::before,
+.author-center-page .cultivation-hero::after {
+  content: none !important;
+  display: none !important;
+}
+
+.author-center-page .cultivation-hero__background {
+  inset: 0 0 -150px 0 !important;
+  z-index: -2 !important;
+  pointer-events: none !important;
+
+  background-image:
+    linear-gradient(
+      180deg,
+      rgba(2, 8, 18, .10) 0%,
+      rgba(2, 8, 18, .14) 45%,
+      rgba(2, 8, 18, .22) 70%,
+      rgba(2, 8, 18, .34) 84%,
+      rgba(2, 8, 18, .58) 94%,
+      var(--theme-bg-0) 100%
+    ),
+    linear-gradient(
+      90deg,
+      rgba(1, 7, 17, .32) 0%,
+      rgba(3, 17, 32, .12) 28%,
+      rgba(3, 17, 32, .10) 72%,
+      rgba(1, 7, 17, .34) 100%
+    ),
+    linear-gradient(rgba(5, 19, 35, .18), rgba(5, 19, 35, .18)),
+    url("/images/author-center/cultivation-mountains.webp") !important;
+
+  background-position:
+    center,
+    center,
+    center,
+    48% -92px !important;
+  background-size:
+    100% 100%,
+    100% 100%,
+    100% 100%,
+    cover !important;
+  background-repeat: no-repeat !important;
+
+  /* The image remains fully visible until the marked transition area.
+     Fade is spread across the final 180px to avoid a visible hard seam. */
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 0,
+    #000 calc(100% - 180px),
+    rgba(0, 0, 0, .98) calc(100% - 150px),
+    rgba(0, 0, 0, .88) calc(100% - 115px),
+    rgba(0, 0, 0, .64) calc(100% - 78px),
+    rgba(0, 0, 0, .32) calc(100% - 38px),
+    transparent 100%
+  ) !important;
+  mask-image: linear-gradient(
+    to bottom,
+    #000 0,
+    #000 calc(100% - 180px),
+    rgba(0, 0, 0, .98) calc(100% - 150px),
+    rgba(0, 0, 0, .88) calc(100% - 115px),
+    rgba(0, 0, 0, .64) calc(100% - 78px),
+    rgba(0, 0, 0, .32) calc(100% - 38px),
+    transparent 100%
+  ) !important;
+}
+
+/* Keep the stat strip and all lower cards above the extended background/fade. */
+.author-center-page .author-stat-grid,
+.author-center-page .author-content-grid,
+.author-center-page .author-sidebar,
+.author-center-page .author-mods,
+.author-center-page .author-panel {
+  position: relative;
+  z-index: 5 !important;
+}
+
+@media (max-width: 680px) {
+  .author-center-page .cultivation-progress__footer.cultivation-progress__footer--right {
+    margin-top: .08rem;
+  }
+
+  .author-center-page .cultivation-hero__background {
+    inset: 0 0 -96px 0 !important;
+    background-position:
+      center,
+      center,
+      center,
+      48% -46px !important;
+
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      #000 0,
+      #000 calc(100% - 132px),
+      rgba(0, 0, 0, .96) calc(100% - 106px),
+      rgba(0, 0, 0, .78) calc(100% - 72px),
+      rgba(0, 0, 0, .42) calc(100% - 34px),
+      transparent 100%
+    ) !important;
+    mask-image: linear-gradient(
+      to bottom,
+      #000 0,
+      #000 calc(100% - 132px),
+      rgba(0, 0, 0, .96) calc(100% - 106px),
+      rgba(0, 0, 0, .78) calc(100% - 72px),
+      rgba(0, 0, 0, .42) calc(100% - 34px),
+      transparent 100%
+    ) !important;
+  }
+}

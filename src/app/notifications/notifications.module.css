@@ -1,0 +1,53 @@
+.page {
+  min-height: calc(100vh - 140px);
+  padding: 34px 20px 60px;
+}
+
+.shell {
+  width: min(900px, 100%);
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.header span {
+  color: #f4bc1d;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.header h1 {
+  margin: 7px 0 0;
+  font-size: 40px;
+}
+
+.header p {
+  margin: 8px 0 0;
+  color: #8fa2c5;
+}
+
+.header > a {
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 15px;
+  border: 1px solid #38517d;
+  border-radius: 11px;
+  color: #dbe7fb;
+  background: #1b2d4e;
+  text-decoration: none;
+  font-weight: 800;
+}
+
+@media (max-width: 650px) {
+  .header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}

@@ -1,0 +1,493 @@
+/* =========================================================
+   P2.2R — Immortal Theme Engine
+   Three intentionally distinct visual identities.
+   ========================================================= */
+
+:root,
+html[data-theme="azure"] {
+  --p22-bg-a: #020611;
+  --p22-bg-b: #06152a;
+  --p22-bg-c: #0b2a47;
+  --p22-surface: rgba(7, 25, 43, .72);
+  --p22-surface-strong: rgba(8, 31, 54, .93);
+  --p22-surface-soft: rgba(13, 48, 78, .58);
+  --p22-text: #f2fbff;
+  --p22-text-soft: #b7d2e1;
+  --p22-muted: #718fa2;
+  --p22-accent: #31dcff;
+  --p22-accent-2: #587cff;
+  --p22-accent-3: #8d68ff;
+  --p22-border: rgba(49, 220, 255, .15);
+  --p22-border-strong: rgba(49, 220, 255, .42);
+  --p22-shadow: rgba(22, 181, 255, .18);
+  --p22-header: rgba(2, 9, 19, .82);
+  --p22-footer: rgba(1, 5, 14, .97);
+  --p22-radius: 20px;
+  --p22-button-radius: 14px;
+  --p22-blur: 24px;
+  --p22-stars: .38;
+  --p22-mist: .44;
+  --p22-card-transform: translateY(-5px);
+}
+
+html[data-theme="abyss"] {
+  --p22-bg-a: #000000;
+  --p22-bg-b: #030303;
+  --p22-bg-c: #090305;
+  --p22-surface: rgba(8, 8, 8, .92);
+  --p22-surface-strong: rgba(13, 13, 13, .98);
+  --p22-surface-soft: rgba(20, 18, 18, .88);
+  --p22-text: #f5f2f2;
+  --p22-text-soft: #c9c0c1;
+  --p22-muted: #766c6e;
+  --p22-accent: #e24b5e;
+  --p22-accent-2: #9b2135;
+  --p22-accent-3: #541019;
+  --p22-border: rgba(255, 255, 255, .08);
+  --p22-border-strong: rgba(226, 75, 94, .42);
+  --p22-shadow: rgba(173, 25, 47, .12);
+  --p22-header: rgba(0, 0, 0, .96);
+  --p22-footer: #000000;
+  --p22-radius: 8px;
+  --p22-button-radius: 6px;
+  --p22-blur: 8px;
+  --p22-stars: .04;
+  --p22-mist: .02;
+  --p22-card-transform: translateY(-2px);
+}
+
+html[data-theme="moonlight"] {
+  --p22-bg-a: #070812;
+  --p22-bg-b: #111424;
+  --p22-bg-c: #25243d;
+  --p22-surface: rgba(24, 26, 42, .66);
+  --p22-surface-strong: rgba(31, 34, 53, .86);
+  --p22-surface-soft: rgba(45, 47, 70, .55);
+  --p22-text: #fcfbff;
+  --p22-text-soft: #dcdced;
+  --p22-muted: #9697ad;
+  --p22-accent: #e7e5ff;
+  --p22-accent-2: #a9a0e8;
+  --p22-accent-3: #796fb7;
+  --p22-border: rgba(231, 229, 255, .16);
+  --p22-border-strong: rgba(231, 229, 255, .42);
+  --p22-shadow: rgba(169, 160, 232, .16);
+  --p22-header: rgba(12, 13, 25, .78);
+  --p22-footer: rgba(7, 8, 18, .98);
+  --p22-radius: 28px;
+  --p22-button-radius: 999px;
+  --p22-blur: 30px;
+  --p22-stars: .24;
+  --p22-mist: .30;
+  --p22-card-transform: translateY(-7px) scale(1.005);
+}
+
+/* Shared mapping to existing UI */
+:root {
+  --theme-bg-0: var(--p22-bg-a);
+  --theme-bg-1: var(--p22-bg-b);
+  --theme-bg-2: var(--p22-bg-c);
+  --theme-surface: var(--p22-surface);
+  --theme-surface-strong: var(--p22-surface-strong);
+  --theme-surface-soft: var(--p22-surface-soft);
+  --theme-text-1: var(--p22-text);
+  --theme-text-2: var(--p22-text-soft);
+  --theme-text-3: var(--p22-muted);
+  --theme-text-4: var(--p22-muted);
+  --theme-accent: var(--p22-accent);
+  --theme-accent-strong: var(--p22-accent);
+  --theme-accent-secondary: var(--p22-accent-2);
+  --theme-accent-tertiary: var(--p22-accent-3);
+  --theme-accent-soft: color-mix(in srgb, var(--p22-accent) 8%, transparent);
+  --theme-border: var(--p22-border);
+  --theme-border-hover: var(--p22-border-strong);
+  --theme-glow: var(--p22-shadow);
+  --theme-header: var(--p22-header);
+  --theme-footer: var(--p22-footer);
+  --theme-field: color-mix(in srgb, var(--p22-surface-strong) 88%, black);
+  --theme-field-hover: var(--p22-surface-strong);
+}
+
+html,
+body,
+.iv2-shell,
+.iv2-header,
+.iv2-footer,
+.iv2-glass,
+.iv2-form-card,
+.iv2-input,
+.iv2-textarea,
+.iv2-select,
+.iv2-button,
+.iv2-submit,
+.p22-theme-menu {
+  transition:
+    color .28s ease,
+    background-color .28s ease,
+    border-color .28s ease,
+    box-shadow .28s ease,
+    border-radius .28s ease;
+}
+
+body {
+  color: var(--p22-text) !important;
+  background:
+    radial-gradient(circle at 12% -12%, color-mix(in srgb, var(--p22-accent) 16%, transparent), transparent 34rem),
+    radial-gradient(circle at 88% 5%, color-mix(in srgb, var(--p22-accent-3) 16%, transparent), transparent 32rem),
+    linear-gradient(180deg, var(--p22-bg-b), var(--p22-bg-a) 74%) !important;
+}
+
+/* Azure: cosmic, luminous, layered */
+html[data-theme="azure"] body {
+  background:
+    radial-gradient(circle at 16% 0%, rgba(49,220,255,.17), transparent 32rem),
+    radial-gradient(circle at 78% 5%, rgba(88,124,255,.15), transparent 30rem),
+    radial-gradient(circle at 50% 90%, rgba(141,104,255,.09), transparent 36rem),
+    linear-gradient(180deg, #06152a, #020611 76%) !important;
+}
+
+html[data-theme="azure"] .iv2-shell::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(rgba(49,220,255,.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(49,220,255,.025) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: linear-gradient(to bottom, black, transparent 72%);
+}
+
+/* Abyss: almost pure black, crimson, sharp, no soft atmosphere */
+html[data-theme="abyss"] body {
+  background:
+    linear-gradient(115deg, transparent 0 48%, rgba(226,75,94,.035) 48% 49%, transparent 49% 100%),
+    linear-gradient(180deg, #030303, #000 72%) !important;
+}
+
+html[data-theme="abyss"] .iv2-stars,
+html[data-theme="abyss"] .iv2-mist {
+  display: none !important;
+}
+
+html[data-theme="abyss"] .iv2-shell::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(
+      135deg,
+      rgba(255,255,255,.012) 0 1px,
+      transparent 1px 18px
+    );
+}
+
+html[data-theme="abyss"] .iv2-gradient-text {
+  background: linear-gradient(90deg, #fff, #e24b5e 52%, #771627) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+}
+
+html[data-theme="abyss"] .iv2-glass,
+html[data-theme="abyss"] .iv2-form-card {
+  box-shadow: 0 18px 50px rgba(0,0,0,.70) !important;
+}
+
+/* Moonlight: silver/violet, soft fog, rounded and ceremonial */
+html[data-theme="moonlight"] body {
+  background:
+    radial-gradient(ellipse at 50% -12%, rgba(231,229,255,.18), transparent 24rem),
+    radial-gradient(circle at 18% 28%, rgba(169,160,232,.12), transparent 31rem),
+    linear-gradient(180deg, #191b30, #080914 78%) !important;
+}
+
+html[data-theme="moonlight"] .iv2-shell::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 50% 12%, rgba(255,255,255,.08), transparent 13rem),
+    linear-gradient(115deg, transparent 30%, rgba(255,255,255,.025) 50%, transparent 70%);
+}
+
+.iv2-stars {
+  opacity: var(--p22-stars) !important;
+}
+
+.iv2-mist {
+  opacity: var(--p22-mist) !important;
+}
+
+.iv2-header {
+  border-bottom-color: var(--p22-border) !important;
+  background: var(--p22-header) !important;
+  backdrop-filter: blur(var(--p22-blur)) saturate(135%);
+}
+
+html[data-theme="abyss"] .iv2-header {
+  border-bottom: 1px solid rgba(226,75,94,.18) !important;
+  box-shadow: 0 1px 0 rgba(255,255,255,.02);
+}
+
+html[data-theme="moonlight"] .iv2-header {
+  margin: .65rem auto 0;
+  width: min(calc(100% - 1.3rem), 1380px);
+  border: 1px solid var(--p22-border) !important;
+  border-radius: 999px;
+  box-shadow: 0 18px 60px rgba(0,0,0,.28);
+}
+
+.iv2-footer {
+  border-color: var(--p22-border) !important;
+  background: var(--p22-footer) !important;
+}
+
+.iv2-glass,
+.iv2-form-card,
+.iv2-card,
+.xianxia-panel {
+  border-color: var(--p22-border) !important;
+  border-radius: var(--p22-radius) !important;
+  background:
+    linear-gradient(145deg, rgba(255,255,255,.035), transparent 44%),
+    var(--p22-surface) !important;
+  backdrop-filter: blur(var(--p22-blur)) saturate(125%);
+}
+
+.iv2-interactive:hover,
+.iv2-card:hover,
+.xianxia-card-hover:hover {
+  transform: var(--p22-card-transform) !important;
+  border-color: var(--p22-border-strong) !important;
+  box-shadow:
+    0 30px 90px rgba(0,0,0,.42),
+    0 18px 60px var(--p22-shadow) !important;
+}
+
+.iv2-button,
+.iv2-submit,
+form button[type="submit"]:not([data-keep-theme]) {
+  border-radius: var(--p22-button-radius) !important;
+}
+
+.iv2-button-primary,
+.iv2-submit,
+form button[type="submit"]:not([data-keep-theme]) {
+  border-color: color-mix(in srgb, var(--p22-accent) 45%, transparent) !important;
+  background: linear-gradient(135deg, var(--p22-accent), var(--p22-accent-2)) !important;
+  color: #04070b !important;
+  box-shadow: 0 14px 38px var(--p22-shadow) !important;
+}
+
+html[data-theme="abyss"] .iv2-button-primary,
+html[data-theme="abyss"] .iv2-submit,
+html[data-theme="abyss"] form button[type="submit"]:not([data-keep-theme]) {
+  background: linear-gradient(135deg, #d94155, #711322) !important;
+  color: #fff !important;
+  box-shadow: none !important;
+  text-transform: uppercase;
+  letter-spacing: .045em;
+}
+
+html[data-theme="moonlight"] .iv2-button-primary,
+html[data-theme="moonlight"] .iv2-submit,
+html[data-theme="moonlight"] form button[type="submit"]:not([data-keep-theme]) {
+  background: linear-gradient(135deg, #fff, #aaa2e7) !important;
+  color: #151525 !important;
+}
+
+.iv2-input,
+.iv2-textarea,
+.iv2-select,
+.iv2-search,
+form input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]),
+form textarea,
+form select {
+  border-color: var(--p22-border) !important;
+  border-radius: calc(var(--p22-button-radius) + 1px) !important;
+  background: color-mix(in srgb, var(--p22-surface-strong) 88%, black) !important;
+  color: var(--p22-text) !important;
+}
+
+html[data-theme="abyss"] :where(.iv2-input,.iv2-textarea,.iv2-select,form input,form textarea,form select):focus {
+  border-color: #e24b5e !important;
+  box-shadow: 3px 0 0 #e24b5e !important;
+}
+
+html[data-theme="moonlight"] :where(.iv2-input,.iv2-textarea,.iv2-select,form input,form textarea,form select):focus {
+  border-color: #e7e5ff !important;
+  box-shadow: 0 0 0 4px rgba(231,229,255,.10), 0 18px 45px rgba(0,0,0,.25) !important;
+}
+
+.iv2-logo {
+  border-color: var(--p22-border-strong) !important;
+  border-radius: var(--p22-button-radius) !important;
+  background: var(--p22-surface-strong) !important;
+  color: var(--p22-accent) !important;
+}
+
+html[data-theme="abyss"] .iv2-logo {
+  transform: rotate(45deg);
+}
+
+html[data-theme="abyss"] .iv2-logo > svg {
+  transform: rotate(-45deg);
+}
+
+html[data-theme="moonlight"] .iv2-logo {
+  border-radius: 999px !important;
+  box-shadow: 0 0 28px rgba(231,229,255,.14);
+}
+
+.iv2-nav-link {
+  color: var(--p22-muted) !important;
+  border-radius: var(--p22-button-radius) !important;
+}
+
+.iv2-nav-link:hover {
+  color: var(--p22-text) !important;
+  background: color-mix(in srgb, var(--p22-accent) 8%, transparent) !important;
+}
+
+html[data-theme="abyss"] .iv2-nav-link:hover {
+  background: rgba(226,75,94,.08) !important;
+  box-shadow: inset 3px 0 0 #e24b5e;
+}
+
+.p22-theme-switcher {
+  position: relative;
+}
+
+.p22-theme-trigger {
+  display: inline-flex;
+  min-height: 40px;
+  align-items: center;
+  gap: .45rem;
+  border: 1px solid var(--p22-border);
+  border-radius: var(--p22-button-radius);
+  background: var(--p22-surface);
+  padding: .5rem .72rem;
+  color: var(--p22-text-soft);
+  font-size: .78rem;
+  font-weight: 800;
+}
+
+.p22-theme-trigger:hover {
+  border-color: var(--p22-border-strong);
+  color: var(--p22-text);
+}
+
+.p22-theme-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + .7rem);
+  z-index: 100;
+  width: min(370px, calc(100vw - 1.25rem));
+  overflow: hidden;
+  border: 1px solid var(--p22-border);
+  border-radius: var(--p22-radius);
+  background: var(--p22-surface-strong);
+  padding: .75rem;
+  box-shadow: 0 32px 100px rgba(0,0,0,.56);
+  backdrop-filter: blur(var(--p22-blur));
+}
+
+.p22-theme-menu__heading {
+  display: grid;
+  gap: .15rem;
+  padding: .45rem .55rem .7rem;
+}
+
+.p22-theme-menu__heading span {
+  color: var(--p22-text);
+  font-size: .75rem;
+  font-weight: 900;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.p22-theme-menu__heading small {
+  color: var(--p22-muted);
+  font-size: .68rem;
+}
+
+.p22-theme-option {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: .75rem;
+  border-radius: calc(var(--p22-radius) - 7px);
+  padding: .72rem;
+  color: var(--p22-text-soft);
+  transition: .16s ease;
+}
+
+.p22-theme-option:hover {
+  background: color-mix(in srgb, var(--p22-accent) 8%, transparent);
+}
+
+.p22-theme-option__preview {
+  display: grid;
+  width: 46px;
+  height: 46px;
+  flex: none;
+  place-items: center;
+  border-radius: 13px;
+}
+
+.p22-theme-option--azure .p22-theme-option__preview {
+  border: 1px solid rgba(49,220,255,.35);
+  background: linear-gradient(135deg, #07182b, #2750a8);
+  color: #31dcff;
+  box-shadow: 0 0 25px rgba(49,220,255,.13);
+}
+
+.p22-theme-option--abyss .p22-theme-option__preview {
+  border: 1px solid rgba(226,75,94,.35);
+  border-radius: 5px;
+  background: linear-gradient(135deg, #000, #2b070d);
+  color: #e24b5e;
+}
+
+.p22-theme-option--moonlight .p22-theme-option__preview {
+  border: 1px solid rgba(231,229,255,.35);
+  border-radius: 999px;
+  background: linear-gradient(135deg, #151628, #7770ae);
+  color: #fff;
+  box-shadow: inset 0 0 18px rgba(255,255,255,.08);
+}
+
+.p22-theme-option__copy {
+  display: grid;
+  min-width: 0;
+  flex: 1;
+  gap: .16rem;
+  text-align: left;
+}
+
+.p22-theme-option__copy strong {
+  color: var(--p22-text);
+  font-size: .83rem;
+}
+
+.p22-theme-option__copy small {
+  color: var(--p22-muted);
+  font-size: .68rem;
+  line-height: 1.45;
+}
+
+@media (max-width: 640px) {
+  html[data-theme="moonlight"] .iv2-header {
+    width: calc(100% - .7rem);
+    margin-top: .35rem;
+  }
+
+  .p22-theme-menu {
+    position: fixed;
+    right: .65rem;
+    top: 74px;
+  }
+}

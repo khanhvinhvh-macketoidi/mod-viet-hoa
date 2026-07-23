@@ -1,0 +1,24 @@
+.form { display: grid; gap: 18px; }
+.panel { padding: 22px; border: 1px solid rgba(111,139,192,.2); border-radius: 18px; background: linear-gradient(180deg,rgba(19,32,60,.97),rgba(12,23,46,.97)); }
+.sectionTitle h2 { margin: 0; font-size: 21px; }
+.sectionTitle p { margin: 7px 0 0; color: #8fa2c5; line-height: 1.6; }
+.fieldGrid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 16px; margin-top: 20px; }
+.field { display: grid; gap: 8px; }
+.field span { color:#dbe7fa; font-size:13px; font-weight:800; }
+.field input,.field textarea { width:100%; border:1px solid #30476f; border-radius:11px; color:#eef4ff; background:#0a162d; font:inherit; outline:none; }
+.field input { min-height:46px; padding:0 13px; }
+.field textarea { padding:12px 13px; resize:vertical; line-height:1.6; }
+.field input:focus,.field textarea:focus { border-color:#eeb51d; box-shadow:0 0 0 3px rgba(238,181,29,.12); }
+.field small { color:#7387ab; font-size:12px; text-align:right; }
+.field em { color:#ff9f9f; font-size:12px; font-style:normal; }
+.fullWidth { grid-column:1/-1; }
+.actions { display:flex; justify-content:flex-end; gap:10px; }
+.cancelButton,.saveButton { min-height:44px; display:inline-flex; align-items:center; justify-content:center; padding:0 18px; border-radius:11px; text-decoration:none; font:inherit; font-weight:900; }
+.cancelButton { color:#d8e3f8; border:1px solid #365078; background:#172946; }
+.saveButton { border:0; color:#191305; background:linear-gradient(180deg,#ffd03c,#eda900); cursor:pointer; }
+.saveButton:disabled { opacity:.6; cursor:not-allowed; }
+.error,.success { padding:13px 15px; border-radius:12px; font-weight:700; }
+.error { color:#ffb0b0; border:1px solid rgba(255,74,74,.32); background:rgba(111,20,31,.52); }
+.success { color:#72e6bb; border:1px solid rgba(34,211,148,.28); background:rgba(10,91,65,.45); }
+@media(max-width:700px){.panel{padding:16px}.fieldGrid{grid-template-columns:1fr}.fullWidth{grid-column:auto}.actions{flex-direction:column-reverse}.cancelButton,.saveButton{width:100%}}
+
