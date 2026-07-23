@@ -110,8 +110,16 @@ export default function RootLayout({
 
       <body>
         <div className="iv2-shell">
+        <div className="iv2-stars" />
+        <div className="iv2-mist" />
+        <div className="iv2-particles" />
           <div className="iv2-stars" aria-hidden="true" />
           <div className="iv2-mist" aria-hidden="true" />
+          <div className="iv2-particles" aria-hidden="true">
+  {Array.from({ length: 20 }).map((_, i) => (
+    <span key={i} className={`iv2-particle p${i + 1}`} />
+  ))}
+</div>
           <AtmosphereEffects />
           <LiveNotificationToaster />
           <WelcomeGate />
