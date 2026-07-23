@@ -60,7 +60,7 @@ export default function UserProfileMigrationPanel() {
         const data = (await response.json()) as ApiResponse;
 
         if (!response.ok) {
-          throw new Error(data.message || 'Không thể tải trạng thái migration.');
+          throw new Error(data.message || 'Không thể tải trạng thái chuyển đổi.');
         }
 
         if (!cancelled) {
@@ -71,7 +71,7 @@ export default function UserProfileMigrationPanel() {
           setError(
             statusError instanceof Error
               ? statusError.message
-              : 'Không thể tải trạng thái migration.',
+              : 'Không thể tải trạng thái chuyển đổi.',
           );
         }
       } finally {
@@ -108,16 +108,16 @@ export default function UserProfileMigrationPanel() {
 
       if (!response.ok) {
         if (data.state) setState(data.state);
-        throw new Error(data.message || 'Migration thất bại.');
+        throw new Error(data.message || 'Chuyển đổi thất bại.');
       }
 
       setState(data.state ?? null);
-      setMessage(data.message || 'Migration đã hoàn tất.');
+      setMessage(data.message || 'Chuyển đổi đã hoàn tất.');
     } catch (runError) {
       setError(
         runError instanceof Error
           ? runError.message
-          : 'Migration thất bại.',
+          : 'Chuyển đổi thất bại.',
       );
     } finally {
       setRunning(false);
@@ -140,7 +140,7 @@ export default function UserProfileMigrationPanel() {
         <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
           <div>
             <h2 className="text-xl font-bold text-white">
-              User Profile Migration v1
+              Chuyển đổi dữ liệu Đạo Tịch v1
             </h2>
             <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400">
               Chuẩn hóa hồ sơ người dùng, tạo profileSlug duy nhất, liên kết
@@ -155,10 +155,10 @@ export default function UserProfileMigrationPanel() {
             className="rounded-xl bg-amber-400 px-5 py-3 font-bold text-slate-950 transition hover:bg-amber-300 disabled:cursor-not-allowed disabled:bg-slate-700 disabled:text-slate-400"
           >
             {state
-              ? 'Đã chạy migration'
+              ? 'Đã chuyển đổi'
               : running
-                ? 'Đang migration...'
-                : 'Chạy migration một lần'}
+                ? 'Đang chuyển đổi...'
+                : 'Thực hiện chuyển đổi'}
           </button>
         </div>
 
@@ -178,7 +178,7 @@ export default function UserProfileMigrationPanel() {
       {state && result && (
         <div className="rounded-2xl border border-emerald-400/20 bg-slate-900 p-6">
           <h3 className="text-lg font-bold text-emerald-300">
-            Migration đã hoàn tất
+            Chuyển đổi đã hoàn tất
           </h3>
           <p className="mt-2 text-sm text-slate-400">
             Thời gian: {new Date(state.completedAt).toLocaleString('vi-VN')}
@@ -194,7 +194,7 @@ export default function UserProfileMigrationPanel() {
           </dl>
 
           <div className="mt-6 rounded-xl bg-slate-950 p-4 text-sm text-slate-300">
-            <p className="font-semibold text-white">Thư mục backup</p>
+            <p className="font-semibold text-white">Thư mục sao lưu</p>
             <p className="mt-1 break-all text-slate-400">
               {result.backup.directory}
             </p>
@@ -211,7 +211,7 @@ export default function UserProfileMigrationPanel() {
                     <tr className="border-b border-white/10">
                       <th className="px-3 py-3">Tên mod</th>
                       <th className="px-3 py-3">Tác giả cũ</th>
-                      <th className="px-3 py-3">Mod ID</th>
+                      <th className="px-3 py-3">Mã mod</th>
                     </tr>
                   </thead>
                   <tbody>

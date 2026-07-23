@@ -130,19 +130,19 @@ export default function CreatorFollowersCenter({ data }: { data: CreatorFollower
     {
       label: 'Đã kết giao',
       value: formatNumber(data.stats.following),
-      helper: 'Creator và thành viên đạo hữu theo dõi',
+      helper: 'Tông Sư và thành viên mà đạo hữu đang theo dõi',
       icon: HeartHandshake,
     },
     {
       label: 'Mới hôm nay',
       value: formatNumber(data.stats.newToday),
-      helper: 'Follower mới từ 00:00 hôm nay',
+      helper: 'Đồng đạo mới từ 00:00 hôm nay',
       icon: UserCheck,
     },
     {
       label: 'Hoạt động 30 ngày',
       value: `${data.stats.activeRate}%`,
-      helper: `${formatNumber(data.stats.activeLast30Days)} follower có hoạt động`,
+      helper: `${formatNumber(data.stats.activeLast30Days)} đồng đạo có hoạt động`,
       icon: Activity,
     },
   ];
@@ -151,7 +151,7 @@ export default function CreatorFollowersCenter({ data }: { data: CreatorFollower
     <div className="space-y-6">
       <header className="overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-slate-900 via-slate-900 to-amber-950/30 p-6 shadow-2xl shadow-black/20 sm:p-8">
         <p className="text-xs font-black uppercase tracking-[0.24em] text-amber-400">
-          Creator Community
+          Cộng đồng Tông Sư
         </p>
         <div className="mt-3 flex flex-col justify-between gap-5 lg:flex-row lg:items-end">
           <div>
@@ -207,7 +207,7 @@ export default function CreatorFollowersCenter({ data }: { data: CreatorFollower
           </div>
 
           <select value={filter} onChange={(event) => setFilter(event.target.value as FilterKey)} className="rounded-2xl border border-white/10 bg-slate-950/50 px-4 py-3 text-sm font-bold">
-            <option value="all">Tất cả follower</option>
+            <option value="all">Tất cả đồng đạo</option>
             <option value="vip">Thành viên VIP</option>
             <option value="engaged">Đã tương tác với mod</option>
             <option value="quiet">Chưa tương tác</option>
@@ -238,7 +238,7 @@ export default function CreatorFollowersCenter({ data }: { data: CreatorFollower
         {followers.length === 0 ? (
           <div className="p-12 text-center">
             <Users className="mx-auto h-10 w-10 text-slate-700" />
-            <h2 className="mt-4 text-lg font-black">Không tìm thấy follower phù hợp</h2>
+            <h2 className="mt-4 text-lg font-black">Không tìm thấy đồng đạo phù hợp</h2>
             <p className="mt-2 text-sm text-slate-500">Thử đổi từ khóa hoặc bộ lọc hiện tại.</p>
           </div>
         ) : (
@@ -268,7 +268,7 @@ export default function CreatorFollowersCenter({ data }: { data: CreatorFollower
 
                 <div>
                   <p className="text-sm font-black text-amber-300">{engagement(follower)}</p>
-                  <p className="mt-1 text-xs text-slate-600">tâm đắc · review · comment</p>
+                  <p className="mt-1 text-xs text-slate-600">tâm đắc · luận đạo · luận bàn</p>
                 </div>
 
                 <div>

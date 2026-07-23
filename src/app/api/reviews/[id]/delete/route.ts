@@ -33,7 +33,7 @@ export async function POST(
 
   if (!review) {
     return new Response(
-      'Review not found',
+      'Không tìm thấy luận đạo',
       {
         status: 404,
       },

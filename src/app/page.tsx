@@ -57,8 +57,8 @@ export default async function Home() {
         <div className="grid gap-4 lg:grid-cols-3">
           <Feature
             icon={<BookOpenText size={20} />}
-            title="Tàng thư khoa học"
-            text="Khám phá theo game, công năng, cốt truyện và cấp độ truy cập."
+            title="Tàng thư tinh chọn"
+            text="Khám phá theo game, công năng, cốt truyện và chất lượng mod."
           />
           <Feature
             icon={<UploadCloud size={20} />}
@@ -67,8 +67,8 @@ export default async function Home() {
           />
           <Feature
             icon={<ShieldCheck size={20} />}
-            title="Cộng đồng phân quyền"
-            text="Hỗ trợ nội dung công khai, thành viên, VIP và tác giả."
+            title="Cộng đồng chia sẻ"
+            text="Thành viên toàn quyền chia sẻ, thảo luận và đánh giá mod."
           />
         </div>
 
@@ -99,7 +99,7 @@ export default async function Home() {
               Chưa có bí thuật nào được lưu giữ
             </p>
             <p className="mt-2 text-sm text-[#839caf]">
-              Đăng nhập bằng tài khoản quản trị để tải lên bản đầu tiên.
+              Nhanh chóng gia nhập tiên lộ và sớm phát hành bí thuật của riêng mình.
             </p>
           </div>
         )}

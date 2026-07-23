@@ -41,7 +41,7 @@ export default function PrivacyPage() {
       <section>
         <h2>3. Cookie</h2>
         <p>
-          Website sử dụng cookie phiên đăng nhập bảo mật và localStorage
+          Trang web cá nhân sử dụng cookie phiên đăng nhập bảo mật và localStorage
           để ghi nhớ lựa chọn giao diện. Không sử dụng mật khẩu dạng văn
           bản thuần trong cookie.
         </p>

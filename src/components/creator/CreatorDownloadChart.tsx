@@ -10,7 +10,7 @@ export default function CreatorDownloadChart({ snapshots }: { snapshots: Snapsho
         <div>
           <p className="font-bold text-slate-300">Đang bắt đầu ghi nhận dữ liệu</p>
           <p className="mt-2 max-w-md text-sm leading-6 text-slate-500">
-            Dashboard sẽ lưu một snapshot mỗi ngày. Biểu đồ tăng trưởng xuất hiện sau khi có ít nhất hai ngày dữ liệu.
+            Tông Sư Các sẽ lưu một bản ghi mỗi ngày. Biểu đồ tăng trưởng xuất hiện sau khi có ít nhất hai ngày dữ liệu.
           </p>
         </div>
       </div>

@@ -207,7 +207,7 @@ export default function CreatorWorkspace({ data }: { data: CreatorWorkspaceData 
             <h1 className="mt-3 break-words text-3xl font-black leading-tight sm:text-4xl">
               Mod của {data.creatorName}
             </h1>
-            <p className="mt-3 max-w-2xl text-slate-400">Quản lý metadata, phát hành phiên bản mới và theo dõi hiệu suất của toàn bộ mod tại một nơi.</p>
+            <p className="mt-3 max-w-2xl text-slate-400">Quản lý thông tin, phát hành phiên bản mới và theo dõi hiệu suất của toàn bộ mod tại một nơi.</p>
           </div>
           <div className="grid w-full gap-3 sm:grid-cols-2 xl:w-auto xl:min-w-[390px]">
             <Link href="/mods/upload" className="inline-flex min-h-12 items-center justify-center gap-2 whitespace-nowrap rounded-2xl bg-amber-400 px-5 py-3 font-black text-slate-950 transition hover:bg-amber-300">

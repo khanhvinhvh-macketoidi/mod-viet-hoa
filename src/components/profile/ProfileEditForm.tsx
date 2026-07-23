@@ -156,7 +156,7 @@ export default function ProfileEditForm({ initialData }: Props) {
           </label>
 
           <label className={`${styles.field} ${styles.fullWidth}`}>
-            <span>Website</span>
+            <span>Trang web cá nhân</span>
             <input
               type="url"
               value={form.website}

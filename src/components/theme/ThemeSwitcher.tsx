@@ -126,7 +126,7 @@ export default function ThemeSwitcher() {
       {open && (
         <div className="p22-theme-menu" role="menu">
           <div className="p22-theme-menu__heading">
-            <span>Immortal Theme Engine</span>
+            <span>Bộ giao diện Tiên Hiệp</span>
             <small>Chọn phong cách hiển thị</small>
           </div>
 

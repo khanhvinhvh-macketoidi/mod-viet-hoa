@@ -52,7 +52,7 @@ export default function Footer() {
                   <span className="iv2-gradient-text">MOD</span> THƯ VIỆN
                 </p>
                 <p className="mt-1 text-[10px] font-bold tracking-[0.14em] text-[#667f92]">
-                  IMMORTAL MOD ARCHIVE
+                  THƯ VIỆN MOD TIÊN HIỆP
                 </p>
               </div>
             </div>
@@ -98,12 +98,12 @@ export default function Footer() {
           </div>
           <div className="flex flex-wrap items-center gap-4">
             <span className="inline-flex items-center gap-1.5">
-              <ShieldCheck size={13} /> Immortal UI
+              <ShieldCheck size={13} /> Giao diện Tiên Hiệp
             </span>
             <OpenBetaBadge />
             <span>v{SITE_INFO.version}</span>
             <span className="inline-flex items-center gap-1.5">
-              <Code2 size={13} /> Community Build
+              <Code2 size={13} /> Bản dựng cộng đồng
             </span>
           </div>
         </div>

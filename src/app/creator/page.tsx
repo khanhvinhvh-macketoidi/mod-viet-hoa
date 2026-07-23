@@ -50,7 +50,7 @@ export default async function CreatorDashboardPage() {
   const stats = [
     { label: 'Mod đã đăng', value: number(dashboard.stats.mods), helper: 'Nội dung thuộc tài khoản này', icon: Boxes },
     { label: 'Lượt tải', value: number(dashboard.stats.downloads), helper: 'Tổng lượt tải của toàn bộ mod', icon: Download },
-    { label: 'Đồng đạo', value: number(dashboard.stats.followers), helper: 'Follower của hồ sơ tác giả', icon: HeartHandshake },
+    { label: 'Đồng đạo', value: number(dashboard.stats.followers), helper: 'Đồng đạo kết giao với hồ sơ tác giả', icon: HeartHandshake },
     { label: 'Tàng Kinh Các', value: number(dashboard.stats.collections), helper: 'Có chứa ít nhất một mod của đạo hữu', icon: FolderHeart },
     { label: 'Luận đạo', value: dashboard.stats.averageRating ? `${dashboard.stats.averageRating.toFixed(2)}★` : '—', helper: `${number(dashboard.stats.reviews)} lượt luận đạo`, icon: Star },
     { label: 'Luận bàn', value: number(dashboard.stats.comments), helper: 'Luận bàn đang hiển thị', icon: MessageSquare },
