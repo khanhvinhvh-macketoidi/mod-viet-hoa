@@ -33,6 +33,8 @@ body{
  * Cách này không bị các theme con hoặc section riêng ghi đè.
  */
 body::before{
+  will-change:transform;
+transform:translateZ(0);
   content:"";
   position:fixed;
   inset:0;
@@ -149,22 +151,53 @@ body > footer {
 }
 
 .iv2-particles{
-
     position:fixed;
-
     inset:0;
-
     pointer-events:none;
+    z-index:-2;
+    overflow:hidden;
+}
 
-    z-index:-1;
+.iv2-particles::before{
+    content:"";
+    position:absolute;
+    inset:-40%;
 
-    background:url("/images/effects/particles.webp") repeat;
+    background-image:
 
-    background-size:700px;
+        radial-gradient(circle,#d7ffff 1px,transparent 1.8px),
 
-    opacity:.12;
+        radial-gradient(circle,#6be5ff .8px,transparent 1.6px),
 
-    animation:iv2Particles 120s linear infinite;
+        radial-gradient(circle,#ffffff .9px,transparent 1.8px);
+
+    background-size:
+
+        180px 180px,
+
+        240px 240px,
+
+        320px 320px;
+
+    opacity:.35;
+
+    animation:particleFloat 80s linear infinite;
+}
+
+@keyframes particleFloat{
+
+0%{
+
+transform:translateY(0);
+
+}
+
+100%{
+
+transform:translateY(-260px);
+
+}
+
 }
 
 @keyframes iv2Particles{
@@ -178,6 +211,38 @@ body > footer {
     to{
 
         background-position:-800px -1600px;
+
+    }
+
+}
+@supports (animation-timeline: scroll()){
+
+    body::before{
+
+        animation:mountainParallax linear both;
+
+        animation-timeline:scroll(root);
+
+        animation-range:0% 100%;
+    }
+
+    @keyframes mountainParallax{
+
+        from{
+
+            transform:
+                scale(1)
+                translateY(0);
+
+        }
+
+        to{
+
+            transform:
+                scale(1.08)
+                translateY(-90px);
+
+        }
 
     }
 
