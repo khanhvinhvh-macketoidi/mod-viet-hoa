@@ -138,11 +138,47 @@ body > header,
 body > main,
 body > footer {
   position:relative;
-  z-index:0;
+  z-index:5;
 }
 
 @media (max-width:900px){
   body::before{
     background-position:58% top;
   }
+
+}
+
+.iv2-particles{
+
+    position:fixed;
+
+    inset:0;
+
+    pointer-events:none;
+
+    z-index:-1;
+
+    background:url("/images/effects/particles.webp") repeat;
+
+    background-size:700px;
+
+    opacity:.12;
+
+    animation:iv2Particles 120s linear infinite;
+}
+
+@keyframes iv2Particles{
+
+    from{
+
+        background-position:0 0;
+
+    }
+
+    to{
+
+        background-position:-800px -1600px;
+
+    }
+
 }
