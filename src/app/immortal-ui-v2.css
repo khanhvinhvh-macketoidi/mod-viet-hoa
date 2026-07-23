@@ -378,6 +378,37 @@ body {
         );
 
     pointer-events:none;
+    mask-image:
+linear-gradient(
+to bottom,
+
+black 0%,
+
+black 76%,
+
+rgba(0,0,0,.82) 84%,
+
+rgba(0,0,0,.45) 91%,
+
+transparent 100%
+
+);
+
+-webkit-mask-image:
+linear-gradient(
+to bottom,
+
+black 0%,
+
+black 76%,
+
+rgba(0,0,0,.82) 84%,
+
+rgba(0,0,0,.45) 91%,
+
+transparent 100%
+
+);
 }
 
 .iv2-hero::after{
@@ -597,5 +628,168 @@ body {
     to{
         background-position:2200px 0;
     }
+
+}
+.iv2-shell::before{
+
+content:"";
+
+position:fixed;
+
+inset:0;
+
+pointer-events:none;
+
+z-index:-2;
+
+background:
+
+radial-gradient(
+ellipse at 50% 18%,
+rgba(110,220,255,.06),
+transparent 45%
+),
+
+radial-gradient(
+ellipse at 80% 10%,
+rgba(180,170,255,.05),
+transparent 35%
+);
+
+mix-blend-mode:screen;
+
+}
+/* =====================================================
+   P7.5B.1 - Floating Spiritual Particles
+===================================================== */
+
+.iv2-particles{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    overflow:hidden;
+    z-index:-2;
+}
+
+.iv2-particle{
+
+    position:absolute;
+
+    width:2px;
+    height:2px;
+
+    border-radius:999px;
+
+    background:#dffcff;
+
+    opacity:.14;
+
+    box-shadow:
+        0 0 6px rgba(170,240,255,.9),
+        0 0 12px rgba(110,220,255,.35);
+
+    animation-name:iv2FloatParticle;
+    animation-timing-function:linear;
+    animation-iteration-count:infinite;
+
+    will-change:transform,opacity;
+}
+
+@keyframes iv2FloatParticle{
+
+    0%{
+
+        transform:
+            translate3d(0,20px,0);
+
+        opacity:0;
+
+    }
+
+    10%{
+
+        opacity:.16;
+
+    }
+
+    90%{
+
+        opacity:.16;
+
+    }
+
+    100%{
+
+        transform:
+            translate3d(0,-120vh,0);
+
+        opacity:0;
+
+    }
+
+}
+.p1{left:3%;top:108%;animation-duration:52s;animation-delay:-3s;}
+.p2{left:8%;top:110%;animation-duration:61s;animation-delay:-22s;}
+.p3{left:14%;top:109%;animation-duration:47s;animation-delay:-14s;}
+.p4{left:21%;top:111%;animation-duration:58s;animation-delay:-41s;}
+.p5{left:28%;top:107%;animation-duration:63s;animation-delay:-7s;}
+
+.p6{left:36%;top:110%;animation-duration:49s;animation-delay:-31s;}
+.p7{left:42%;top:108%;animation-duration:66s;animation-delay:-52s;}
+.p8{left:49%;top:111%;animation-duration:55s;animation-delay:-11s;}
+.p9{left:56%;top:109%;animation-duration:62s;animation-delay:-46s;}
+.p10{left:63%;top:110%;animation-duration:51s;animation-delay:-17s;}
+
+.p11{left:69%;top:108%;animation-duration:59s;animation-delay:-34s;}
+.p12{left:74%;top:109%;animation-duration:68s;animation-delay:-56s;}
+.p13{left:79%;top:111%;animation-duration:46s;animation-delay:-26s;}
+.p14{left:84%;top:107%;animation-duration:57s;animation-delay:-39s;}
+.p15{left:88%;top:110%;animation-duration:65s;animation-delay:-18s;}
+
+.p16{left:92%;top:109%;animation-duration:53s;animation-delay:-9s;}
+.p17{left:96%;top:111%;animation-duration:71s;animation-delay:-48s;}
+.p18{left:39%;top:113%;animation-duration:60s;animation-delay:-27s;}
+.p19{left:58%;top:112%;animation-duration:69s;animation-delay:-44s;}
+.p20{left:17%;top:114%;animation-duration:56s;animation-delay:-13s;}
+
+.p2,
+.p7,
+.p12,
+.p17{
+
+    width:3px;
+    height:3px;
+
+    opacity:.22;
+
+}
+
+.p5,
+.p10,
+.p15{
+
+    width:1px;
+    height:1px;
+
+    opacity:.08;
+
+}
+.p3,
+.p8,
+.p13,
+.p18{
+
+    background:#fff7d1;
+
+    box-shadow:
+        0 0 8px rgba(255,239,180,.8);
+
+}
+
+.p6,
+.p11,
+.p16{
+
+    background:#bff6ff;
 
 }
