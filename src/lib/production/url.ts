@@ -56,7 +56,7 @@ export function getAppBaseUrl(request?: Request): string {
     }
   }
 
-  return 'http://localhost:3000';
+  return DEFAULT_PRODUCTION_URL;
 }
 
 export function createSafeRedirectUrl(
