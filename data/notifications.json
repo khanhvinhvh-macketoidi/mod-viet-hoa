@@ -168,5 +168,44 @@
     "dedupeKey": "mod-version:37bcfd1c-0f49-49ee-be15-c5fd66b002c8:315ec22d-94eb-4cb6-9110-2b37128c47dc",
     "isRead": false,
     "createdAt": "2026-07-23T05:21:01.380Z"
+  },
+  {
+    "id": "da36ac18-4236-4ac4-81d3-bc47b4f6e190",
+    "userId": "315ec22d-94eb-4cb6-9110-2b37128c47dc",
+    "type": "MOD_PUBLISHED",
+    "title": "Tu Sĩ Qua Đường vừa đăng mod mới",
+    "message": "<color=#DD0000>【Mimosa】Tối Ưu Hóa Tiện Ích</color>",
+    "href": "/mods/color-dd0000-mimosa-toi-uu-hoa-tien-ich-color",
+    "actorUserId": "admin-local",
+    "relatedModId": "61465c57-544c-4428-9f94-a9329076d93c",
+    "dedupeKey": "mod-published:61465c57-544c-4428-9f94-a9329076d93c:315ec22d-94eb-4cb6-9110-2b37128c47dc",
+    "isRead": false,
+    "createdAt": "2026-07-24T01:34:53.805Z"
+  },
+  {
+    "id": "8fa77d67-22c6-4e45-931e-8f196c8d0636",
+    "userId": "315ec22d-94eb-4cb6-9110-2b37128c47dc",
+    "type": "MOD_PUBLISHED",
+    "title": "Tu Sĩ Qua Đường vừa đăng mod mới",
+    "message": "「 ✦ Cốt Truyện ✦ 」Hôn sự sắp đặt",
+    "href": "/mods/cot-truyen-hon-su-sap-at",
+    "actorUserId": "admin-local",
+    "relatedModId": "ca629ccc-c0e4-47b3-b134-52386c04b690",
+    "dedupeKey": "mod-published:ca629ccc-c0e4-47b3-b134-52386c04b690:315ec22d-94eb-4cb6-9110-2b37128c47dc",
+    "isRead": false,
+    "createdAt": "2026-07-24T01:43:38.398Z"
+  },
+  {
+    "id": "2fb892cc-9bae-4fed-9b18-c5ceadac2c72",
+    "userId": "315ec22d-94eb-4cb6-9110-2b37128c47dc",
+    "type": "MOD_PUBLISHED",
+    "title": "Tu Sĩ Qua Đường vừa đăng mod mới",
+    "message": "「 ✦ Công Năng ✦ 」Tư Y Tiên - Quản lý Trang phục",
+    "href": "/mods/cong-nang-tu-y-tien-quan-ly-trang-phuc",
+    "actorUserId": "admin-local",
+    "relatedModId": "66b1b6ac-1ecd-4ff8-b6e3-e433f84e9ca6",
+    "dedupeKey": "mod-published:66b1b6ac-1ecd-4ff8-b6e3-e433f84e9ca6:315ec22d-94eb-4cb6-9110-2b37128c47dc",
+    "isRead": false,
+    "createdAt": "2026-07-24T02:19:38.094Z"
   }
 ]

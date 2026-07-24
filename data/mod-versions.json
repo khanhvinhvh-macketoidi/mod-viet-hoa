@@ -68,5 +68,47 @@
     "isCurrent": true,
     "createdByUserId": "admin-local",
     "createdAt": "2026-07-23T05:21:01.376Z"
+  },
+  {
+    "id": "0f494031-75f9-48e7-a157-3728d0348239",
+    "modId": "61465c57-544c-4428-9f94-a9329076d93c",
+    "version": "1.0",
+    "gameVersion": "Mới nhất",
+    "changelog": "Phiên bản hiện tại được nhập từ dữ liệu mod cũ.",
+    "fileName": "Mod_Toi_uu_tien_ich_Mimosa.zip",
+    "storedFileName": "25617a7d-5eae-4bdd-936c-c989b66a1162-Mod_Toi_uu_tien_ich_Mimosa.zip",
+    "fileSize": 632858,
+    "downloads": 0,
+    "isCurrent": true,
+    "createdByUserId": "admin-local",
+    "createdAt": "2026-07-24T01:34:53.799Z"
+  },
+  {
+    "id": "f9f52a50-bb1c-4dc8-9980-1e90e86f1b86",
+    "modId": "ca629ccc-c0e4-47b3-b134-52386c04b690",
+    "version": "1.0",
+    "gameVersion": "Mới nhất",
+    "changelog": "Phiên bản hiện tại được nhập từ dữ liệu mod cũ.",
+    "fileName": "Mod_Hon_su_sap_dat_VH_by_Ken.zip",
+    "storedFileName": "1f8dbf53-54e7-4de2-bda9-5adbef420128-Mod_Hon_su_sap_dat_VH_by_Ken.zip",
+    "fileSize": 16336874,
+    "downloads": 0,
+    "isCurrent": true,
+    "createdByUserId": "admin-local",
+    "createdAt": "2026-07-24T01:43:38.393Z"
+  },
+  {
+    "id": "1e744c9c-739c-4d22-b1ba-a906f94b882b",
+    "modId": "66b1b6ac-1ecd-4ff8-b6e3-e433f84e9ca6",
+    "version": "1.0",
+    "gameVersion": "Mới nhất",
+    "changelog": "Phiên bản hiện tại được nhập từ dữ liệu mod cũ.",
+    "fileName": "3758119881_Quan_ly_trang_phuc.zip",
+    "storedFileName": "242313e9-8b99-4110-a2de-a66c9a3a176e-3758119881_Quan_ly_trang_phuc.zip",
+    "fileSize": 809632,
+    "downloads": 0,
+    "isCurrent": true,
+    "createdByUserId": "admin-local",
+    "createdAt": "2026-07-24T02:19:38.091Z"
   }
 ]

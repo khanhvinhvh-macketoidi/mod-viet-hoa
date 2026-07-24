@@ -38,7 +38,7 @@ transform:translateZ(0);
   content:"";
   position:fixed;
   inset:0;
-  z-index:-3;
+  z-index:-6;
   pointer-events:none;
   background:
     linear-gradient(
@@ -60,16 +60,6 @@ transform:translateZ(0);
   background-size:cover;
 }
 
-body::after{
-  content:"";
-  position:fixed;
-  inset:0;
-  z-index:-2;
-  pointer-events:none;
-  background:
-    radial-gradient(circle at 14% 8%,rgb(54 215 255 / .08),transparent 30rem),
-    radial-gradient(circle at 84% 18%,rgb(143 112 255 / .07),transparent 32rem);
-}
 ::selection{background:rgb(202 166 101 / .35);color:#fff9ed}
 a{color:inherit;text-decoration:none}
 button,input,textarea,select{font:inherit} button{cursor:pointer}
