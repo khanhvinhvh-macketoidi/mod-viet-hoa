@@ -71,7 +71,7 @@ export default async function Home() {
             text="Thành viên toàn quyền chia sẻ, thảo luận và đánh giá mod."
           />
         </div>
-
+<div className="iv2-hero-fade"/>
         <div className="mb-7 mt-14 flex items-end justify-between gap-5">
           <div>
             <p className="iv2-kicker">Bí thuật mới xuất thế</p>

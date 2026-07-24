@@ -57,71 +57,12 @@ body {
   min-height: 100vh;
 }
 
-.iv2-ambient,
-.iv2-stars,
-.iv2-mist {
+.iv2-ambient {
   pointer-events: none;
   position: fixed;
   inset: 0;
   z-index: -1;
   overflow: hidden;
-}
-
-.iv2-stars {
-  opacity: 0.34;
-  background-image:
-    radial-gradient(circle, rgba(255,255,255,.56) 0 1px, transparent 1.3px),
-    radial-gradient(circle, rgba(54,215,255,.48) 0 1px, transparent 1.4px),
-    radial-gradient(circle, rgba(143,112,255,.38) 0 1px, transparent 1.4px);
-  background-position: 0 0, 42px 65px, 92px 25px;
-  background-size: 120px 120px, 155px 155px, 210px 210px;
-  mask-image: linear-gradient(to bottom, black, transparent 84%);
-  animation: iv2-stars 42s linear infinite;
-}
-
-.iv2-mist::before,
-.iv2-mist::after{
-    content:"";
-    position:absolute;
-    inset:0;
-
-    background-repeat:repeat-x;
-    background-position:center;
-    background-size:2200px auto;
-
-    pointer-events:none;
-}
-
-.iv2-mist::before{
-
-    background-image:url("/images/effects/clouds.webp");
-
-    opacity:.18;
-
-    animation:iv2Clouds 180s linear infinite;
-
-}
-
-.iv2-mist::after{
-
-    background-image:url("/images/effects/mist.webp");
-
-    opacity:.28;
-
-    transform:scale(1.08);
-
-    filter:blur(2px);
-
-    animation:iv2Fog 130s linear infinite reverse;
-
-}
-
-@keyframes iv2-stars {
-  to { transform: translateY(-150px); }
-}
-
-@keyframes iv2-drift {
-  to { transform: translate3d(7rem, 2rem, 0) scale(1.14); }
 }
 
 .iv2-container {
@@ -283,13 +224,15 @@ body {
 
 /* Header */
 .iv2-header {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 50;
-  border-bottom: 1px solid rgba(54, 215, 255, 0.13);
-  background: linear-gradient(180deg, rgba(3, 9, 17, 0.94), rgba(6, 16, 29, 0.78));
-  box-shadow: 0 14px 45px rgba(0,0,0,.24);
-  backdrop-filter: blur(24px) saturate(140%);
+
+  transform: translateY(0);
+  transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
 }
 
 .iv2-header::after {
@@ -344,11 +287,27 @@ body {
 
 .iv2-nav-link:hover::after { transform: scaleX(1); }
 
-/* Hero */
-.iv2-hero {
-  position: relative;
-  overflow: hidden;
-  border-bottom: 1px solid rgba(54,215,255,.11);
+/* ==========================================================
+   Hero Overlay
+   ========================================================== */
+
+.iv2-hero{
+    position:relative;
+    overflow:hidden;
+    border-bottom: 1px solid rgba(54,215,255,.11);
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(3,7,18,.97) 0%,
+            rgba(3,7,18,.94) 55%,
+            rgba(3,7,18,.90) 75%,
+            rgba(3,7,18,.74) 88%,
+            rgba(3,7,18,.36) 96%,
+            rgba(3,7,18,0) 100%
+        );
+
+    isolation:isolate;
 }
 
 .iv2-hero::before{
@@ -411,28 +370,27 @@ transparent 100%
 );
 }
 
-.iv2-hero::after{
-
-    content:"";
-
-    position:absolute;
-
-    left:0;
-    right:0;
-    bottom:0;
-
-    height:22%;
-
-    background:linear-gradient(
-        to bottom,
-        transparent,
-        rgba(2,8,18,.18),
-        rgba(2,8,18,.45),
-        rgba(2,8,18,.78),
-        rgba(2,8,18,.95)
+.iv2-hero::after {
+  content: "";
+  position: absolute;
+  left: -4%;
+  right: -4%;
+  bottom: -1px;
+  height: 220px;
+  pointer-events: none;
+  z-index: 2;
+  background:
+    linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(2, 8, 18, 0.035) 20%,
+      rgba(2, 8, 18, 0.10) 42%,
+      rgba(2, 8, 18, 0.24) 64%,
+      rgba(2, 8, 18, 0.48) 82%,
+      rgba(2, 8, 18, 0.72) 100%
     );
-
-    pointer-events:none;
+  filter: blur(14px);
+  transform: translateY(10px);
 }
 
 .iv2-hero-orb {
@@ -488,9 +446,9 @@ transparent 100%
   margin-top: 5rem;
   border-top: 1px solid rgba(54,215,255,.13);
   background:
-    linear-gradient(180deg, rgba(6,16,29,.72), rgba(3,7,18,.98)),
-    radial-gradient(circle at 18% 0%, rgba(54,215,255,.09), transparent 28rem),
-    radial-gradient(circle at 80% 8%, rgba(143,112,255,.09), transparent 28rem);
+    linear-gradient(180deg, rgba(6,16,29,.38), rgba(3,7,18,.82)),
+    radial-gradient(circle at 18% 0%, rgba(54,215,255,.06), transparent 28rem),
+    radial-gradient(circle at 80% 8%, rgba(143,112,255,.06), transparent 28rem);
 }
 
 .iv2-footer::before {
@@ -510,9 +468,6 @@ transparent 100%
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .iv2-stars,
-  .iv2-mist::before,
-  .iv2-mist::after,
   .iv2-hero-orb,
   .iv2-hero-orb::before,
   .iv2-hero-orb::after {
@@ -520,276 +475,88 @@ transparent 100%
   }
 }
 
-
 /* ==========================================================
-   Hero Overlay
-   ========================================================== */
+   Scroll Chrome
+   Header hides near the end of the homepage Hero.
+   Back-to-top control appears after the user leaves the Hero.
+========================================================== */
 
-.iv2-hero{
-    position:relative;
-    overflow:hidden;
-
-    background:
-        linear-gradient(
-            180deg,
-            rgba(3,7,18,.97) 0%,
-            rgba(3,7,18,.94) 55%,
-            rgba(3,7,18,.90) 75%,
-            rgba(3,7,18,.74) 88%,
-            rgba(3,7,18,.36) 96%,
-            rgba(3,7,18,0) 100%
-        );
-
-    isolation:isolate;
+.iv2-scroll-chrome {
+  position: relative;
+  z-index: 50;
 }
 
-.iv2-footer {
-  background:
-    linear-gradient(180deg, rgba(6,16,29,.38), rgba(3,7,18,.82)),
-    radial-gradient(circle at 18% 0%, rgba(54,215,255,.06), transparent 28rem),
-    radial-gradient(circle at 80% 8%, rgba(143,112,255,.06), transparent 28rem);
-}
-@keyframes ivClouds{
-
-    from{
-
-        transform:translateX(0);
-
-    }
-
-    to{
-
-        transform:translateX(-900px);
-
-    }
-
-}
-.iv2-aura{
-
-    position:fixed;
-
-    inset:0;
-
-    pointer-events:none;
-
-    z-index:-1;
-
+.iv2-header.is-scroll-hidden {
+  transform: translateY(-100%);
 }
 
-.iv2-aura::before{
-
-    content:"";
-
-    position:absolute;
-
-    left:50%;
-
-    top:8%;
-
-    width:900px;
-
-    height:900px;
-
-    transform:translateX(-50%);
-
-    background:
-
-        radial-gradient(
-
-            circle,
-
-            rgba(110,220,255,.08),
-
-            transparent 70%
-
-        );
-
-    filter:blur(80px);
-
-}
-@keyframes iv2Clouds{
-
-    from{
-        background-position:0 0;
-    }
-
-    to{
-        background-position:-2200px 0;
-    }
-
+.iv2-header {
+  transition:
+    transform 360ms cubic-bezier(.22,.61,.36,1),
+    opacity 240ms ease;
 }
 
-@keyframes iv2Fog{
-
-    from{
-        background-position:0 0;
-    }
-
-    to{
-        background-position:2200px 0;
-    }
-
-}
-.iv2-shell::before{
-
-content:"";
-
-position:fixed;
-
-inset:0;
-
-pointer-events:none;
-
-z-index:-2;
-
-background:
-
-radial-gradient(
-ellipse at 50% 18%,
-rgba(110,220,255,.06),
-transparent 45%
-),
-
-radial-gradient(
-ellipse at 80% 10%,
-rgba(180,170,255,.05),
-transparent 35%
-);
-
-mix-blend-mode:screen;
-
-}
-/* =====================================================
-   P7.5B.1 - Floating Spiritual Particles
-===================================================== */
-
-.iv2-particles{
-    position:fixed;
-    inset:0;
-    pointer-events:none;
-    overflow:hidden;
-    z-index:-2;
+.iv2-back-to-top {
+  position: fixed;
+  right: clamp(18px, 3vw, 42px);
+  bottom: clamp(18px, 3vw, 42px);
+  z-index: 60;
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  gap: .55rem;
+  border: 1px solid rgba(54, 215, 255, .24);
+  border-radius: 999px;
+  padding: .7rem 1rem;
+  background: rgba(6, 16, 29, .84);
+  color: var(--iv2-text-1);
+  box-shadow:
+    0 14px 38px rgba(0, 0, 0, .28),
+    0 0 24px rgba(54, 215, 255, .08);
+  backdrop-filter: blur(18px) saturate(140%);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(12px);
+  transition:
+    opacity 220ms ease,
+    transform 220ms ease,
+    border-color 180ms ease,
+    background-color 180ms ease;
 }
 
-.iv2-particle{
-
-    position:absolute;
-
-    width:2px;
-    height:2px;
-
-    border-radius:999px;
-
-    background:#dffcff;
-
-    opacity:.14;
-
-    box-shadow:
-        0 0 6px rgba(170,240,255,.9),
-        0 0 12px rgba(110,220,255,.35);
-
-    animation-name:iv2FloatParticle;
-    animation-timing-function:linear;
-    animation-iteration-count:infinite;
-
-    will-change:transform,opacity;
+.iv2-back-to-top.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
 }
 
-@keyframes iv2FloatParticle{
-
-    0%{
-
-        transform:
-            translate3d(0,20px,0);
-
-        opacity:0;
-
-    }
-
-    10%{
-
-        opacity:.16;
-
-    }
-
-    90%{
-
-        opacity:.16;
-
-    }
-
-    100%{
-
-        transform:
-            translate3d(0,-120vh,0);
-
-        opacity:0;
-
-    }
-
-}
-.p1{left:3%;top:108%;animation-duration:52s;animation-delay:-3s;}
-.p2{left:8%;top:110%;animation-duration:61s;animation-delay:-22s;}
-.p3{left:14%;top:109%;animation-duration:47s;animation-delay:-14s;}
-.p4{left:21%;top:111%;animation-duration:58s;animation-delay:-41s;}
-.p5{left:28%;top:107%;animation-duration:63s;animation-delay:-7s;}
-
-.p6{left:36%;top:110%;animation-duration:49s;animation-delay:-31s;}
-.p7{left:42%;top:108%;animation-duration:66s;animation-delay:-52s;}
-.p8{left:49%;top:111%;animation-duration:55s;animation-delay:-11s;}
-.p9{left:56%;top:109%;animation-duration:62s;animation-delay:-46s;}
-.p10{left:63%;top:110%;animation-duration:51s;animation-delay:-17s;}
-
-.p11{left:69%;top:108%;animation-duration:59s;animation-delay:-34s;}
-.p12{left:74%;top:109%;animation-duration:68s;animation-delay:-56s;}
-.p13{left:79%;top:111%;animation-duration:46s;animation-delay:-26s;}
-.p14{left:84%;top:107%;animation-duration:57s;animation-delay:-39s;}
-.p15{left:88%;top:110%;animation-duration:65s;animation-delay:-18s;}
-
-.p16{left:92%;top:109%;animation-duration:53s;animation-delay:-9s;}
-.p17{left:96%;top:111%;animation-duration:71s;animation-delay:-48s;}
-.p18{left:39%;top:113%;animation-duration:60s;animation-delay:-27s;}
-.p19{left:58%;top:112%;animation-duration:69s;animation-delay:-44s;}
-.p20{left:17%;top:114%;animation-duration:56s;animation-delay:-13s;}
-
-.p2,
-.p7,
-.p12,
-.p17{
-
-    width:3px;
-    height:3px;
-
-    opacity:.22;
-
+.iv2-back-to-top:hover {
+  border-color: rgba(54, 215, 255, .48);
+  background: rgba(8, 22, 39, .94);
 }
 
-.p5,
-.p10,
-.p15{
-
-    width:1px;
-    height:1px;
-
-    opacity:.08;
-
-}
-.p3,
-.p8,
-.p13,
-.p18{
-
-    background:#fff7d1;
-
-    box-shadow:
-        0 0 8px rgba(255,239,180,.8);
-
+.iv2-back-to-top:focus-visible {
+  outline: 2px solid var(--iv2-cyan);
+  outline-offset: 3px;
 }
 
-.p6,
-.p11,
-.p16{
+@media (max-width: 640px) {
+  .iv2-back-to-top {
+    right: 16px;
+    bottom: 16px;
+    min-width: 44px;
+    justify-content: center;
+    padding: .7rem;
+  }
 
-    background:#bff6ff;
+  .iv2-back-to-top-label {
+    display: none;
+  }
+}
 
+@media (prefers-reduced-motion: reduce) {
+  .iv2-scroll-chrome .iv2-header,
+  .iv2-back-to-top {
+    transition: none;
+  }
 }
