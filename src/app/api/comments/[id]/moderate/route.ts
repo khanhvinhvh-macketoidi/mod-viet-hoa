@@ -9,11 +9,13 @@ import {
 
 
 import { createSafeRedirectUrl } from '@/lib/production/url';
+import { grantCultivation } from '@/lib/cultivation-service';
 type ModerationAction =
   | 'hide'
   | 'show'
   | 'lock'
-  | 'unlock';
+  | 'unlock'
+  | 'helpful';
 
 export async function POST(
   request: Request,
@@ -45,8 +47,29 @@ export async function POST(
     formData.get('action') ?? '',
   ) as ModerationAction;
 
+  if (action === 'helpful') {
+    const mod = await getModById(comment.modId);
+    if (!mod || (user.role !== 'ADMIN' && mod.authorId !== user.id)) {
+      return new Response('Forbidden', { status: 403 });
+    }
+
+    await grantCultivation({
+      userId: comment.userId,
+      type: 'COMMENT_HELPFUL',
+      points: 30,
+      targetId: comment.id,
+      uniqueKey: `COMMENT_HELPFUL:${comment.id}`,
+      metadata: { markedByUserId: user.id },
+    });
+
+    return NextResponse.redirect(
+      createSafeRedirectUrl(`/mods/${mod.slug}#comment-${comment.id}`, request),
+      303,
+    );
+  }
+
   if (
-    !['hide', 'show', 'lock', 'unlock'].includes(
+    !['hide', 'show', 'lock', 'unlock', 'helpful'].includes(
       action,
     )
   ) {

@@ -8,6 +8,7 @@ import {
 } from '@/lib/store';
 import { createReviewNotification } from '@/lib/notifications';
 import type { ReviewItem } from '@/lib/types';
+import { rewardReviewCreated, rewardReviewContentTransition } from '@/lib/cultivation-service';
 
 
 import { createSafeRedirectUrl } from '@/lib/production/url';
@@ -85,9 +86,11 @@ export async function POST(request: Request) {
 
     const now = new Date().toISOString();
     let newReview: ReviewItem | null = null;
+    let previousReview: ReviewItem | null = null;
 
     if (existingIndex >= 0) {
       const existingReview = reviews[existingIndex];
+      previousReview = existingReview;
       const elapsed =
         Date.now() -
         new Date(existingReview.updatedAt).getTime();
@@ -131,6 +134,21 @@ export async function POST(request: Request) {
     }
 
     await saveReviews(reviews);
+
+    if (newReview) {
+      await rewardReviewCreated({
+        userId: user.id,
+        reviewId: newReview.id,
+        hasContent: Boolean(newReview.content.trim()),
+      });
+    } else if (previousReview) {
+      await rewardReviewContentTransition({
+        userId: user.id,
+        reviewId: previousReview.id,
+        hadContent: Boolean(previousReview.content.trim()),
+        hasContent: Boolean(content.trim()),
+      });
+    }
 
     /*
      * Chỉ luận đạo mới tạo notification.

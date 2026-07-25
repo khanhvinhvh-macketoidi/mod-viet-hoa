@@ -63,7 +63,7 @@
 .public-page {
   position: relative;
   z-index: 10;
-  padding: 5rem 0 6rem;
+  padding: clamp(7rem, 8vw, 8.5rem) 0 6rem;
 }
 
 .public-page__container {
@@ -175,7 +175,7 @@
   }
 
   .public-page {
-    padding-top: 3rem;
+    padding-top: 5.5rem;
   }
 
   .public-page__article {

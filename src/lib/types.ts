@@ -27,9 +27,14 @@ export type CultivationBreakthroughStatus =
 export interface CultivationProgress {
   realmId: CultivationRealmId;
   realmXp: number;
+  totalXp?: number;
   breakthroughStatus: CultivationBreakthroughStatus;
   completedQuestIds: string[];
   updatedAt: string;
+  login?: {
+    lastRewardDate: string;
+    streak: number;
+  };
 }
 
 /**

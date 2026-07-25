@@ -10,6 +10,7 @@ import {
 
 
 import { createSafeRedirectUrl } from '@/lib/production/url';
+import { revokeCultivation } from '@/lib/cultivation-service';
 export async function POST(
   request: Request,
   {
@@ -58,6 +59,24 @@ export async function POST(
   );
 
   await saveReviews(remainingReviews);
+
+  await revokeCultivation({
+    userId: review.userId,
+    uniqueKey: `REVIEW_REWARD:${review.id}`,
+    type: 'REVIEW_DELETED',
+    points: 50,
+    targetId: review.id,
+  });
+
+  if (review.content.trim()) {
+    await revokeCultivation({
+      userId: review.userId,
+      uniqueKey: `REVIEW_CONTENT:${review.id}`,
+      type: 'REVIEW_CONTENT_REMOVED',
+      points: 50,
+      targetId: review.id,
+    });
+  }
 
   const destination = mod
     ? `/mods/${mod.slug}?reviewDeleted=1#reviews`

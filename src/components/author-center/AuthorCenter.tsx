@@ -29,11 +29,14 @@ import {
   formatCompactNumber,
   formatJoinDate,
   getAvatarFrameTier,
-  getCultivationRealm,
   sanitizePublicUrl,
   type AuthorCenterStats,
   type AuthorCenterUser,
 } from '@/lib/author-center/author-center';
+import {
+  getCultivationSettings,
+  getCultivationView,
+} from '@/lib/cultivation';
 
 type AuthorCenterProps = {
   user: AuthorCenterUser;
@@ -46,7 +49,7 @@ type AuthorCenterProps = {
   profileSlug?: string;
 };
 
-export default function AuthorCenter({
+export default async function AuthorCenter({
   user,
   stats,
   avatar,
@@ -58,19 +61,21 @@ export default function AuthorCenter({
 }: AuthorCenterProps) {
   const profile = user.profile;
   const displayName = profile?.displayName?.trim() || user.name;
-  const realm = getCultivationRealm(stats);
+
+  const cultivationSettings = await getCultivationSettings();
+  const cultivation = getCultivationView(
+    user as Parameters<typeof getCultivationView>[0],
+    stats,
+    cultivationSettings,
+  );
+  const realm = cultivation.realm;
+
   const frameTier = getAvatarFrameTier(user) as AvatarRankTier;
   const avatarRank = getAvatarRankConfig(frameTier);
-  const lateClass = realm.isLateStage ? 'is-late-stage' : '';
+  const lateClass = cultivation.isLateStage ? 'is-late-stage' : '';
   const phaseOrder = ['SO_KY', 'TRUNG_KY', 'HAU_KY'] as const;
-  const currentPhaseIndex = phaseOrder.indexOf(realm.phase);
-  const overallCultivationProgress = Math.min(
-    100,
-    Math.max(
-      0,
-      Math.round((realm.currentXp / Math.max(1, realm.stageEndXp)) * 100),
-    ),
-  );
+  const currentPhaseIndex = phaseOrder.indexOf(cultivation.phase);
+  const overallCultivationProgress = cultivation.overallProgress;
   const phaseSteps = [
     { id: 'SO_KY', label: 'Sơ kỳ' },
     { id: 'TRUNG_KY', label: 'Trung kỳ' },
@@ -114,7 +119,7 @@ export default function AuthorCenter({
                 tier={frameTier}
                 avatar={avatar}
                 alt={`Ảnh đại diện của ${displayName}`}
-                isLateStage={realm.isLateStage}
+                isLateStage={cultivation.isLateStage}
               />
             </aside>
 
@@ -125,7 +130,7 @@ export default function AuthorCenter({
                     <Sparkles size={13} />
                     <span>{realm.name}</span>
                     <i>·</i>
-                    <span>{realm.phaseName}</span>
+                    <span>{cultivation.phaseName}</span>
                   </p>
 
                   <h1 className={`realm-nickname ${lateClass}`}>{displayName}</h1>
@@ -172,14 +177,14 @@ export default function AuthorCenter({
                   <div>
                     <span className="cultivation-progress__eyebrow">Tu vi</span>
                     <strong className="cultivation-progress__realm">
-                      {realm.name} · {realm.phaseName}
+                      {realm.name} · {cultivation.phaseName}
                     </strong>
                   </div>
 
                   <div className="cultivation-progress__value">
                     <strong>
-                      {formatCompactNumber(realm.currentXp)} /{' '}
-                      {formatCompactNumber(realm.stageEndXp)}
+                      {formatCompactNumber(cultivation.realmXp)} /{' '}
+                      {formatCompactNumber(cultivation.requiredXp)}
                     </strong>
                     <span>{overallCultivationProgress}%</span>
                   </div>
@@ -188,7 +193,7 @@ export default function AuthorCenter({
                 <div
                   className="cultivation-meridian"
                   role="progressbar"
-                  aria-label={`Tiến độ Tu vi ${realm.name}, ${realm.phaseName}`}
+                  aria-label={`Tiến độ Tu vi ${realm.name}, ${cultivation.phaseName}`}
                   aria-valuemin={0}
                   aria-valuemax={100}
                   aria-valuenow={overallCultivationProgress}
@@ -206,15 +211,11 @@ export default function AuthorCenter({
                     {phaseSteps.map((step, index) => {
                       const isReached = index <= currentPhaseIndex;
                       const isCurrent = index === currentPhaseIndex;
-                      const phaseProgress = Math.max(
-                        0,
-                        Math.min(
-                          100,
-                          Math.round(
-                            (overallCultivationProgress - index * (100 / 3)) * 3,
-                          ),
-                        ),
-                      );
+                      const phaseProgress = isCurrent
+                        ? cultivation.phaseProgress
+                        : index < currentPhaseIndex
+                          ? 100
+                          : 0;
 
                       return (
                         <div
@@ -248,12 +249,12 @@ export default function AuthorCenter({
 
                 <div className="cultivation-progress__footer cultivation-progress__footer--right">
                   <span className="cultivation-progress__phase-context">
-                    Đang ở giai đoạn {realm.phaseName}
+                    Đang ở giai đoạn {cultivation.phaseName}
                   </span>
                   <strong>
-                    {realm.currentXp >= realm.stageEndXp
+                    {cultivation.realmXp >= cultivation.requiredXp
                       ? 'Viên mãn · Chờ đột phá'
-                      : `Còn ${formatCompactNumber(Math.max(0, realm.stageEndXp - realm.currentXp))} Tu vi`}
+                      : `Còn ${formatCompactNumber(Math.max(0, cultivation.requiredXp - cultivation.realmXp))} Tu vi`}
                   </strong>
                 </div>
               </div>
@@ -294,7 +295,7 @@ export default function AuthorCenter({
                 <div className="identity-summary__content">
                   <small>Thân phận hiện tại</small>
                   <strong>{avatarRank.displayName}</strong>
-                  <span>{realm.name} · {realm.phaseName}</span>
+                  <span>{realm.name} · {cultivation.phaseName}</span>
                 </div>
               </div>
             </section>
@@ -359,7 +360,7 @@ export default function AuthorCenter({
                     </div>
                     <div>
                       <span>Cảnh giới</span>
-                      <strong>{realm.name} · {realm.phaseName}</strong>
+                      <strong>{realm.name} · {cultivation.phaseName}</strong>
                     </div>
                     <div className="author-about-panel__bio">
                       <span>Tiểu sử</span>

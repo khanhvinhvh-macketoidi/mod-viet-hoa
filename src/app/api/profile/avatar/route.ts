@@ -4,6 +4,7 @@ import { randomUUID } from 'node:crypto';
 import { NextResponse } from 'next/server';
 import { getCurrentUser } from '@/lib/auth';
 import { getUsers, saveUsers } from '@/lib/users';
+import { rewardAvatarTransition } from '@/lib/cultivation-service';
 
 const MIME_EXTENSIONS: Record<string, string> = {
   'image/jpeg': '.jpg',
@@ -140,6 +141,11 @@ async function saveImageUpload(
     };
 
     await saveUsers(users);
+    await rewardAvatarTransition({
+      userId: currentUser.id,
+      previousAvatar: oldAvatar,
+      nextAvatar: newAvatar,
+    });
     await removeOldUpload(oldAvatar, 'avatars');
 
     return NextResponse.json({
@@ -164,5 +170,49 @@ async function saveImageUpload(
       },
       { status: 500 },
     );
+  }
+}
+
+
+export async function DELETE() {
+  const currentUser = await getCurrentUser();
+  if (!currentUser) {
+    return NextResponse.json({ ok: false, message: 'Đạo hữu cần đăng nhập.' }, { status: 401 });
+  }
+
+  try {
+    const users = await getUsers();
+    const userIndex = users.findIndex((user) => user.id === currentUser.id);
+    if (userIndex < 0) {
+      return NextResponse.json({ ok: false, message: 'Không tìm thấy tài khoản.' }, { status: 404 });
+    }
+
+    const oldAvatar = users[userIndex].profile?.avatar;
+    if (!oldAvatar || oldAvatar === '/images/default-avatar.png') {
+      return NextResponse.json({ ok: true, avatar: '/images/default-avatar.png' });
+    }
+
+    users[userIndex] = {
+      ...users[userIndex],
+      profile: {
+        displayName: users[userIndex].profile?.displayName || users[userIndex].name,
+        ...users[userIndex].profile,
+        avatar: '/images/default-avatar.png',
+      },
+      updatedAt: new Date().toISOString(),
+    };
+
+    await saveUsers(users);
+    await rewardAvatarTransition({
+      userId: currentUser.id,
+      previousAvatar: oldAvatar,
+      nextAvatar: '/images/default-avatar.png',
+    });
+    await removeOldUpload(oldAvatar, 'avatars');
+
+    return NextResponse.json({ ok: true, avatar: '/images/default-avatar.png' });
+  } catch (error) {
+    console.error('Không thể xóa avatar:', error);
+    return NextResponse.json({ ok: false, message: 'Không thể xóa ảnh đại diện.' }, { status: 500 });
   }
 }

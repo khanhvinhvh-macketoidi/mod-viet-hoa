@@ -49,6 +49,7 @@ import { getDependenciesByModId } from '@/lib/mod-dependencies';
 import VersionHistory from '@/components/versions/VersionHistory';
 import ModDependencies from '@/components/dependencies/ModDependencies';
 import { absoluteUrl, compactDescription, safeJsonLd } from '@/lib/seo';
+import { rewardFirstModView } from '@/lib/cultivation-service';
 
 type ModDetailProps = {
   params: Promise<{
@@ -151,21 +152,26 @@ export default async function ModDetail({
     notFound();
   }
 
+  const viewer = await getCurrentUser();
+  if (viewer) {
+    await rewardFirstModView(viewer.id, mod.id);
+  }
+
   const [
   allMods,
-  user,
   comments,
   reviews,
   users,
   query,
 ] = await Promise.all([
   getMods(),
-  getCurrentUser(),
   getCommentsByModId(mod.id),
   getReviewsByModId(mod.id),
   getUsers(),
   searchParams,
 ]);
+
+const user = viewer;
 
 await ensureCurrentVersion(
   mod,

@@ -10,6 +10,7 @@ import {
 
 
 import { createSafeRedirectUrl } from '@/lib/production/url';
+import { revokeCultivation } from '@/lib/cultivation-service';
 export async function POST(
   request: Request,
   {
@@ -76,6 +77,14 @@ export async function POST(
   }
 
   await saveComments(nextComments);
+
+  await revokeCultivation({
+    userId: comment.userId,
+    uniqueKey: `COMMENT_CREATED:${comment.id}`,
+    type: 'COMMENT_CREATED',
+    points: comment.parentId ? 10 : 50,
+    targetId: comment.id,
+  });
 
   const destination = mod
     ? `/mods/${mod.slug}?commentDeleted=1#comments`

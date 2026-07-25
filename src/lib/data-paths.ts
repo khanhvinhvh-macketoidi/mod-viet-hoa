@@ -22,3 +22,5 @@ export const collectionItemsPath = path.join(
   dataDir,
   'collection-items.json',
 );
+export const cultivationLogsPath = path.join(dataDir, 'cultivation-logs.json');
+export const cultivationModViewsPath = path.join(dataDir, 'cultivation-mod-views.json');

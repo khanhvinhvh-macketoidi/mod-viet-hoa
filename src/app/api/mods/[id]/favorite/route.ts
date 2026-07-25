@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getCurrentUser } from '@/lib/auth';
 import { getModById } from '@/lib/mods';
 import { toggleModFavorite } from '@/lib/favorites';
+import { grantCultivation, revokeCultivation } from '@/lib/cultivation-service';
 
 export async function POST(
   _request: Request,
@@ -34,6 +35,29 @@ export async function POST(
     id,
     user.id,
   );
+
+  if (mod.authorId && mod.authorId !== user.id) {
+    const key = `MOD_LIKE:${id}:${user.id}`;
+    if (result.favorited) {
+      await grantCultivation({
+        userId: mod.authorId,
+        type: 'MOD_LIKED',
+        points: 20,
+        targetId: id,
+        uniqueKey: key,
+        metadata: { likerUserId: user.id },
+      });
+    } else {
+      await revokeCultivation({
+        userId: mod.authorId,
+        uniqueKey: key,
+        type: 'MOD_UNLIKED',
+        points: 20,
+        targetId: id,
+        metadata: { likerUserId: user.id },
+      });
+    }
+  }
 
   return NextResponse.json({
     ok: true,

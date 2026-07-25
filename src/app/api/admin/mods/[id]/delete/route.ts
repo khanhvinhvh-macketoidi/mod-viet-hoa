@@ -4,6 +4,7 @@ import { NextResponse } from 'next/server';
 
 import { getCurrentUser } from '@/lib/auth';
 import { canManageMod } from '@/lib/permissions';
+import { resolveManagedMediaUrl } from '@/lib/media-storage';
 import {
   getModById,
   getMods,
@@ -69,15 +70,20 @@ export async function POST(
 
     await removeFileIfExists(modFilePath);
 
-    if (mod.coverUrl?.startsWith('/uploads/covers/')) {
-      const coverFilePath = path.join(
-        process.cwd(),
-        'public',
-        mod.coverUrl.replace(/^\//, ''),
-      );
+    const managedMediaUrls = [
+      mod.coverUrl,
+      ...(Array.isArray(mod.galleryUrls) ? mod.galleryUrls : []),
+    ];
 
-      await removeFileIfExists(coverFilePath);
-    }
+    await Promise.all(
+      managedMediaUrls.map(async (url) => {
+        const filePath = resolveManagedMediaUrl(url);
+
+        if (filePath) {
+          await removeFileIfExists(filePath);
+        }
+      }),
+    );
 
     return NextResponse.redirect(
       new URL(user.role === 'ADMIN' ? '/admin/mods?deleted=1' : '/creator/mods?deleted=1', request.url),

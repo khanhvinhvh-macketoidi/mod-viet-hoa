@@ -11,6 +11,7 @@ import {
 import { isCommentEffectivelyLocked } from '@/lib/comment-tree';
 import { createCommentNotifications } from '@/lib/notifications';
 import type { CommentItem } from '@/lib/types';
+import { rewardCommentCreated } from '@/lib/cultivation-service';
 
 
 import { createSafeRedirectUrl } from '@/lib/production/url';
@@ -180,6 +181,11 @@ export async function POST(request: Request) {
 
     comments.push(newComment);
     await saveComments(comments);
+    await rewardCommentCreated({
+      userId: user.id,
+      commentId: newComment.id,
+      isReply: Boolean(parentId),
+    });
 
     try {
       await createCommentNotifications({

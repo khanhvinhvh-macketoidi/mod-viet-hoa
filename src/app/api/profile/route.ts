@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getCurrentUser } from '@/lib/auth';
 import { getUsers, saveUsers } from '@/lib/users';
+import { rewardBioTransition } from '@/lib/cultivation-service';
 
 type Body = Record<string, unknown>;
 const clean = (value: unknown) => typeof value === 'string' ? value.trim() : '';
@@ -24,6 +25,11 @@ export async function PATCH(request: Request) {
     const existing=users[index].profile;
     users[index]={...users[index],profile:{displayName,avatar:existing?.avatar,coverImage:existing?.coverImage,coverPosition:existing?.coverPosition??{x:50,y:50},bio,location,website,socialLinks:{facebook,youtube,discord,github,steam}},updatedAt:new Date().toISOString()};
     await saveUsers(users);
+    await rewardBioTransition({
+      userId: currentUser.id,
+      previousBio: existing?.bio,
+      nextBio: bio,
+    });
     return NextResponse.json({ok:true,message:'Đạo tịch đã được cập nhật thành công.',profile:users[index].profile});
   } catch(error) {
     console.error('Không thể cập nhật hồ sơ:',error);

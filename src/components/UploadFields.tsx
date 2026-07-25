@@ -15,7 +15,7 @@ import {
   UploadCloud,
 } from 'lucide-react';
 
-const MAX_COVER_SIZE = 10 * 1024 * 1024;
+const MAX_COVER_SIZE = 2 * 1024 * 1024;
 const MAX_MOD_SIZE = 200 * 1024 * 1024;
 
 const ALLOWED_COVER_TYPES = [
@@ -87,7 +87,7 @@ const dragStartRef = useRef<{
     }
 
     if (file.size > MAX_COVER_SIZE) {
-      return 'Ảnh bìa không được vượt quá 10 MB.';
+      return 'Ảnh bìa không được vượt quá 2 MB.';
     }
 
     return '';
@@ -265,7 +265,7 @@ function handlePreviewPointerUp(
           </label>
 
           <p className="mt-1 text-xs text-slate-500">
-            JPG, PNG hoặc WEBP · Tối đa 10 MB · Khuyến nghị 16:9
+            JPG, PNG hoặc WEBP · Tối đa 2 MB · Khuyến nghị 16:9
           </p>
         </div>
 

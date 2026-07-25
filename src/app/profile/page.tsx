@@ -33,7 +33,7 @@ export default async function ProfilePage() {
           </div>
         ) : (
           <div className="author-empty">
-            Chưa có mod nào được liên kết với tài khoản này.
+            Chưa có bí thuật nào được chia sẻ từ đạo hữu này.
           </div>
         )
       }

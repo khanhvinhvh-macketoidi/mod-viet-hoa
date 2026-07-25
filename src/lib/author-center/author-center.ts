@@ -1,12 +1,12 @@
 import 'server-only';
 
+import type { CultivationProgress } from '@/lib/types';
+
 export type AvatarFrameTier =
   | 'MEMBER'
   | 'NHAN_KIET'
   | 'THIEN_KIEU'
   | 'THAN_THOAI';
-
-export type CultivationPhase = 'SO_KY' | 'TRUNG_KY' | 'HAU_KY';
 
 export type RealmId =
   | 'LUYEN_KHI'
@@ -20,6 +20,28 @@ export type RealmId =
   | 'VU_HOA'
   | 'DANG_TIEN';
 
+export type CultivationPhase =
+  | 'SO_KY'
+  | 'TRUNG_KY'
+  | 'HAU_KY';
+
+export type CultivationRealm = {
+  id: RealmId;
+  name: string;
+  phase: CultivationPhase;
+  phaseName: string;
+  stageIndex: number;
+  totalStages: number;
+  currentXp: number;
+  stageStartXp: number;
+  stageEndXp: number;
+  progress: number;
+  className: string;
+  isLateStage: boolean;
+};
+
+export type AuthorCenterCultivation = CultivationProgress;
+
 export type AuthorCenterUser = {
   id: string;
   name: string;
@@ -28,6 +50,7 @@ export type AuthorCenterUser = {
   createdAt: string;
   profileSlug?: string;
   avatarFrameTier?: AvatarFrameTier;
+  cultivation?: AuthorCenterCultivation;
   profile?: {
     displayName?: string;
     avatar?: string;
@@ -54,38 +77,79 @@ export type AuthorCenterStats = {
   averageRating: number;
 };
 
-export type CultivationRealm = {
+const LEGACY_REALMS: Array<{
   id: RealmId;
   name: string;
-  phase: CultivationPhase;
-  phaseName: string;
-  stageIndex: number;
-  totalStages: number;
-  currentXp: number;
-  stageStartXp: number;
-  stageEndXp: number;
-  progress: number;
   className: string;
-  isLateStage: boolean;
-};
-
-const REALMS: Array<{ id: RealmId; name: string; className: string }> = [
-  { id: 'LUYEN_KHI', name: 'Luyện Khí', className: 'realm-luyen-khi' },
-  { id: 'TRUC_CO', name: 'Trúc Cơ', className: 'realm-truc-co' },
-  { id: 'KET_TINH', name: 'Kết Tinh', className: 'realm-ket-tinh' },
-  { id: 'KIM_DAN', name: 'Kim Đan', className: 'realm-kim-dan' },
-  { id: 'CU_LINH', name: 'Cụ Linh', className: 'realm-cu-linh' },
-  { id: 'NGUYEN_ANH', name: 'Nguyên Anh', className: 'realm-nguyen-anh' },
-  { id: 'HOA_THAN', name: 'Hóa Thần', className: 'realm-hoa-than' },
-  { id: 'NGO_DAO', name: 'Ngộ Đạo', className: 'realm-ngo-dao' },
-  { id: 'VU_HOA', name: 'Vũ Hóa', className: 'realm-vu-hoa' },
-  { id: 'DANG_TIEN', name: 'Đăng Tiên', className: 'realm-dang-tien' },
+}> = [
+  {
+    id: 'LUYEN_KHI',
+    name: 'Luyện Khí',
+    className: 'realm-luyen-khi',
+  },
+  {
+    id: 'TRUC_CO',
+    name: 'Trúc Cơ',
+    className: 'realm-truc-co',
+  },
+  {
+    id: 'KET_TINH',
+    name: 'Kết Tinh',
+    className: 'realm-ket-tinh',
+  },
+  {
+    id: 'KIM_DAN',
+    name: 'Kim Đan',
+    className: 'realm-kim-dan',
+  },
+  {
+    id: 'CU_LINH',
+    name: 'Cụ Linh',
+    className: 'realm-cu-linh',
+  },
+  {
+    id: 'NGUYEN_ANH',
+    name: 'Nguyên Anh',
+    className: 'realm-nguyen-anh',
+  },
+  {
+    id: 'HOA_THAN',
+    name: 'Hóa Thần',
+    className: 'realm-hoa-than',
+  },
+  {
+    id: 'NGO_DAO',
+    name: 'Ngộ Đạo',
+    className: 'realm-ngo-dao',
+  },
+  {
+    id: 'VU_HOA',
+    name: 'Vũ Hóa',
+    className: 'realm-vu-hoa',
+  },
+  {
+    id: 'DANG_TIEN',
+    name: 'Đăng Tiên',
+    className: 'realm-dang-tien',
+  },
 ];
 
-const PHASES: Array<{ id: CultivationPhase; name: string }> = [
-  { id: 'SO_KY', name: 'Sơ kỳ' },
-  { id: 'TRUNG_KY', name: 'Trung kỳ' },
-  { id: 'HAU_KY', name: 'Hậu kỳ' },
+const LEGACY_PHASES: Array<{
+  id: CultivationPhase;
+  name: string;
+}> = [
+  {
+    id: 'SO_KY',
+    name: 'Sơ kỳ',
+  },
+  {
+    id: 'TRUNG_KY',
+    name: 'Trung kỳ',
+  },
+  {
+    id: 'HAU_KY',
+    name: 'Hậu kỳ',
+  },
 ];
 
 export const AVATAR_FRAME_OPTIONS: Array<{
@@ -93,16 +157,40 @@ export const AVATAR_FRAME_OPTIONS: Array<{
   name: string;
   description: string;
 }> = [
-  { id: 'MEMBER', name: 'Thành viên', description: 'Khung avatar tiêu chuẩn.' },
-  { id: 'NHAN_KIET', name: 'Nhân Kiệt', description: 'Khung bạc dành cho thành viên sôi nổi hoặc người ủng hộ.' },
-  { id: 'THIEN_KIEU', name: 'Thiên Kiêu', description: 'Khung vàng dành cho thành viên cao cấp.' },
-  { id: 'THAN_THOAI', name: 'Thần Thoại', description: 'Khung danh dự tối cao, chỉ Admin cấp.' },
+  { id: 'MEMBER', name: 'Phàm Nhân', description: 'Khung avatar tiêu chuẩn.' },
+  {
+    id: 'NHAN_KIET',
+    name: 'Nhân Kiệt',
+    description: 'Khung bạc dành cho thành viên sôi nổi hoặc người ủng hộ.',
+  },
+  {
+    id: 'THIEN_KIEU',
+    name: 'Thiên Kiêu',
+    description: 'Khung vàng dành cho thành viên cao cấp.',
+  },
+  {
+    id: 'THAN_THOAI',
+    name: 'Thần Thoại',
+    description: 'Khung danh dự tối cao, chỉ Admin cấp.',
+  },
 ];
 
-export function calculateCultivationXp(stats: AuthorCenterStats): number {
+/**
+ * Chỉ giữ để tương thích với các trang admin cũ.
+ *
+ * Profile chính không còn sử dụng hàm này.
+ * Hệ thống cultivation mới sử dụng user.cultivation.totalXp.
+ */
+export function calculateCultivationXp(
+  stats: AuthorCenterStats,
+): number {
   const ratingBonus =
     stats.totalReviews > 0
-      ? Math.round(stats.averageRating * stats.totalReviews * 18)
+      ? Math.round(
+          stats.averageRating *
+            stats.totalReviews *
+            18,
+        )
       : 0;
 
   return Math.max(
@@ -115,22 +203,34 @@ export function calculateCultivationXp(stats: AuthorCenterStats): number {
   );
 }
 
-function stageThreshold(stageIndex: number): number {
-  // 30 bậc. Đường cong tăng dần, nhưng không tạo khoảng cách quá lớn
-  // ở các cảnh giới đầu để người dùng mới vẫn cảm nhận được tiến bộ.
-  return Math.round(250 * stageIndex * stageIndex + 600 * stageIndex);
+/**
+ * Mốc XP của hệ thống cũ, chỉ giữ để các trang quản trị hiện tại
+ * tiếp tục hoạt động trong lúc chuyển dần sang cultivation mới.
+ */
+function legacyStageThreshold(stageIndex: number): number {
+  return Math.round(
+    250 * stageIndex * stageIndex +
+      600 * stageIndex,
+  );
 }
 
+/**
+ * Hàm tương thích cho code cũ đang import getCultivationRealm().
+ *
+ * Trang profile mới không dùng hàm này; profile dùng
+ * getCultivationSettings() và getCultivationView() từ '@/lib/cultivation'.
+ */
 export function getCultivationRealm(
   stats: AuthorCenterStats,
 ): CultivationRealm {
   const currentXp = calculateCultivationXp(stats);
-  const totalStages = REALMS.length * PHASES.length;
+  const totalStages =
+    LEGACY_REALMS.length * LEGACY_PHASES.length;
 
   let stageIndex = totalStages - 1;
 
   for (let index = 0; index < totalStages; index += 1) {
-    if (currentXp < stageThreshold(index + 1)) {
+    if (currentXp < legacyStageThreshold(index + 1)) {
       stageIndex = index;
       break;
     }
@@ -138,25 +238,40 @@ export function getCultivationRealm(
 
   const realmIndex = Math.floor(stageIndex / 3);
   const phaseIndex = stageIndex % 3;
-  const realm = REALMS[Math.min(realmIndex, REALMS.length - 1)];
-  const phase = PHASES[phaseIndex];
-  const stageStartXp = stageThreshold(stageIndex);
+
+  const realm =
+    LEGACY_REALMS[
+      Math.min(realmIndex, LEGACY_REALMS.length - 1)
+    ];
+  const phase = LEGACY_PHASES[phaseIndex];
+
+  if (!realm || !phase) {
+    throw new Error(
+      'Legacy cultivation configuration is invalid.',
+    );
+  }
+
+  const stageStartXp =
+    legacyStageThreshold(stageIndex);
+
   const stageEndXp =
     stageIndex >= totalStages - 1
-      ? stageThreshold(totalStages)
-      : stageThreshold(stageIndex + 1);
+      ? legacyStageThreshold(totalStages)
+      : legacyStageThreshold(stageIndex + 1);
 
   const progress =
-    stageIndex >= totalStages - 1 && currentXp >= stageEndXp
+    stageIndex >= totalStages - 1 &&
+    currentXp >= stageEndXp
       ? 100
       : Math.max(
           0,
           Math.min(
             100,
             Math.round(
-              ((currentXp - stageStartXp) /
-                Math.max(1, stageEndXp - stageStartXp)) *
-                100,
+              (
+                (currentXp - stageStartXp) /
+                Math.max(1, stageEndXp - stageStartXp)
+              ) * 100,
             ),
           ),
         );
@@ -186,7 +301,7 @@ export function getAvatarFrameTier(
 export function getAvatarFrameName(tier: AvatarFrameTier): string {
   return (
     AVATAR_FRAME_OPTIONS.find((item) => item.id === tier)?.name ??
-    'Thành viên'
+    'Phàm Nhân'
   );
 }
 
@@ -212,7 +327,9 @@ export function sanitizePublicUrl(value?: string): string | null {
 
   try {
     const url = new URL(value.trim());
-    return ['http:', 'https:'].includes(url.protocol) ? url.toString() : null;
+    return ['http:', 'https:'].includes(url.protocol)
+      ? url.toString()
+      : null;
   } catch {
     return null;
   }

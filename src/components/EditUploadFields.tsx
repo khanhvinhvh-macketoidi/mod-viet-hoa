@@ -18,15 +18,18 @@ import {
   UploadCloud,
 } from 'lucide-react';
 
+import GalleryUploadFields from '@/components/GalleryUploadFields';
+
 type EditUploadFieldsProps = {
   currentCoverUrl: string;
   currentCoverPositionX?: number;
   currentCoverPositionY?: number;
   currentFileName: string;
   currentFileSize: number;
+  currentGalleryUrls?: string[];
 };
 
-const MAX_COVER_SIZE = 10 * 1024 * 1024;
+const MAX_COVER_SIZE = 2 * 1024 * 1024;
 const MAX_MOD_SIZE = 200 * 1024 * 1024;
 
 const ALLOWED_COVER_TYPES = [
@@ -61,6 +64,7 @@ export default function EditUploadFields({
   currentCoverPositionY = 50,
   currentFileName,
   currentFileSize,
+  currentGalleryUrls = [],
 }: EditUploadFieldsProps) {
   const coverInputRef = useRef<HTMLInputElement>(null);
   const modInputRef = useRef<HTMLInputElement>(null);
@@ -127,7 +131,7 @@ export default function EditUploadFields({
     }
 
     if (file.size > MAX_COVER_SIZE) {
-      return 'Ảnh bìa không được vượt quá 10 MB.';
+      return 'Ảnh bìa không được vượt quá 2 MB.';
     }
 
     return '';
@@ -572,7 +576,7 @@ export default function EditUploadFields({
             </p>
 
             <p className="mt-2 text-sm text-slate-400">
-              JPG, PNG hoặc WEBP · Tối đa 10 MB
+              JPG, PNG hoặc WEBP · Tối đa 2 MB
             </p>
           </div>
         )}
@@ -588,6 +592,8 @@ export default function EditUploadFields({
           </p>
         )}
       </section>
+
+      <GalleryUploadFields initialUrls={currentGalleryUrls} />
 
       {/* File mod */}
       <section
