@@ -64,4 +64,6 @@ desktop.ini
 *.rar
 *.7z
 *.tar
-*.gz
+*.gzdata/cultivation-logs.json
+data/cultivation-mod-views.json
+storage/public-uploads/
