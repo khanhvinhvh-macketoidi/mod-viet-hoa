@@ -21,6 +21,11 @@ import {
 
 
 import { createSafeRedirectUrl } from '@/lib/production/url';
+import {
+  getManagedMediaDirectory,
+  getManagedMediaFilePath,
+  getManagedMediaUrl,
+} from '@/lib/media-storage';
 const UPLOAD_WINDOW_MS = 10 * 60 * 1000;
 const UPLOAD_ATTEMPT_LIMIT = 10;
 
@@ -138,18 +143,8 @@ export async function POST(request: Request) {
       formData.get('coverPositionY'),
     );
 
-    const coverDirectory = path.join(
-      process.cwd(),
-      'public',
-      'uploads',
-      'covers',
-    );
-    const galleryDirectory = path.join(
-      process.cwd(),
-      'public',
-      'uploads',
-      'gallery',
-    );
+    const coverDirectory = getManagedMediaDirectory('covers');
+    const galleryDirectory = getManagedMediaDirectory('gallery');
     const uploadDirectory = path.join(
       process.cwd(),
       'storage',
@@ -164,8 +159,8 @@ export async function POST(request: Request) {
 
     const storedCoverName =
       `${crypto.randomUUID()}-${safeFileName(cover.name)}`;
-    const storedCoverPath = path.join(
-      coverDirectory,
+    const storedCoverPath = getManagedMediaFilePath(
+      'covers',
       storedCoverName,
     );
 
@@ -181,8 +176,8 @@ export async function POST(request: Request) {
     for (const galleryFile of galleryFiles) {
       const storedGalleryName =
         `${crypto.randomUUID()}-${safeFileName(galleryFile.name)}`;
-      const storedGalleryPath = path.join(
-        galleryDirectory,
+      const storedGalleryPath = getManagedMediaFilePath(
+        'gallery',
         storedGalleryName,
       );
 
@@ -193,7 +188,7 @@ export async function POST(request: Request) {
       );
       writtenFiles.push(storedGalleryPath);
       galleryUrls.push(
-        `/uploads/gallery/${storedGalleryName}`,
+        getManagedMediaUrl('gallery', storedGalleryName),
       );
     }
 
@@ -240,7 +235,7 @@ export async function POST(request: Request) {
       fileName: safeFileName(file.name),
       storedFileName,
       fileSize: file.size,
-      coverUrl: `/uploads/covers/${storedCoverName}`,
+      coverUrl: getManagedMediaUrl('covers', storedCoverName),
       coverPositionX,
       coverPositionY,
       galleryUrls,

@@ -65,7 +65,7 @@ export default async function EditModPage({
         </h1>
 
         <p className="mt-2 text-slate-400">
-          Đạo hữu có thể cập nhật thông tin, thay ảnh bìa hoặc thay tệp tải xuống.
+          Đạo hữu có thể cập nhật thông tin, ảnh bìa, ảnh preview hoặc tệp tải xuống.
         </p>
       </div>
 
@@ -252,13 +252,14 @@ export default async function EditModPage({
           </select>
         </div>
 
-  <EditUploadFields
-  currentCoverUrl={mod.coverUrl}
-  currentCoverPositionX={mod.coverPositionX}
-  currentCoverPositionY={mod.coverPositionY}
-  currentFileName={mod.fileName}
-  currentFileSize={mod.fileSize}
-/>      
+        <EditUploadFields
+          currentCoverUrl={mod.coverUrl}
+          currentCoverPositionX={mod.coverPositionX}
+          currentCoverPositionY={mod.coverPositionY}
+          currentFileName={mod.fileName}
+          currentFileSize={mod.fileSize}
+          currentGalleryUrls={mod.galleryUrls ?? []}
+        />
 
       </form>
 

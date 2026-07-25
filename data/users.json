@@ -27,9 +27,21 @@
         "steam": ""
       }
     },
-    "updatedAt": "2026-07-23T09:31:26.127Z",
+    "updatedAt": "2026-07-25T03:50:34.092Z",
     "isActive": true,
-    "avatarFrameTier": "THAN_THOAI"
+    "avatarFrameTier": "THAN_THOAI",
+    "cultivation": {
+      "realmId": "TRUC_CO",
+      "realmXp": 2691,
+      "totalXp": 5037,
+      "breakthroughStatus": "CULTIVATING",
+      "completedQuestIds": [],
+      "updatedAt": "2026-07-25T03:50:34.092Z",
+      "login": {
+        "lastRewardDate": "2026-07-25",
+        "streak": 1
+      }
+    }
   },
   {
     "id": "315ec22d-94eb-4cb6-9110-2b37128c47dc",
@@ -292,7 +304,7 @@
     "role": "MODDER",
     "isVip": false,
     "createdAt": "2026-07-23T00:52:14.108Z",
-    "updatedAt": "2026-07-23T06:46:41.591Z",
+    "updatedAt": "2026-07-24T19:17:19.638Z",
     "isActive": true,
     "emailVerificationRequired": false,
     "profileSlug": "van-dao-su",
@@ -309,6 +321,18 @@
       "socialLinks": {}
     },
     "emailVerifiedAt": "2026-07-23T00:55:04.931Z",
-    "avatarFrameTier": "MEMBER"
+    "avatarFrameTier": "MEMBER",
+    "cultivation": {
+      "realmId": "LUYEN_KHI",
+      "realmXp": 5,
+      "totalXp": 5,
+      "breakthroughStatus": "CULTIVATING",
+      "completedQuestIds": [],
+      "updatedAt": "2026-07-24T19:17:19.639Z",
+      "login": {
+        "lastRewardDate": "2026-07-25",
+        "streak": 1
+      }
+    }
   }
 ]

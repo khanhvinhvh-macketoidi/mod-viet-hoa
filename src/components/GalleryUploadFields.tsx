@@ -16,7 +16,7 @@ import {
 } from 'lucide-react';
 
 const MAX_GALLERY_IMAGES = 10;
-const MAX_IMAGE_SIZE = 10 * 1024 * 1024;
+const MAX_IMAGE_SIZE = 2 * 1024 * 1024;
 
 const ALLOWED_IMAGE_TYPES = [
   'image/jpeg',
@@ -24,11 +24,24 @@ const ALLOWED_IMAGE_TYPES = [
   'image/webp',
 ];
 
-type PreviewItem = {
+type GalleryUploadFieldsProps = {
+  initialUrls?: string[];
+};
+
+type ExistingPreviewItem = {
   id: string;
+  kind: 'existing';
+  url: string;
+};
+
+type NewPreviewItem = {
+  id: string;
+  kind: 'new';
   file: File;
   previewUrl: string;
 };
+
+type PreviewItem = ExistingPreviewItem | NewPreviewItem;
 
 function formatFileSize(bytes: number): string {
   if (bytes <= 0) {
@@ -36,52 +49,70 @@ function formatFileSize(bytes: number): string {
   }
 
   const units = ['B', 'KB', 'MB', 'GB'];
-
   const index = Math.min(
     Math.floor(Math.log(bytes) / Math.log(1024)),
     units.length - 1,
   );
-
   const value = bytes / 1024 ** index;
 
   return `${value.toFixed(index === 0 ? 0 : 2)} ${units[index]}`;
 }
 
-export default function GalleryUploadFields() {
-  const inputRef = useRef<HTMLInputElement>(null);
+function createExistingItems(
+  urls: string[],
+): ExistingPreviewItem[] {
+  return Array.from(new Set(urls.filter(Boolean)))
+    .slice(0, MAX_GALLERY_IMAGES)
+    .map((url, index) => ({
+      id: `existing-${index}-${url}`,
+      kind: 'existing' as const,
+      url,
+    }));
+}
 
-  const [items, setItems] = useState<PreviewItem[]>([]);
+export default function GalleryUploadFields({
+  initialUrls = [],
+}: GalleryUploadFieldsProps) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const newItemsRef = useRef<NewPreviewItem[]>([]);
+
+  const [existingItems, setExistingItems] = useState<
+    ExistingPreviewItem[]
+  >(() => createExistingItems(initialUrls));
+  const [newItems, setNewItems] = useState<NewPreviewItem[]>([]);
   const [dragging, setDragging] = useState(false);
   const [error, setError] = useState('');
 
-  /**
-   * Giải phóng các blob URL khi component bị gỡ.
-   */
+  const items: PreviewItem[] = [
+    ...existingItems,
+    ...newItems,
+  ];
+
+  useEffect(() => {
+    newItemsRef.current = newItems;
+  }, [newItems]);
+
   useEffect(() => {
     return () => {
-      items.forEach((item) => {
+      newItemsRef.current.forEach((item) => {
         URL.revokeObjectURL(item.previewUrl);
       });
     };
-  }, [items]);
+  }, []);
 
   function validateFile(file: File): string {
     if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
       return `${file.name}: chỉ hỗ trợ JPG, PNG hoặc WEBP.`;
     }
 
-    if (file.size > MAX_IMAGE_SIZE) {
-      return `${file.name}: dung lượng vượt quá 10 MB.`;
+    if (file.size <= 0 || file.size > MAX_IMAGE_SIZE) {
+      return `${file.name}: dung lượng không được vượt quá 2 MB.`;
     }
 
     return '';
   }
 
-  /**
-   * Đồng bộ danh sách file trong state vào input thật.
-   * Nhờ vậy form HTML vẫn gửi được nhiều file đến API.
-   */
-  function syncInputFiles(nextItems: PreviewItem[]): void {
+  function syncInputFiles(nextItems: NewPreviewItem[]): void {
     if (!inputRef.current) {
       return;
     }
@@ -107,37 +138,32 @@ export default function GalleryUploadFields() {
 
     if (availableSlots <= 0) {
       setError(
-        `Chỉ được tải tối đa ${MAX_GALLERY_IMAGES} ảnh preview.`,
+        `Chỉ được lưu tối đa ${MAX_GALLERY_IMAGES} ảnh preview.`,
       );
-
       return;
     }
 
     const acceptedFiles: File[] = [];
+    let latestError = '';
 
     for (const file of incomingFiles) {
       const validationError = validateFile(file);
 
       if (validationError) {
-        setError(validationError);
+        latestError = validationError;
         continue;
       }
 
-      /**
-       * Chặn chọn trùng cùng file trong một lần đăng.
-       */
-      const duplicated = items.some(
+      const duplicated = newItems.some(
         (item) =>
           item.file.name === file.name &&
           item.file.size === file.size &&
           item.file.lastModified === file.lastModified,
       );
 
-      if (duplicated) {
-        continue;
+      if (!duplicated) {
+        acceptedFiles.push(file);
       }
-
-      acceptedFiles.push(file);
     }
 
     const filesToAdd = acceptedFiles.slice(
@@ -146,25 +172,24 @@ export default function GalleryUploadFields() {
     );
 
     if (acceptedFiles.length > availableSlots) {
-      setError(
-        `Đạo hữu chỉ có thể thêm ${availableSlots} ảnh nữa.`,
-      );
-    } else if (filesToAdd.length > 0) {
-      setError('');
+      latestError =
+        `Đạo hữu chỉ có thể thêm ${availableSlots} ảnh nữa.`;
     }
 
-    const newItems: PreviewItem[] = filesToAdd.map(
+    const addedItems: NewPreviewItem[] = filesToAdd.map(
       (file) => ({
         id: crypto.randomUUID(),
+        kind: 'new',
         file,
         previewUrl: URL.createObjectURL(file),
       }),
     );
 
-    const nextItems = [...items, ...newItems];
+    const nextItems = [...newItems, ...addedItems];
 
-    setItems(nextItems);
+    setNewItems(nextItems);
     syncInputFiles(nextItems);
+    setError(latestError);
   }
 
   function handleInputChange(
@@ -188,30 +213,32 @@ export default function GalleryUploadFields() {
     }
   }
 
-  function removeItem(id: string): void {
-    const removedItem = items.find(
-      (item) => item.id === id,
-    );
+  function removeItem(item: PreviewItem): void {
+    if (item.kind === 'existing') {
+      setExistingItems((current) =>
+        current.filter((entry) => entry.id !== item.id),
+      );
+    } else {
+      URL.revokeObjectURL(item.previewUrl);
 
-    if (removedItem) {
-      URL.revokeObjectURL(removedItem.previewUrl);
+      const nextItems = newItems.filter(
+        (entry) => entry.id !== item.id,
+      );
+
+      setNewItems(nextItems);
+      syncInputFiles(nextItems);
     }
 
-    const nextItems = items.filter(
-      (item) => item.id !== id,
-    );
-
-    setItems(nextItems);
-    syncInputFiles(nextItems);
     setError('');
   }
 
   function clearAll(): void {
-    items.forEach((item) => {
+    newItems.forEach((item) => {
       URL.revokeObjectURL(item.previewUrl);
     });
 
-    setItems([]);
+    setExistingItems([]);
+    setNewItems([]);
     setError('');
 
     if (inputRef.current) {
@@ -221,17 +248,24 @@ export default function GalleryUploadFields() {
 
   return (
     <section
-      className="
-        rounded-2xl border border-white/10
-        bg-slate-950/40 p-5
-      "
+      className="rounded-2xl border border-white/10 bg-slate-950/40 p-5"
     >
-      <div
-        className="
-          flex flex-col gap-3
-          sm:flex-row sm:items-start sm:justify-between
-        "
-      >
+      <input
+        type="hidden"
+        name="galleryUpdateIntent"
+        value="1"
+      />
+
+      {existingItems.map((item) => (
+        <input
+          key={`keep-${item.id}`}
+          type="hidden"
+          name="existingGalleryUrls"
+          value={item.url}
+        />
+      ))}
+
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <div className="flex items-center gap-2">
             <Images className="h-5 w-5 text-violet-400" />
@@ -242,8 +276,8 @@ export default function GalleryUploadFields() {
           </div>
 
           <p className="mt-2 text-xs leading-5 text-slate-500">
-            Tải tối đa {MAX_GALLERY_IMAGES} ảnh JPG, PNG
-            hoặc WEBP. Mỗi ảnh không vượt quá 10 MB.
+            Giữ, xóa hoặc thêm tối đa {MAX_GALLERY_IMAGES}{' '}
+            ảnh JPG, PNG hoặc WEBP. Mỗi ảnh không vượt quá 2 MB.
           </p>
         </div>
 
@@ -251,14 +285,7 @@ export default function GalleryUploadFields() {
           <button
             type="button"
             onClick={clearAll}
-            className="
-              inline-flex items-center gap-2
-              self-start rounded-xl
-              border border-red-400/20
-              bg-red-500/10 px-3 py-2
-              text-sm font-semibold text-red-200
-              transition hover:bg-red-500/20
-            "
+            className="inline-flex items-center gap-2 self-start rounded-xl border border-red-400/20 bg-red-500/10 px-3 py-2 text-sm font-semibold text-red-200 transition hover:bg-red-500/20"
           >
             <Trash2 className="h-4 w-4" />
             Xóa tất cả
@@ -282,10 +309,7 @@ export default function GalleryUploadFields() {
         tabIndex={0}
         onClick={() => inputRef.current?.click()}
         onKeyDown={(event) => {
-          if (
-            event.key === 'Enter' ||
-            event.key === ' '
-          ) {
+          if (event.key === 'Enter' || event.key === ' ') {
             inputRef.current?.click();
           }
         }}
@@ -314,13 +338,7 @@ export default function GalleryUploadFields() {
           }
         `}
       >
-        <div
-          className="
-            flex h-14 w-14 items-center
-            justify-center rounded-2xl
-            bg-violet-400/10 text-violet-400
-          "
-        >
+        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-violet-400/10 text-violet-400">
           {dragging ? (
             <UploadCloud className="h-7 w-7" />
           ) : (
@@ -335,99 +353,79 @@ export default function GalleryUploadFields() {
         </p>
 
         <p className="mt-2 text-sm text-slate-400">
-          Đã chọn {items.length}/{MAX_GALLERY_IMAGES} ảnh
+          Đang lưu {items.length}/{MAX_GALLERY_IMAGES} ảnh
         </p>
       </div>
 
       {error && (
-        <p
-          className="
-            mt-4 rounded-xl
-            border border-red-400/20
-            bg-red-500/10 px-4 py-3
-            text-sm text-red-200
-          "
-        >
+        <p className="mt-4 rounded-xl border border-red-400/20 bg-red-500/10 px-4 py-3 text-sm text-red-200">
           {error}
         </p>
       )}
 
       {items.length > 0 && (
-        <div
-          className="
-            mt-5 grid gap-4
-            sm:grid-cols-2 lg:grid-cols-3
-          "
-        >
-          {items.map((item, index) => (
-            <article
-              key={item.id}
-              className="
-                overflow-hidden rounded-2xl
-                border border-white/10
-                bg-slate-900
-              "
-            >
-              <div className="relative aspect-video bg-slate-950">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={item.previewUrl}
-                  alt={`Ảnh preview ${index + 1}`}
-                  className="h-full w-full object-cover"
-                />
+        <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {items.map((item, index) => {
+            const previewUrl =
+              item.kind === 'existing'
+                ? item.url
+                : item.previewUrl;
 
-                <span
-                  className="
-                    absolute left-3 top-3
-                    rounded-full bg-black/70
-                    px-2.5 py-1 text-xs
-                    font-bold text-white
-                    backdrop-blur-sm
-                  "
-                >
-                  Ảnh {index + 1}
-                </span>
-              </div>
+            const title =
+              item.kind === 'existing'
+                ? 'Ảnh hiện có'
+                : item.file.name;
 
-              <div
-                className="
-                  flex items-center
-                  justify-between gap-3 p-3
-                "
+            return (
+              <article
+                key={item.id}
+                className="overflow-hidden rounded-2xl border border-white/10 bg-slate-900"
               >
-                <div className="min-w-0">
-                  <p
-                    className="
-                      truncate text-sm
-                      font-semibold text-slate-200
-                    "
-                    title={item.file.name}
-                  >
-                    {item.file.name}
-                  </p>
+                <div className="relative aspect-video bg-slate-950">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={previewUrl}
+                    alt={`Ảnh preview ${index + 1}`}
+                    className="h-full w-full object-cover"
+                  />
 
-                  <p className="mt-1 text-xs text-slate-500">
-                    {formatFileSize(item.file.size)}
-                  </p>
+                  <span className="absolute left-3 top-3 rounded-full bg-black/70 px-2.5 py-1 text-xs font-bold text-white backdrop-blur-sm">
+                    Ảnh {index + 1}
+                  </span>
+
+                  <span className="absolute right-3 top-3 rounded-full bg-black/70 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-violet-100 backdrop-blur-sm">
+                    {item.kind === 'existing' ? 'Hiện có' : 'Mới'}
+                  </span>
                 </div>
 
-                <button
-                  type="button"
-                  onClick={() => removeItem(item.id)}
-                  className="
-                    shrink-0 rounded-xl
-                    border border-red-400/20
-                    bg-red-500/10 p-2
-                    text-red-300 transition
-                    hover:bg-red-500/20
-                  "
-                  aria-label={`Xóa ${item.file.name}`}
-                >
-                  <Trash2 className="h-4 w-4" />
-                </button>
-              </div>
-            </article>
-          ))}
+                <div className="flex items-center justify-between gap-3 p-3">
+                  <div className="min-w-0">
+                    <p
+                      className="truncate text-sm font-semibold text-slate-200"
+                      title={title}
+                    >
+                      {title}
+                    </p>
+
+                    <p className="mt-1 text-xs text-slate-500">
+                      {item.kind === 'existing'
+                        ? 'Sẽ được giữ lại khi lưu'
+                        : formatFileSize(item.file.size)}
+                    </p>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => removeItem(item)}
+                    className="shrink-0 rounded-xl border border-red-400/20 bg-red-500/10 p-2 text-red-300 transition hover:bg-red-500/20"
+                    aria-label={`Xóa ảnh preview ${index + 1}`}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
+              </article>
+            );
+          })}
         </div>
       )}
     </section>

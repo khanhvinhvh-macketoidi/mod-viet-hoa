@@ -27,7 +27,7 @@
     ],
     "downloads": 0,
     "createdAt": "2026-07-24T02:19:38.091Z",
-    "updatedAt": "2026-07-24T02:19:38.091Z"
+    "updatedAt": "2026-07-24T17:00:58.837Z"
   },
   {
     "id": "ca629ccc-c0e4-47b3-b134-52386c04b690",
@@ -82,7 +82,7 @@
     ],
     "downloads": 0,
     "createdAt": "2026-07-24T01:34:53.799Z",
-    "updatedAt": "2026-07-24T16:24:49.894Z"
+    "updatedAt": "2026-07-24T16:50:47.240Z"
   },
   {
     "id": "4c207f24-d70c-4b5d-800f-3a38f773bfb2",
@@ -103,10 +103,12 @@
     "coverUrl": "/uploads/covers/52267968-2c8d-4ed8-92e1-ebebde8d45bf-ModProjectPreview.de.png",
     "coverPositionX": 50,
     "coverPositionY": 50,
-    "galleryUrls": [],
+    "galleryUrls": [
+      "/uploads/gallery/f423cd3e-a6ea-49fe-b522-7ddf55f804c5-UI.png"
+    ],
     "downloads": 4,
     "createdAt": "2026-07-17T04:59:26.329Z",
-    "updatedAt": "2026-07-24T16:03:21.281Z"
+    "updatedAt": "2026-07-25T03:50:32.099Z"
   },
   {
     "id": "631be878-07a2-428f-897e-fddb08768384",

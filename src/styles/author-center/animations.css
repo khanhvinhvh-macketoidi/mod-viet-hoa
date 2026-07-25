@@ -24,6 +24,29 @@
   100% { background-position:36px 0,180% 0; opacity:.56; }
 }
 
+
+@keyframes p606-cultivation-title-mist-primary {
+  0%, 100% {
+    transform: translate3d(-5%, 3px, 0) scale(.94);
+    opacity: .14;
+  }
+  50% {
+    transform: translate3d(5%, -2px, 0) scale(1.06);
+    opacity: .25;
+  }
+}
+
+@keyframes p606-cultivation-title-mist-secondary {
+  0%, 100% {
+    transform: translate3d(4%, -1px, 0) scale(1.02);
+    opacity: .10;
+  }
+  50% {
+    transform: translate3d(-6%, 2px, 0) scale(.96);
+    opacity: .20;
+  }
+}
+
 @keyframes p606-identity-sweep {
   0%,18% { left:-44%; opacity:0; }
   28% { opacity:.18; }
@@ -70,6 +93,18 @@
   background-position:18px 88px;
   filter:blur(.25px) drop-shadow(0 0 3px currentColor);
   animation:p606-avatar-particles-alt 12s linear -4.5s infinite !important;
+}
+
+
+/* Khói linh lực nhẹ quanh thẻ cảnh giới. */
+.author-center-page .cultivation-title::before {
+  will-change: transform, opacity;
+  animation: p606-cultivation-title-mist-primary 6.8s ease-in-out infinite;
+}
+
+.author-center-page .cultivation-title::after {
+  will-change: transform, opacity;
+  animation: p606-cultivation-title-mist-secondary 8.4s ease-in-out -2.6s infinite;
 }
 
 /* Tu vi: preserve the original horizontal geometry; animate only inside the fill. */
@@ -145,6 +180,8 @@
   .author-center-page .avatar-rank__particles::before,
   .author-center-page .avatar-rank__particles::after,
   .author-center-page .cultivation-meridian__fill::before,
+  .author-center-page .cultivation-title::before,
+  .author-center-page .cultivation-title::after,
   .author-center-page .identity-summary--than-thoai::after {
     animation:none !important;
   }

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createSession, verifyPassword } from '@/lib/auth';
+import { rewardDailyLogin } from '@/lib/cultivation-service';
 import { getUsers } from '@/lib/store';
 import {
   consumeRateLimit,
@@ -78,6 +79,7 @@ export async function POST(request: Request) {
     }
 
     await createSession(user);
+    await rewardDailyLogin(user.id);
 
     const response = NextResponse.redirect(
       createSafeRedirectUrl('/', request),

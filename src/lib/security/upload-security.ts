@@ -3,7 +3,7 @@ import 'server-only';
 import path from 'node:path';
 
 export const MAX_MOD_FILE_BYTES = 200 * 1024 * 1024;
-export const MAX_IMAGE_FILE_BYTES = 10 * 1024 * 1024;
+export const MAX_IMAGE_FILE_BYTES = 2 * 1024 * 1024;
 export const MAX_GALLERY_FILES = 10;
 export const MAX_UPLOAD_REQUEST_BYTES =
   MAX_MOD_FILE_BYTES +
@@ -82,7 +82,7 @@ export async function validateImageFile(
     file.size > MAX_IMAGE_FILE_BYTES ||
     !ALLOWED_IMAGE_MIME_TYPES.has(file.type)
   ) {
-    throw new Error(`${label} không hợp lệ.`);
+    throw new Error(`${label} không hợp lệ hoặc vượt quá 2 MB.`);
   }
 
   const header = new Uint8Array(

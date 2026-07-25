@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getCurrentUser } from '@/lib/auth';
 import { getCommentById } from '@/lib/store';
 import { toggleCommentLike } from '@/lib/comment-reactions';
+import { rewardCommentLike } from '@/lib/cultivation-service';
 
 export async function POST(
   _request: Request,
@@ -37,6 +38,13 @@ export async function POST(
     id,
     user.id,
   );
+
+  await rewardCommentLike({
+    ownerUserId: comment.userId,
+    likerUserId: user.id,
+    commentId: id,
+    liked: result.liked,
+  });
 
   return NextResponse.json({
     ok: true,

@@ -1,0 +1,40 @@
+[
+  {
+    "id": "12e12d18-a023-42a4-967f-f8aaeaa2d418",
+    "createdAt": "2026-07-24T19:17:19.629Z",
+    "userId": "146f4801-ef64-410c-8dd4-96b6e833c581",
+    "type": "DAILY_LOGIN",
+    "points": 5,
+    "uniqueKey": "DAILY_LOGIN:146f4801-ef64-410c-8dd4-96b6e833c581:2026-07-25"
+  },
+  {
+    "id": "c442319c-dde2-4f43-a2cb-8546d2fde7f0",
+    "createdAt": "2026-07-25T02:27:54.754Z",
+    "userId": "admin-local",
+    "type": "DAILY_LOGIN",
+    "points": 5,
+    "uniqueKey": "DAILY_LOGIN:admin-local:2026-07-25"
+  },
+  {
+    "id": "87566c66-d2de-4bf2-9edf-e9b81e498762",
+    "createdAt": "2026-07-25T02:50:55.326Z",
+    "userId": "admin-local",
+    "type": "ADMIN_ADJUSTMENT",
+    "points": 5027,
+    "uniqueKey": "LEGACY_CULTIVATION_MIGRATION:admin-local",
+    "metadata": {
+      "reason": "Migrate legacy stats-based cultivation XP",
+      "legacyXp": 5027,
+      "migratedBy": "admin-local"
+    }
+  },
+  {
+    "id": "110543f8-59ad-4354-8483-fa5bff647daa",
+    "createdAt": "2026-07-25T03:50:34.089Z",
+    "userId": "admin-local",
+    "type": "MOD_VIEWED",
+    "points": 5,
+    "targetId": "4c207f24-d70c-4b5d-800f-3a38f773bfb2",
+    "uniqueKey": "MOD_VIEWED:admin-local:4c207f24-d70c-4b5d-800f-3a38f773bfb2"
+  }
+]
