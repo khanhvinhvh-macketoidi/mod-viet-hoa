@@ -9,3 +9,9 @@
 
 /* Realm-consistent nickname colors and glow intensity. */
 @import "./author-center/nickname-effects.css";
+
+/* Reputation profile card and tier effects. */
+@import "./author-center/reputation.css";
+
+/* Admin Tông Sư management layout and control palette. */
+@import "./author-center/admin-author-center.css";

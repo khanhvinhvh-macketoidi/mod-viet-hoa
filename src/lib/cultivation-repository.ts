@@ -8,10 +8,13 @@ export type CultivationLogType =
   | 'DAILY_LOGIN'
   | 'LOGIN_STREAK_BONUS'
   | 'COMMENT_CREATED'
+  | 'COMMENT_DELETED'
   | 'REPLY_CREATED'
+  | 'REPLY_DELETED'
   | 'COMMENT_LIKED'
   | 'COMMENT_UNLIKED'
   | 'COMMENT_HELPFUL'
+  | 'COMMENT_HELPFUL_REMOVED'
   | 'MOD_VIEWED'
   | 'MOD_LIKED'
   | 'MOD_UNLIKED'
@@ -20,6 +23,7 @@ export type CultivationLogType =
   | 'REVIEW_CONTENT_REMOVED'
   | 'REVIEW_DELETED'
   | 'MOD_PUBLISHED'
+  | 'MOD_DELETED'
   | 'AVATAR_ADDED'
   | 'AVATAR_REMOVED'
   | 'AVATAR_RESTORED'
@@ -76,6 +80,30 @@ export async function getCultivationLogs(): Promise<CultivationLog[]> {
 
 export async function saveCultivationLogs(logs: CultivationLog[]): Promise<void> {
   await writeJson(cultivationLogsPath, logs);
+}
+
+export function calculateCultivationXpFromLogs(
+  logs: CultivationLog[],
+  userId: string,
+): number {
+  /*
+   * Cultivation logs are an append-only ledger:
+   * - the original positive grant remains part of history;
+   * - a reversal appends a negative entry;
+   * - reversedAt only prevents the same grant from being reversed twice.
+   *
+   * Therefore total XP must sum every ledger entry, not only entries without
+   * reversedAt. Filtering the original grant out would subtract the reward
+   * twice when its negative reversal entry is also present.
+   */
+  return Math.max(
+    0,
+    Math.round(
+      logs
+        .filter((log) => log.userId === userId)
+        .reduce((total, log) => total + Number(log.points || 0), 0),
+    ),
+  );
 }
 
 export async function hasActiveCultivationLog(
@@ -156,10 +184,18 @@ export async function reverseCultivationLog(
   });
 }
 
+/**
+ * Legacy compatibility only. New mod-view rewards use the cultivation log
+ * unique key as the single source of truth.
+ */
 export async function getModViews(): Promise<ModViewRecord[]> {
   return readJson<ModViewRecord[]>(cultivationModViewsPath, []);
 }
 
+/**
+ * Legacy compatibility only. Kept so old code/data migrations continue to
+ * compile, but the live reward flow no longer depends on this separate file.
+ */
 export async function recordFirstModView(
   userId: string,
   modId: string,

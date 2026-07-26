@@ -1,11 +1,11 @@
 'use client';
 
 import { FormEvent, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { Send, X } from 'lucide-react';
-import MentionTextarea, {
-  type MentionCandidate,
-} from './MentionTextarea';
+
+import RichTextComposer from '@/components/rich-text/RichTextComposer';
+import type { CommentItem } from '@/lib/types';
+import type { MentionCandidate } from './MentionTextarea';
 
 type Props = {
   modId: string;
@@ -13,6 +13,7 @@ type Props = {
   parentId: string;
   parentUserName: string;
   mentionCandidates: MentionCandidate[];
+  onCreated: (comment: CommentItem) => void;
   onCancel: () => void;
 };
 
@@ -31,19 +32,14 @@ export default function ReplyCommentForm({
   parentId,
   parentUserName,
   mentionCandidates,
+  onCreated,
   onCancel,
 }: Props) {
-  const mention = `@${toMentionToken(
-    parentUserName,
-  )} `;
-
-  const router = useRouter();
-  const [content, setContent] =
-    useState(mention);
-  const [submitting, setSubmitting] =
-    useState(false);
-  const [errorMessage, setErrorMessage] =
-    useState('');
+  const mention = `@${toMentionToken(parentUserName)} `;
+  const [content, setContent] = useState(mention);
+  const [mediaAssetId, setMediaAssetId] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   async function handleSubmit(
     event: FormEvent<HTMLFormElement>,
@@ -51,9 +47,7 @@ export default function ReplyCommentForm({
     event.preventDefault();
 
     const trimmedContent = content.trim();
-    if (!trimmedContent || submitting) {
-      return;
-    }
+    if ((!trimmedContent && !mediaAssetId) || submitting) return;
 
     const scrollY = window.scrollY;
     setSubmitting(true);
@@ -62,27 +56,45 @@ export default function ReplyCommentForm({
     try {
       const formData = new FormData(event.currentTarget);
       formData.set('content', trimmedContent);
+      formData.set('mediaAssetId', mediaAssetId);
 
       const response = await fetch('/api/comments/create', {
         method: 'POST',
         body: formData,
+        credentials: 'same-origin',
+        cache: 'no-store',
         headers: {
           Accept: 'application/json',
+          'X-Requested-With': 'XMLHttpRequest',
         },
       });
 
-      const result = (await response.json().catch(() => null)) as
-        | { ok?: boolean; message?: string }
-        | null;
+      const bodyText = await response.text();
+      const result = (() => {
+        if (!bodyText.trim()) return null;
+        try {
+          return JSON.parse(bodyText) as {
+            ok?: boolean;
+            message?: string;
+            requestId?: string;
+            comment?: CommentItem;
+          };
+        } catch {
+          return null;
+        }
+      })();
 
-      if (!response.ok || !result?.ok) {
+      if (!response.ok || !result?.ok || !result.comment) {
+        const requestSuffix = result?.requestId
+          ? ` (mã ${result.requestId})`
+          : '';
         throw new Error(
-          result?.message || 'Không thể gửi trả lời.',
+          `${result?.message || `Máy chủ trả về lỗi HTTP ${response.status}.`}${requestSuffix}`,
         );
       }
 
+      onCreated(result.comment);
       onCancel();
-      router.refresh();
       requestAnimationFrame(() => {
         window.scrollTo({ top: scrollY, behavior: 'auto' });
       });
@@ -104,36 +116,27 @@ export default function ReplyCommentForm({
       onSubmit={handleSubmit}
       className="mt-4 rounded-2xl border border-sky-400/20 bg-sky-400/5 p-4 shadow-inner shadow-sky-950/20"
     >
-      <input
-        type="hidden"
-        name="modId"
-        value={modId}
-      />
-      <input
-        type="hidden"
-        name="modSlug"
-        value={modSlug}
-      />
-      <input
-        type="hidden"
-        name="parentId"
-        value={parentId}
-      />
+      <input type="hidden" name="modId" value={modId} />
+      <input type="hidden" name="modSlug" value={modSlug} />
+      <input type="hidden" name="parentId" value={parentId} />
 
       <p className="text-sm font-semibold text-sky-300">
         Trả lời {parentUserName}
       </p>
 
-      <MentionTextarea
+      <RichTextComposer
         name="content"
         value={content}
         onChange={setContent}
-        candidates={mentionCandidates}
         maxLength={MAX_LENGTH}
         rows={3}
         autoFocus
         placeholder={`Viết phản hồi cho ${parentUserName}...`}
-        className="mt-3 w-full resize-y rounded-xl border border-white/10 bg-slate-950 px-4 py-3 text-slate-100 outline-none transition focus:border-sky-400/50 focus:ring-2 focus:ring-sky-400/10"
+        mentionCandidates={mentionCandidates}
+        allowMedia
+        mediaAssetId={mediaAssetId}
+        onMediaAssetChange={setMediaAssetId}
+        className="w-full resize-y rounded-xl border border-white/10 bg-slate-950 px-4 py-3 text-slate-100 outline-none transition focus:border-sky-400/50 focus:ring-2 focus:ring-sky-400/10"
       />
 
       {errorMessage && (
@@ -146,7 +149,6 @@ export default function ReplyCommentForm({
         <span className="text-xs text-slate-500">
           {content.length}/{MAX_LENGTH}
         </span>
-
         <div className="flex gap-2">
           <button
             type="button"
@@ -156,19 +158,13 @@ export default function ReplyCommentForm({
             <X className="h-4 w-4" />
             Hủy
           </button>
-
           <button
             type="submit"
-            disabled={
-              submitting ||
-              !content.trim()
-            }
+            disabled={submitting || (!content.trim() && !mediaAssetId)}
             className="inline-flex items-center gap-2 rounded-xl bg-sky-400 px-4 py-2 font-bold text-slate-950 transition hover:bg-sky-300 disabled:opacity-50"
           >
             <Send className="h-4 w-4" />
-            {submitting
-              ? 'Đang gửi...'
-              : 'Gửi trả lời'}
+            {submitting ? 'Đang gửi...' : 'Gửi trả lời'}
           </button>
         </div>
       </div>

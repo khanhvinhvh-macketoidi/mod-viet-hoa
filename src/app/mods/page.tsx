@@ -244,7 +244,7 @@ export default async function ModsPage({
           </p>
 
           <h1 className="mt-2 text-4xl font-black">
-            Thư viện mod
+            Tàng Kinh Các
           </h1>
 
           <p className="mt-2 text-slate-400">
@@ -373,7 +373,7 @@ export default async function ModsPage({
           <strong className="text-slate-300">
             {sortedMods.length}
           </strong>{' '}
-          mod phù hợp.
+          bí thuật phù hợp.
         </p>
 
         {hasFilters && (

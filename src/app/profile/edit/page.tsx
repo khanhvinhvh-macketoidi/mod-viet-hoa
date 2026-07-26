@@ -3,6 +3,7 @@ import { getCurrentUser } from '@/lib/auth';
 import ProfileEditForm from '@/components/profile/ProfileEditForm';
 import ProfileMediaEditor from '@/components/profile/ProfileMediaEditor';
 import styles from './profile-edit.module.css';
+import { isProfileCoverUploadEnabled } from '@/config/features';
 
 export default async function ProfileEditPage() {
   const user = await getCurrentUser();
@@ -10,6 +11,8 @@ export default async function ProfileEditPage() {
   if (!user) {
     redirect('/login?next=/profile/edit');
   }
+
+  const coverUploadEnabled = isProfileCoverUploadEnabled();
 
   return (
     <main className={styles.page}>
@@ -19,8 +22,8 @@ export default async function ProfileEditPage() {
             <span className={styles.eyebrow}>Đạo tịch cá nhân</span>
             <h1>Chỉnh sửa đạo tịch</h1>
             <p>
-              Cập nhật ảnh đại diện, ảnh bìa và những thông tin sẽ hiển thị
-              trên trang cá nhân cũng như hồ sơ tác giả công khai.
+              Cập nhật ảnh đại diện và những thông tin sẽ hiển thị trên
+              trang cá nhân cũng như hồ sơ tác giả công khai.
             </p>
           </div>
         </header>
@@ -34,6 +37,7 @@ export default async function ProfileEditPage() {
             x: user.profile?.coverPosition?.x ?? 50,
             y: user.profile?.coverPosition?.y ?? 50,
           }}
+          coverUploadEnabled={coverUploadEnabled}
         />
 
         <ProfileEditForm

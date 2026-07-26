@@ -34,17 +34,32 @@ export async function POST(
     );
   }
 
-  const result = await toggleCommentLike(
-    id,
-    user.id,
-  );
+  const result = await toggleCommentLike(id, user.id);
 
-  await rewardCommentLike({
-    ownerUserId: comment.userId,
-    likerUserId: user.id,
-    commentId: id,
-    liked: result.liked,
-  });
+  try {
+    await rewardCommentLike({
+      ownerUserId: comment.userId,
+      likerUserId: user.id,
+      commentId: id,
+      liked: result.liked,
+    });
+  } catch (error) {
+    // Restore both sides. rewardCommentLike is idempotent, so the opposite
+    // transition safely compensates even if the first mutation was partial.
+    await rewardCommentLike({
+      ownerUserId: comment.userId,
+      likerUserId: user.id,
+      commentId: id,
+      liked: !result.liked,
+    }).catch(() => undefined);
+    await toggleCommentLike(id, user.id).catch(() => undefined);
+
+    console.error('Không thể đồng bộ XP lượt thích luận bàn:', error);
+    return NextResponse.json(
+      { ok: false, message: 'Không thể cập nhật lượt thích.' },
+      { status: 500 },
+    );
+  }
 
   return NextResponse.json({
     ok: true,

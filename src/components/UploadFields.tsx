@@ -10,13 +10,14 @@ import {
 import {
   CheckCircle2,
   ImageIcon,
+  Link2,
   Package,
   Trash2,
   UploadCloud,
 } from 'lucide-react';
+import { MAX_MOD_FILE_BYTES } from '@/lib/upload-limits';
 
 const MAX_COVER_SIZE = 2 * 1024 * 1024;
-const MAX_MOD_SIZE = 200 * 1024 * 1024;
 
 const ALLOWED_COVER_TYPES = [
   'image/jpeg',
@@ -41,6 +42,7 @@ export default function UploadFields() {
 
   const [coverFile, setCoverFile] = useState<File | null>(null);
   const [modFile, setModFile] = useState<File | null>(null);
+  const [downloadSource, setDownloadSource] = useState<'LOCAL' | 'EXTERNAL'>('LOCAL');
   const [coverPreview, setCoverPreview] = useState<string>('');
 
   const [coverPositionX, setCoverPositionX] = useState(50);
@@ -94,8 +96,8 @@ const dragStartRef = useRef<{
   }
 
   function validateMod(file: File): string {
-    if (file.size > MAX_MOD_SIZE) {
-      return 'File mod không được vượt quá 200 MB.';
+    if (file.size > MAX_MOD_FILE_BYTES) {
+      return 'File mod không được vượt quá 500 MB.';
     }
 
     return '';
@@ -469,140 +471,175 @@ function handlePreviewPointerUp(
         )}
       </div>
 
-      {/* File mod */}
-      <div className="grid gap-2">
+      {/* Nguồn tải mod */}
+      <div className="grid gap-3">
         <div>
           <label className="text-sm font-bold text-slate-100">
-            File mod để tải xuống
+            Cách chia sẻ file mod
           </label>
-
           <p className="mt-1 text-xs text-slate-500">
-            ZIP, RAR, 7Z hoặc định dạng mod phù hợp · Tối đa 200 MB
+            Tải trực tiếp file dưới 500 MB, hoặc dùng link ngoài cho mod dung lượng lớn.
           </p>
         </div>
 
-        <input
-          ref={modInputRef}
-          id="modFile"
-          name="file"
-          type="file"
-          required
-          className="hidden"
-          onChange={handleModChange}
-        />
-
-        {!modFile ? (
-          <div
-            role="button"
-            tabIndex={0}
-            onClick={() => modInputRef.current?.click()}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter' || event.key === ' ') {
-                modInputRef.current?.click();
-              }
-            }}
-            onDragEnter={(event) => {
-              event.preventDefault();
-              setModDragging(true);
-            }}
-            onDragOver={(event) => {
-              event.preventDefault();
-              setModDragging(true);
-            }}
-            onDragLeave={(event) => {
-              event.preventDefault();
-              setModDragging(false);
-            }}
-            onDrop={handleModDrop}
-            className={`
-              group flex min-h-40 cursor-pointer flex-col
-              items-center justify-center rounded-2xl border-2
-              border-dashed px-6 py-8 text-center transition
-              duration-200
-              ${
-                modDragging
-                  ? 'border-sky-300 bg-sky-400/10'
-                  : 'border-slate-700 bg-slate-900/70 hover:border-sky-400 hover:bg-slate-900'
-              }
-            `}
+        <div className="grid gap-3 sm:grid-cols-2">
+          <label
+            className={`cursor-pointer rounded-2xl border p-4 transition ${
+              downloadSource === 'LOCAL'
+                ? 'border-sky-400/40 bg-sky-400/10'
+                : 'border-white/10 bg-slate-900/60 hover:border-white/20'
+            }`}
           >
-            <div
-              className="
-                mb-4 flex h-14 w-14 items-center justify-center
-                rounded-2xl bg-sky-400/10 text-sky-400
-                transition group-hover:scale-105
-                group-hover:bg-sky-400/20
-              "
-            >
-              {modDragging ? (
-                <UploadCloud className="h-7 w-7" />
-              ) : (
-                <Package className="h-7 w-7" />
-              )}
-            </div>
+            <input
+              type="radio"
+              name="downloadSource"
+              value="LOCAL"
+              checked={downloadSource === 'LOCAL'}
+              onChange={() => setDownloadSource('LOCAL')}
+              className="sr-only"
+            />
+            <span className="flex items-center gap-3">
+              <Package className="h-5 w-5 text-sky-300" />
+              <span>
+                <strong className="block text-sm text-slate-100">Tải file lên website</strong>
+                <span className="mt-1 block text-xs text-slate-500">ZIP, RAR hoặc 7Z · tối đa 500 MB</span>
+              </span>
+            </span>
+          </label>
 
-            <p className="font-bold text-slate-100">
-              {modDragging
-                ? 'Thả file mod vào đây'
-                : 'Chọn hoặc kéo file mod vào đây'}
-            </p>
+          <label
+            className={`cursor-pointer rounded-2xl border p-4 transition ${
+              downloadSource === 'EXTERNAL'
+                ? 'border-amber-400/40 bg-amber-400/10'
+                : 'border-white/10 bg-slate-900/60 hover:border-white/20'
+            }`}
+          >
+            <input
+              type="radio"
+              name="downloadSource"
+              value="EXTERNAL"
+              checked={downloadSource === 'EXTERNAL'}
+              onChange={() => {
+                setDownloadSource('EXTERNAL');
+                setModError('');
+              }}
+              className="sr-only"
+            />
+            <span className="flex items-center gap-3">
+              <Link2 className="h-5 w-5 text-amber-300" />
+              <span>
+                <strong className="block text-sm text-slate-100">Dùng link tải ngoài</strong>
+                <span className="mt-1 block text-xs text-slate-500">Google Drive, Dropbox, OneDrive...</span>
+              </span>
+            </span>
+          </label>
+        </div>
 
-            <p className="mt-2 text-sm text-slate-400">
-              Nhấn vào khung để mở trình chọn file
+        {downloadSource === 'EXTERNAL' ? (
+          <label className="block">
+            <span className="mb-2 block text-sm font-bold text-slate-100">
+              Link tải ngoài
+            </span>
+            <input
+              type="url"
+              name="externalDownloadUrl"
+              required
+              inputMode="url"
+              autoComplete="url"
+              placeholder="https://drive.google.com/..."
+              className="w-full"
+            />
+            <p className="mt-2 text-xs leading-5 text-amber-200/75">
+              Link phải dùng HTTPS và được cấp quyền xem/tải công khai. Website sẽ chuyển người tải sang dịch vụ lưu trữ ngoài.
             </p>
-          </div>
+          </label>
         ) : (
-          <div
-            className="
-              flex items-center justify-between gap-4 rounded-2xl
-              border border-sky-400/20 bg-sky-400/5 p-4
-            "
-          >
-            <div className="flex min-w-0 items-center gap-4">
+          <div className="grid gap-2">
+            <input
+              ref={modInputRef}
+              id="modFile"
+              name="file"
+              type="file"
+              accept=".zip,.rar,.7z"
+              required
+              className="hidden"
+              onChange={handleModChange}
+            />
+
+            {!modFile ? (
               <div
-                className="
-                  flex h-12 w-12 shrink-0 items-center justify-center
-                  rounded-xl bg-sky-400/10 text-sky-400
-                "
+                role="button"
+                tabIndex={0}
+                onClick={() => modInputRef.current?.click()}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    modInputRef.current?.click();
+                  }
+                }}
+                onDragEnter={(event) => {
+                  event.preventDefault();
+                  setModDragging(true);
+                }}
+                onDragOver={(event) => {
+                  event.preventDefault();
+                  setModDragging(true);
+                }}
+                onDragLeave={(event) => {
+                  event.preventDefault();
+                  setModDragging(false);
+                }}
+                onDrop={handleModDrop}
+                className={`group flex min-h-40 cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed px-6 py-8 text-center transition duration-200 ${
+                  modDragging
+                    ? 'border-sky-300 bg-sky-400/10'
+                    : 'border-slate-700 bg-slate-900/70 hover:border-sky-400 hover:bg-slate-900'
+                }`}
               >
-                <Package className="h-6 w-6" />
-              </div>
-
-              <div className="min-w-0">
-                <div className="flex items-center gap-2">
-                  <p className="truncate font-semibold text-slate-100">
-                    {modFile.name}
-                  </p>
-
-                  <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400" />
+                <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-sky-400/10 text-sky-400 transition group-hover:scale-105 group-hover:bg-sky-400/20">
+                  {modDragging ? (
+                    <UploadCloud className="h-7 w-7" />
+                  ) : (
+                    <Package className="h-7 w-7" />
+                  )}
                 </div>
-
-                <p className="mt-1 text-xs text-slate-500">
-                  {formatFileSize(modFile.size)}
+                <p className="font-bold text-slate-100">
+                  {modDragging ? 'Thả file mod vào đây' : 'Chọn hoặc kéo file mod vào đây'}
+                </p>
+                <p className="mt-2 text-sm text-slate-400">
+                  ZIP, RAR hoặc 7Z · tối đa 500 MB · tải theo từng phần
                 </p>
               </div>
-            </div>
+            ) : (
+              <div className="flex items-center justify-between gap-4 rounded-2xl border border-sky-400/20 bg-sky-400/5 p-4">
+                <div className="flex min-w-0 items-center gap-4">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-sky-400/10 text-sky-400">
+                    <Package className="h-6 w-6" />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2">
+                      <p className="truncate font-semibold text-slate-100">{modFile.name}</p>
+                      <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400" />
+                    </div>
+                    <p className="mt-1 text-xs text-slate-500">{formatFileSize(modFile.size)}</p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={clearMod}
+                  className="flex shrink-0 items-center gap-2 rounded-xl border border-red-400/20 bg-red-500/10 px-3 py-2 text-sm font-semibold text-red-300 transition hover:bg-red-500/20"
+                >
+                  <Trash2 className="h-4 w-4" />
+                  Xóa file
+                </button>
+              </div>
+            )}
 
-            <button
-              type="button"
-              onClick={clearMod}
-              className="
-                flex shrink-0 items-center gap-2 rounded-xl
-                border border-red-400/20 bg-red-500/10
-                px-3 py-2 text-sm font-semibold text-red-300
-                transition hover:bg-red-500/20
-              "
-            >
-              <Trash2 className="h-4 w-4" />
-              Xóa file
-            </button>
+            {modError && (
+              <p className="rounded-xl bg-red-950/60 px-4 py-3 text-sm text-red-300">
+                {modError}
+              </p>
+            )}
           </div>
-        )}
-
-        {modError && (
-          <p className="rounded-xl bg-red-950/60 px-4 py-3 text-sm text-red-300">
-            {modError}
-          </p>
         )}
       </div>
     </div>

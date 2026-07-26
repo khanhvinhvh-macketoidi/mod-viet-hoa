@@ -1,0 +1,458 @@
+.page {
+  min-height: 100vh;
+  padding: 54px 18px 84px;
+  color: #edfaff;
+  background:
+    radial-gradient(circle at 15% 5%, rgba(54, 215, 255, .12), transparent 27%),
+    radial-gradient(circle at 85% 18%, rgba(98, 244, 174, .08), transparent 31%),
+    #030a14;
+}
+
+.shell {
+  width: min(1120px, 100%);
+  margin: 0 auto;
+}
+
+.hero {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.hero > div {
+  max-width: 780px;
+}
+
+.eyebrow {
+  color: #36d7ff;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+}
+
+.hero h1 {
+  margin: 10px 0;
+  font-family: var(--font-display), serif;
+  font-size: clamp(38px, 6vw, 66px);
+  line-height: 1;
+}
+
+.hero p {
+  margin: 0;
+  color: #91a8b8;
+  line-height: 1.8;
+}
+
+.primaryButton {
+  display: inline-flex;
+  min-height: 46px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid rgba(54, 215, 255, .4);
+  border-radius: 14px;
+  padding: 11px 17px;
+  color: #03101b;
+  background: linear-gradient(135deg, #49ddff, #68f0bb);
+  font: inherit;
+  font-weight: 950;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.form {
+  display: grid;
+  gap: 16px;
+  margin-top: 28px;
+  border: 1px solid rgba(54, 215, 255, .18);
+  border-radius: 21px;
+  padding: 22px;
+  background: rgba(7, 24, 40, .92);
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 14px;
+}
+
+.form label {
+  display: grid;
+  gap: 7px;
+}
+
+.form label > span {
+  color: #9ab0bf;
+  font-size: 13px;
+  font-weight: 850;
+}
+
+.form input,
+.form textarea,
+.cardActions select {
+  width: 100%;
+  border: 1px solid rgba(54, 215, 255, .16);
+  border-radius: 12px;
+  padding: 12px 13px;
+  color: #eafaff;
+  background: rgba(3, 14, 27, .82);
+  font: inherit;
+  outline: none;
+}
+
+.form input:focus,
+.form textarea:focus,
+.cardActions select:focus {
+  border-color: rgba(54, 215, 255, .55);
+  box-shadow: 0 0 0 3px rgba(54, 215, 255, .08);
+}
+
+.form textarea {
+  min-height: 140px;
+  resize: vertical;
+}
+
+
+.illustrationField {
+  display: grid;
+  gap: 10px;
+}
+
+.illustrationFieldHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.illustrationFieldHeader > div {
+  display: grid;
+  gap: 4px;
+}
+
+.illustrationFieldHeader span {
+  color: #9ab0bf;
+  font-size: 13px;
+  font-weight: 850;
+}
+
+.illustrationFieldHeader small,
+.illustrationPlaceholder small {
+  color: #6f899b;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.removeIllustrationButton {
+  display: inline-flex;
+  min-height: 34px;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid rgba(255, 107, 128, .24);
+  border-radius: 10px;
+  padding: 7px 10px;
+  color: #ffb3bf;
+  background: rgba(91, 24, 36, .4);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.illustrationPicker {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border: 1px dashed rgba(54, 215, 255, .28);
+  border-radius: 16px;
+  background: rgba(3, 14, 27, .6);
+  cursor: pointer;
+}
+
+.illustrationPicker:focus-within {
+  border-color: rgba(54, 215, 255, .62);
+  box-shadow: 0 0 0 3px rgba(54, 215, 255, .08);
+}
+
+.illustrationPicker > input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.illustrationPlaceholder {
+  display: grid;
+  min-height: 150px;
+  place-items: center;
+  align-content: center;
+  gap: 7px;
+  padding: 22px;
+  color: #7de3fb;
+  text-align: center;
+}
+
+.illustrationPlaceholder strong {
+  color: #dff8ff;
+  font-size: 14px;
+}
+
+.illustrationPreview,
+.cardIllustration {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  background: rgba(2, 9, 18, .84);
+}
+
+.illustrationPreview {
+  aspect-ratio: 16 / 9;
+}
+
+.illustrationPreview img,
+.cardIllustration img {
+  object-fit: cover;
+}
+
+.cardIllustration {
+  aspect-ratio: 16 / 7;
+  margin-top: 15px;
+  border: 1px solid rgba(54, 215, 255, .11);
+  border-radius: 14px;
+}
+
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.formActions button,
+.filters button,
+.cardActions button {
+  min-height: 40px;
+  border: 1px solid rgba(54, 215, 255, .16);
+  border-radius: 11px;
+  padding: 9px 13px;
+  color: #a9c2d1;
+  background: rgba(8, 29, 47, .78);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.formActions button:last-child {
+  color: #05201c;
+  background: linear-gradient(135deg, #64e6ff, #67e7ad);
+}
+
+.formActions button:disabled,
+.cardActions button:disabled,
+.cardActions select:disabled {
+  cursor: not-allowed;
+  opacity: .55;
+}
+
+.success,
+.error {
+  margin-top: 18px;
+  border-radius: 13px;
+  padding: 13px 15px;
+  font-weight: 800;
+}
+
+.success {
+  border: 1px solid rgba(68, 224, 160, .25);
+  color: #8df2cc;
+  background: rgba(14, 85, 61, .48);
+}
+
+.error {
+  border: 1px solid rgba(255, 108, 125, .25);
+  color: #ffb7c2;
+  background: rgba(104, 24, 37, .46);
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 28px 0 18px;
+}
+
+.filters .filterActive {
+  border-color: rgba(54, 215, 255, .48);
+  color: #e9fbff;
+  background: rgba(54, 215, 255, .12);
+}
+
+.list {
+  display: grid;
+  gap: 14px;
+}
+
+.card {
+  border: 1px solid rgba(54, 215, 255, .12);
+  border-radius: 19px;
+  padding: 20px;
+  background:
+    linear-gradient(135deg, rgba(8, 28, 46, .94), rgba(5, 17, 31, .95));
+  box-shadow: 0 20px 55px rgba(0, 0, 0, .16);
+}
+
+.cardTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.game {
+  color: #58dbff;
+  font-size: 11px;
+  font-weight: 950;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+}
+
+.card h2 {
+  margin: 6px 0 0;
+  font-family: var(--font-display), serif;
+  font-size: 22px;
+}
+
+.status {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.statusOpen { color: #8edfff; }
+.statusPlanned { color: #f7cf80; }
+.statusProgress { color: #d8adff; }
+.statusCompleted { color: #70edb5; }
+.statusRejected { color: #ff9bab; }
+.statusCancelled { color: #8295a4; }
+
+.description {
+  margin: 14px 0;
+  color: #9db1bf;
+  line-height: 1.75;
+  white-space: pre-wrap;
+}
+
+.sourceLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: #80ddf5;
+  font-size: 13px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px 16px;
+  margin-top: 17px;
+  border-top: 1px solid rgba(54, 215, 255, .08);
+  padding-top: 13px;
+  color: #667f90;
+  font-size: 12px;
+}
+
+.cardActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 13px;
+}
+
+.cardActions button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.cardActions .votedButton {
+  border-color: rgba(92, 230, 174, .45);
+  color: #8ef2ca;
+  background: rgba(30, 99, 73, .42);
+}
+
+.cardActions .deleteButton {
+  margin-left: auto;
+  border-color: rgba(255, 107, 128, .22);
+  color: #ffabb8;
+  background: rgba(91, 24, 36, .45);
+}
+
+.cardActions select {
+  width: auto;
+  min-width: 170px;
+  margin-left: auto;
+  padding-block: 8px;
+}
+
+.empty {
+  border: 1px dashed rgba(54, 215, 255, .18);
+  border-radius: 18px;
+  padding: 46px 18px;
+  text-align: center;
+  color: #6f899b;
+}
+
+@media (max-width: 720px) {
+  .hero {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .primaryButton {
+    width: 100%;
+  }
+
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .illustrationFieldHeader {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .removeIllustrationButton {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .cardIllustration {
+    aspect-ratio: 16 / 10;
+  }
+
+  .cardTop {
+    flex-direction: column;
+  }
+
+  .cardActions .deleteButton,
+  .cardActions select {
+    margin-left: 0;
+  }
+
+  .cardActions select {
+    width: 100%;
+  }
+}

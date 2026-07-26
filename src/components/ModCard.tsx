@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { ModItem } from '@/lib/types';
+import { richTextToPlainText } from '@/lib/rich-text';
 import {
   Download,
   Heart,
@@ -33,6 +34,7 @@ export default function ModCard({
 }: Props) {
   const x = mod.coverPositionX ?? 50;
   const y = mod.coverPositionY ?? 50;
+  const plainDescription = richTextToPlainText(mod.description);
 
   const access =
     mod.accessLevel === 'VIP'
@@ -84,7 +86,7 @@ export default function ModCard({
         </div>
 
         <p className="mt-2 line-clamp-2 min-h-10 text-sm leading-5 text-[#839caf]">
-          {mod.description}
+          {plainDescription}
         </p>
 
         <div className="mt-4 flex flex-wrap gap-2">

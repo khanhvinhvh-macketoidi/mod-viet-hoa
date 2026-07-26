@@ -1,61 +1,73 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { getCurrentUser } from '@/lib/auth';
-import {
-  getModById,
-  getMods,
-  saveMods,
-} from '@/lib/mods';
+import { getModById, getMods, saveMods } from '@/lib/mods';
 import {
   getVersionById,
   incrementVersionDownloads,
 } from '@/lib/mod-versions';
+import {
+  getDownloadSource,
+  normalizeExternalDownloadUrl,
+} from '@/lib/download-source';
 
 export async function GET(
   _request: Request,
   {
     params,
   }: {
-    params: Promise<{
-      id: string;
-      versionId: string;
-    }>;
+    params: Promise<{ id: string; versionId: string }>;
   },
 ) {
-  const { id, versionId } =
-    await params;
-  const [mod, version, user] =
-    await Promise.all([
-      getModById(id),
-      getVersionById(versionId),
-      getCurrentUser(),
-    ]);
+  const { id, versionId } = await params;
+  const [mod, version, user] = await Promise.all([
+    getModById(id),
+    getVersionById(versionId),
+    getCurrentUser(),
+  ]);
 
-  if (
-    !mod ||
-    !version ||
-    version.modId !== mod.id
-  ) {
-    return new Response('Not found', {
-      status: 404,
-    });
+  if (!mod || !version || version.modId !== mod.id) {
+    return new Response('Not found', { status: 404 });
   }
 
   const allowed =
     mod.accessLevel === 'PUBLIC' ||
-    (
-      mod.accessLevel === 'MEMBER' &&
-      Boolean(user)
-    ) ||
-    (
-      mod.accessLevel === 'VIP' &&
-      Boolean(user?.isVip)
-    ) ||
+    (mod.accessLevel === 'MEMBER' && Boolean(user)) ||
+    (mod.accessLevel === 'VIP' && Boolean(user?.isVip)) ||
     user?.role === 'ADMIN';
 
   if (!allowed) {
-    return new Response('Forbidden', {
-      status: 403,
+    return new Response('Forbidden', { status: 403 });
+  }
+
+  if (getDownloadSource(version) === 'EXTERNAL') {
+    let externalUrl: string;
+
+    try {
+      externalUrl = normalizeExternalDownloadUrl(
+        version.externalDownloadUrl,
+      );
+    } catch {
+      return new Response('External link missing', { status: 404 });
+    }
+
+    await incrementVersionDownloads(version.id);
+    const mods = await getMods();
+    await saveMods(
+      mods.map((item) =>
+        item.id === mod.id
+          ? { ...item, downloads: item.downloads + 1 }
+          : item,
+      ),
+    );
+
+    return new Response(null, {
+      status: 302,
+      headers: {
+        Location: externalUrl,
+        'Cache-Control': 'no-store',
+        'Referrer-Policy': 'no-referrer',
+      },
     });
   }
 
@@ -71,43 +83,25 @@ export async function GET(
   try {
     file = await fs.readFile(filePath);
   } catch {
-    return new Response(
-      'File not found',
-      {
-        status: 404,
-      },
-    );
+    return new Response('File not found', { status: 404 });
   }
 
-  await incrementVersionDownloads(
-    version.id,
-  );
-
+  await incrementVersionDownloads(version.id);
   const mods = await getMods();
-
   await saveMods(
     mods.map((item) =>
       item.id === mod.id
-        ? {
-            ...item,
-            downloads:
-              item.downloads + 1,
-          }
+        ? { ...item, downloads: item.downloads + 1 }
         : item,
     ),
   );
 
-  return new Response(
-  new Uint8Array(file),
-  {
+  return new Response(new Uint8Array(file), {
     headers: {
-      "Content-Type": "application/octet-stream",
+      'Content-Type': 'application/octet-stream',
       'Content-Disposition':
-        `attachment; filename*=UTF-8''${encodeURIComponent(
-          version.fileName,
-        )}`,
-      'Content-Length':
-        String(file.byteLength),
+        `attachment; filename*=UTF-8''${encodeURIComponent(version.fileName)}`,
+      'Content-Length': String(file.byteLength),
     },
   });
 }

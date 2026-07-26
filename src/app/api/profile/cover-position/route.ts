@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getCurrentUser } from '@/lib/auth';
 import { getUsers, saveUsers } from '@/lib/users';
+import { isProfileCoverUploadEnabled } from '@/config/features';
 
 function normalizePosition(value: unknown): number | null {
   if (typeof value !== 'number' || !Number.isFinite(value)) {
@@ -17,6 +18,16 @@ export async function PATCH(request: Request) {
     return NextResponse.json(
       { ok: false, message: 'Đạo hữu cần đăng nhập.' },
       { status: 401 },
+    );
+  }
+
+  if (!isProfileCoverUploadEnabled()) {
+    return NextResponse.json(
+      {
+        ok: false,
+        message: 'Tính năng ảnh bìa hiện đang tạm đóng.',
+      },
+      { status: 403 },
     );
   }
 

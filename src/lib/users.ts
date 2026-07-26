@@ -1,6 +1,7 @@
 import type { PublicUserProfile, User } from './types';
 import { usersPath } from './data-paths';
-import { readJson, writeJson } from './json-store';
+import { readJson } from './json-store';
+import { writeJsonAtomic } from './stability/atomic-json';
 import {
   DEFAULT_AVATAR_URL,
   createProfileSlug,
@@ -19,7 +20,7 @@ export async function getRawUsers(): Promise<User[]> {
 }
 
 export async function saveUsers(users: User[]): Promise<void> {
-  await writeJson(usersPath, normalizeUsers(users));
+  await writeJsonAtomic(usersPath, normalizeUsers(users));
 }
 
 export async function getUserById(id: string): Promise<User | undefined> {
@@ -86,6 +87,8 @@ export function toPublicUserProfile(user: User): PublicUserProfile {
     role: normalized.role,
     isVip: normalized.isVip,
     avatarFrameTier: normalized.avatarFrameTier,
+    cultivation: normalized.cultivation,
+    reputation: normalized.reputation,
     profile: normalized.profile!,
     createdAt: normalized.createdAt,
   };

@@ -4,6 +4,7 @@ import { randomUUID } from 'node:crypto';
 import { NextResponse } from 'next/server';
 import { getCurrentUser } from '@/lib/auth';
 import { getUsers, saveUsers } from '@/lib/users';
+import { isProfileCoverUploadEnabled } from '@/config/features';
 
 const MIME_EXTENSIONS: Record<string, string> = {
   'image/jpeg': '.jpg',
@@ -94,6 +95,16 @@ async function saveImageUpload(
     return NextResponse.json(
       { ok: false, message: 'Đạo hữu cần đăng nhập.' },
       { status: 401 },
+    );
+  }
+
+  if (!isProfileCoverUploadEnabled()) {
+    return NextResponse.json(
+      {
+        ok: false,
+        message: 'Tính năng tải ảnh bìa hiện đang tạm đóng.',
+      },
+      { status: 403 },
     );
   }
 

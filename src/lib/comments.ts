@@ -1,13 +1,16 @@
 import type { CommentItem } from './types';
 import { commentsPath } from './data-paths';
-import { readJson, writeJson } from './json-store';
+import {
+  readJsonAtomic,
+  writeJsonAtomic,
+} from './stability/atomic-json';
 
 export async function getComments(): Promise<CommentItem[]> {
-  return readJson<CommentItem[]>(commentsPath, []);
+  return readJsonAtomic<CommentItem[]>(commentsPath, []);
 }
 
 export async function saveComments(comments: CommentItem[]): Promise<void> {
-  await writeJson(commentsPath, comments);
+  await writeJsonAtomic(commentsPath, comments);
 }
 
 export async function getCommentsByModId(
@@ -17,7 +20,8 @@ export async function getCommentsByModId(
     .filter((comment) => comment.modId === modId)
     .sort(
       (a, b) =>
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+        new Date(b.createdAt).getTime() -
+        new Date(a.createdAt).getTime(),
     );
 }
 

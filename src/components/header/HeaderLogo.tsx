@@ -15,7 +15,7 @@ export default function HeaderLogo() {
             THƯ VIỆN <span className="iv2-gradient-text">MOD</span>
           </span>
           <span className="hidden text-[10px] font-bold tracking-[0.14em] text-[#667f92] sm:block">
-            HỆ THỐNG TU LUYỆN VIỆT HÓA
+            HỆ THỐNG VIỆT HÓA
           </span>
         </span>
       </Link>

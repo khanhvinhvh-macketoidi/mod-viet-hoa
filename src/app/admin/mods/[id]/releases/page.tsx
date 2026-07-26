@@ -57,11 +57,11 @@ export default async function ReleasesPage({
   return (
     <main className="mx-auto max-w-5xl px-5 py-12">
       <p className="text-sm font-bold uppercase tracking-wider text-amber-400">
-        Milestone 12
+        Công Xưởng MOD
       </p>
 
       <h1 className="mt-2 text-4xl font-black">
-        Quản lý phát hành
+        Quản lý phiên bản
       </h1>
 
       <p className="mt-2 mb-8 text-slate-400">

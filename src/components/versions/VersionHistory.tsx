@@ -1,9 +1,11 @@
 import {
   CalendarDays,
   Download,
+  ExternalLink,
   History,
 } from 'lucide-react';
 import type { ModVersion } from '@/lib/types';
+import RichTextRenderer from '@/components/rich-text/RichTextRenderer';
 
 function formatFileSize(bytes: number): string {
   const megabytes = bytes / 1024 / 1024;
@@ -85,20 +87,25 @@ export default function VersionHistory({
               </div>
             </div>
 
-            <p className="mt-4 whitespace-pre-line text-sm leading-6 text-slate-300">
-              {version.changelog ||
-                'Không có ghi chú thay đổi.'}
-            </p>
+            <div className="mt-4 break-words text-sm leading-6 text-slate-300">
+              <RichTextRenderer
+                content={version.changelog || 'Không có ghi chú thay đổi.'}
+              />
+            </div>
 
             <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-3">
               <div className="min-w-0 text-xs text-slate-500">
                 <p className="truncate">
-                  {version.fileName}
+                  {version.downloadSource === 'EXTERNAL' ||
+                  version.externalDownloadUrl
+                    ? 'Liên kết tải ngoài'
+                    : version.fileName}
                 </p>
                 <p className="mt-1">
-                  {formatFileSize(
-                    version.fileSize,
-                  )}
+                  {version.downloadSource === 'EXTERNAL' ||
+                  version.externalDownloadUrl
+                    ? 'Drive / Dropbox / dịch vụ bên ngoài'
+                    : formatFileSize(version.fileSize)}
                 </p>
               </div>
 
@@ -107,8 +114,16 @@ export default function VersionHistory({
                   href={`/api/mods/${modId}/versions/${version.id}/download`}
                   className="inline-flex items-center gap-2 rounded-xl border border-white/10 px-4 py-2 text-sm font-semibold text-slate-200 hover:bg-white/5"
                 >
-                  <Download className="h-4 w-4" />
-                  Tải bản này
+                  {version.downloadSource === 'EXTERNAL' ||
+                  version.externalDownloadUrl ? (
+                    <ExternalLink className="h-4 w-4" />
+                  ) : (
+                    <Download className="h-4 w-4" />
+                  )}
+                  {version.downloadSource === 'EXTERNAL' ||
+                  version.externalDownloadUrl
+                    ? 'Mở link tải'
+                    : 'Tải bản này'}
                 </a>
               )}
             </div>

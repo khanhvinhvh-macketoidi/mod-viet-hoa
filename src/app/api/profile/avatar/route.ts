@@ -6,6 +6,8 @@ import { getCurrentUser } from '@/lib/auth';
 import { getUsers, saveUsers } from '@/lib/users';
 import { rewardAvatarTransition } from '@/lib/cultivation-service';
 
+const MAX_AVATAR_BYTES = 2 * 1024 * 1024;
+
 const MIME_EXTENSIONS: Record<string, string> = {
   'image/jpeg': '.jpg',
   'image/png': '.png',
@@ -88,7 +90,9 @@ async function saveImageUpload(
   await fs.writeFile(absolutePath, bytes);
 
   return `/uploads/${folder}/${fileName}`;
-}export async function POST(request: Request) {
+}
+
+export async function POST(request: Request) {
   const currentUser = await getCurrentUser();
 
   if (!currentUser) {
@@ -99,6 +103,7 @@ async function saveImageUpload(
   }
 
   let newAvatar: string | null = null;
+  let userDataCommitted = false;
 
   try {
     const formData = await request.formData();
@@ -114,7 +119,7 @@ async function saveImageUpload(
     newAvatar = await saveImageUpload(
       file,
       'avatars',
-      5 * 1024 * 1024,
+      MAX_AVATAR_BYTES,
     );
 
     const users = await getUsers();
@@ -141,11 +146,21 @@ async function saveImageUpload(
     };
 
     await saveUsers(users);
-    await rewardAvatarTransition({
-      userId: currentUser.id,
-      previousAvatar: oldAvatar,
-      nextAvatar: newAvatar,
-    });
+    userDataCommitted = true;
+
+    try {
+      await rewardAvatarTransition({
+        userId: currentUser.id,
+        previousAvatar: oldAvatar,
+        nextAvatar: newAvatar,
+      });
+    } catch (cultivationError) {
+      // The avatar is already valid and committed. Do not delete it merely
+      // because reward synchronization failed; the admin rebuild endpoint can
+      // reconcile cultivation from logs later.
+      console.error('Avatar đã lưu nhưng không thể đồng bộ XP:', cultivationError);
+    }
+
     await removeOldUpload(oldAvatar, 'avatars');
 
     return NextResponse.json({
@@ -154,7 +169,7 @@ async function saveImageUpload(
       avatar: newAvatar,
     });
   } catch (error) {
-    if (newAvatar) {
+    if (newAvatar && !userDataCommitted) {
       await removeOldUpload(newAvatar, 'avatars');
     }
 
@@ -173,29 +188,41 @@ async function saveImageUpload(
   }
 }
 
-
 export async function DELETE() {
   const currentUser = await getCurrentUser();
   if (!currentUser) {
-    return NextResponse.json({ ok: false, message: 'Đạo hữu cần đăng nhập.' }, { status: 401 });
+    return NextResponse.json(
+      { ok: false, message: 'Đạo hữu cần đăng nhập.' },
+      { status: 401 },
+    );
   }
 
   try {
     const users = await getUsers();
-    const userIndex = users.findIndex((user) => user.id === currentUser.id);
+    const userIndex = users.findIndex(
+      (user) => user.id === currentUser.id,
+    );
     if (userIndex < 0) {
-      return NextResponse.json({ ok: false, message: 'Không tìm thấy tài khoản.' }, { status: 404 });
+      return NextResponse.json(
+        { ok: false, message: 'Không tìm thấy tài khoản.' },
+        { status: 404 },
+      );
     }
 
     const oldAvatar = users[userIndex].profile?.avatar;
     if (!oldAvatar || oldAvatar === '/images/default-avatar.png') {
-      return NextResponse.json({ ok: true, avatar: '/images/default-avatar.png' });
+      return NextResponse.json({
+        ok: true,
+        avatar: '/images/default-avatar.png',
+      });
     }
 
     users[userIndex] = {
       ...users[userIndex],
       profile: {
-        displayName: users[userIndex].profile?.displayName || users[userIndex].name,
+        displayName:
+          users[userIndex].profile?.displayName ||
+          users[userIndex].name,
         ...users[userIndex].profile,
         avatar: '/images/default-avatar.png',
       },
@@ -203,16 +230,28 @@ export async function DELETE() {
     };
 
     await saveUsers(users);
-    await rewardAvatarTransition({
-      userId: currentUser.id,
-      previousAvatar: oldAvatar,
-      nextAvatar: '/images/default-avatar.png',
-    });
+
+    try {
+      await rewardAvatarTransition({
+        userId: currentUser.id,
+        previousAvatar: oldAvatar,
+        nextAvatar: '/images/default-avatar.png',
+      });
+    } catch (cultivationError) {
+      console.error('Avatar đã xóa nhưng không thể đồng bộ XP:', cultivationError);
+    }
+
     await removeOldUpload(oldAvatar, 'avatars');
 
-    return NextResponse.json({ ok: true, avatar: '/images/default-avatar.png' });
+    return NextResponse.json({
+      ok: true,
+      avatar: '/images/default-avatar.png',
+    });
   } catch (error) {
     console.error('Không thể xóa avatar:', error);
-    return NextResponse.json({ ok: false, message: 'Không thể xóa ảnh đại diện.' }, { status: 500 });
+    return NextResponse.json(
+      { ok: false, message: 'Không thể xóa ảnh đại diện.' },
+      { status: 500 },
+    );
   }
 }

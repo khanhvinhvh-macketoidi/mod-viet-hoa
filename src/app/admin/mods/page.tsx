@@ -5,6 +5,7 @@ import {
   Edit3,
   ImageIcon,
   Plus,
+  Bug,
 } from 'lucide-react';
 
 import { getCurrentUser } from '@/lib/auth';
@@ -78,18 +79,23 @@ export default async function AdminModsPage({
           </p>
         </div>
 
-        <Link
-          href="/admin/upload"
-          className="
-            inline-flex items-center justify-center gap-2
-            rounded-xl bg-amber-400 px-5 py-3
-            font-bold text-slate-950 transition
-            hover:bg-amber-300
-          "
-        >
-          <Plus className="h-5 w-5" />
-          Đăng mod mới
-        </Link>
+        <div className="flex flex-wrap gap-3">
+          <Link
+            href="/admin/mod-reports"
+            className="inline-flex items-center justify-center gap-2 rounded-xl border border-red-400/20 bg-red-500/10 px-5 py-3 font-bold text-red-200 transition hover:bg-red-500/15"
+          >
+            <Bug className="h-5 w-5" />
+            Báo cáo lỗi
+          </Link>
+
+          <Link
+            href="/admin/upload"
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-amber-400 px-5 py-3 font-bold text-slate-950 transition hover:bg-amber-300"
+          >
+            <Plus className="h-5 w-5" />
+            Đăng mod mới
+          </Link>
+        </div>
       </div>
 
       {params.updated && (
@@ -125,9 +131,17 @@ export default async function AdminModsPage({
         </div>
       )}
 
-      <div className="mt-8 overflow-hidden rounded-2xl border border-white/10">
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[900px] border-collapse">
+      <div className="mt-8 min-w-0 overflow-hidden rounded-2xl border border-white/10">
+        <div className="w-full min-w-0 overflow-x-auto">
+          <table className="w-full min-w-[1040px] table-fixed border-collapse">
+            <colgroup>
+              <col className="w-[32%]" />
+              <col className="w-[15%]" />
+              <col className="w-[10%]" />
+              <col className="w-[16%]" />
+              <col className="w-[8%]" />
+              <col className="w-[19%]" />
+            </colgroup>
             <thead className="bg-slate-900">
               <tr className="text-left text-sm text-slate-400">
                 <th className="px-4 py-4 font-semibold">
@@ -255,8 +269,8 @@ export default async function AdminModsPage({
                     </span>
                   </td>
 
-                  <td className="px-4 py-4">
-                    <div className="flex justify-end gap-2">
+                  <td className="bg-transparent px-4 py-4">
+                    <div className="flex flex-nowrap justify-end gap-2">
                       <Link
                         href={`/admin/mods/${mod.id}/edit`}
                         className="
@@ -271,9 +285,9 @@ export default async function AdminModsPage({
                         Sửa
                       </Link>
 
-                  <DeleteModButton
-                      modId={mod.id}
-                      modTitle={mod.title}
+                      <DeleteModButton
+                        modId={mod.id}
+                        modTitle={mod.title}
                       />
                     </div>
                   </td>

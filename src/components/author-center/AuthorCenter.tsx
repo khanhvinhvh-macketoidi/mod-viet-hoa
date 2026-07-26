@@ -9,6 +9,7 @@ import {
   type AvatarRankTier,
 } from '@/lib/author-center/avatar-ranks';
 import {
+  Award,
   CalendarDays,
   Download,
   ExternalLink,
@@ -37,6 +38,10 @@ import {
   getCultivationSettings,
   getCultivationView,
 } from '@/lib/cultivation';
+import {
+  getReputationSettings,
+  getReputationView,
+} from '@/lib/reputation';
 
 type AuthorCenterProps = {
   user: AuthorCenterUser;
@@ -62,11 +67,18 @@ export default async function AuthorCenter({
   const profile = user.profile;
   const displayName = profile?.displayName?.trim() || user.name;
 
-  const cultivationSettings = await getCultivationSettings();
+  const [cultivationSettings, reputationSettings] = await Promise.all([
+    getCultivationSettings(),
+    getReputationSettings(),
+  ]);
   const cultivation = getCultivationView(
     user as Parameters<typeof getCultivationView>[0],
     stats,
     cultivationSettings,
+  );
+  const reputation = getReputationView(
+    user as Parameters<typeof getReputationView>[0],
+    reputationSettings,
   );
   const realm = cultivation.realm;
 
@@ -297,6 +309,34 @@ export default async function AuthorCenter({
                   <strong>{avatarRank.displayName}</strong>
                   <span>{realm.name} · {cultivation.phaseName}</span>
                 </div>
+              </div>
+            </section>
+
+            <section className="author-panel">
+              <div className="author-panel__heading">
+                <Award size={17} />
+                <div>
+                  <h2>Danh vọng</h2>
+                </div>
+              </div>
+
+              <div
+                className={`reputation-summary ${reputation.tier.className}`}
+                style={
+                  {
+                    '--reputation-color': reputation.tier.color,
+                  } as CSSProperties
+                }
+              >
+                <span className="reputation-summary__aura" aria-hidden="true" />
+                <span className="reputation-summary__spark reputation-summary__spark--one" aria-hidden="true" />
+                <span className="reputation-summary__spark reputation-summary__spark--two" aria-hidden="true" />
+                <small>Danh vọng hiện tại</small>
+                <strong>{reputation.tier.name}</strong>
+                <span>{formatCompactNumber(reputation.totalPoints)} Danh vọng</span>
+                {reputation.status === 'FROZEN' && (
+                  <em>Đang tạm khóa nhận Danh vọng</em>
+                )}
               </div>
             </section>
 

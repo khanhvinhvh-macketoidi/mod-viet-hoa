@@ -75,6 +75,8 @@ export async function ensureCurrentVersion(
     fileName: mod.fileName,
     storedFileName: mod.storedFileName,
     fileSize: mod.fileSize,
+    downloadSource: mod.downloadSource,
+    externalDownloadUrl: mod.externalDownloadUrl,
     downloads: mod.downloads,
     isCurrent: true,
     createdByUserId,
@@ -120,6 +122,8 @@ export async function createModVersion(input: {
   fileName: string;
   storedFileName: string;
   fileSize: number;
+  downloadSource?: 'LOCAL' | 'EXTERNAL';
+  externalDownloadUrl?: string;
   createdByUserId: string;
 }): Promise<ModVersion> {
   const versions = await getModVersions();
@@ -143,6 +147,8 @@ export async function createModVersion(input: {
     fileName: input.fileName,
     storedFileName: input.storedFileName,
     fileSize: input.fileSize,
+    downloadSource: input.downloadSource,
+    externalDownloadUrl: input.externalDownloadUrl,
     downloads: 0,
     isCurrent: true,
     createdByUserId: input.createdByUserId,
