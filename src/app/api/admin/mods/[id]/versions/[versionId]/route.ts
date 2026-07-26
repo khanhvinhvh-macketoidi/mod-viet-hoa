@@ -72,17 +72,19 @@ export async function DELETE(
     );
   }
 
-  try {
-    await fs.unlink(
-      path.join(
-        process.cwd(),
-        'storage',
-        'uploads',
-        version.storedFileName,
-      ),
-    );
-  } catch {
-    // File có thể đã được xóa thủ công.
+  if (version.storedFileName) {
+    try {
+      await fs.unlink(
+        path.join(
+          process.cwd(),
+          'storage',
+          'uploads',
+          version.storedFileName,
+        ),
+      );
+    } catch {
+      // File có thể đã được xóa thủ công.
+    }
   }
 
   return NextResponse.json({

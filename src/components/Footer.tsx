@@ -3,7 +3,9 @@ import {
   BookOpenText,
   CircleHelp,
   Code2,
+  Heart,
   MessageCircle,
+  MessageSquarePlus,
   ShieldCheck,
   Sparkles,
   Upload,
@@ -26,6 +28,7 @@ const groups = [
     links: [
       { href: '/authors', label: 'Tác giả', icon: Users },
       { href: '/profile', label: 'Hồ sơ', icon: Sparkles },
+      { href: '/mod-requests', label: 'Yêu Cầu Mod', icon: MessageSquarePlus },
     ],
   },
   {
@@ -33,6 +36,7 @@ const groups = [
     links: [
       { href: '/contact', label: 'Liên hệ', icon: MessageCircle },
       { href: '/thien-co-cac', label: 'Thiên Cơ Các', icon: CircleHelp },
+      { href: '/support', label: 'Ủng hộ hệ thống', icon: Heart },
     ],
   },
 ];
@@ -49,10 +53,10 @@ export default function Footer() {
               </span>
               <div>
                 <p className="font-black tracking-[0.14em] text-white">
-                  <span className="iv2-gradient-text">MOD</span> THƯ VIỆN
+                  THƯ VIỆN <span className="iv2-gradient-text">MOD</span>
                 </p>
                 <p className="mt-1 text-[10px] font-bold tracking-[0.14em] text-[#667f92]">
-                  THƯ VIỆN MOD TIÊN HIỆP
+                  HỆ THỐNG VIỆT HÓA
                 </p>
               </div>
             </div>

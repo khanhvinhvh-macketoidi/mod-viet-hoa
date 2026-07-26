@@ -12,21 +12,19 @@ import {
 import { getCurrentUser } from '@/lib/auth';
 import ModCard from '@/components/ModCard';
 import ModMediaShowcase from '@/components/ModMediaShowcase';
-import CommentForm from '@/components/CommentForm';
-import CommentThread from '@/components/comments/CommentThread';
+import CommentSectionClient from '@/components/comments/CommentSectionClient';
 import { getReactionSummaryMap } from '@/lib/comment-reactions';
 import {
   CalendarDays,
   ChevronRight,
   Download,
+  ExternalLink,
   FileArchive,
   Home,
   LockKeyhole,
   UserRound,
 } from 'lucide-react';
-import ReviewCard from '@/components/ReviewCard';
-import ReviewForm from '@/components/ReviewForm';
-import ReviewSummary from '@/components/ReviewSummary';
+import ReviewSectionClient from '@/components/reviews/ReviewSectionClient';
 import StarRatingDisplay from '@/components/StarRatingDisplay';
 import FavoriteButton from '@/components/FavoriteButton';
 import CollectionPicker from '@/components/collections/CollectionPicker';
@@ -49,7 +47,10 @@ import { getDependenciesByModId } from '@/lib/mod-dependencies';
 import VersionHistory from '@/components/versions/VersionHistory';
 import ModDependencies from '@/components/dependencies/ModDependencies';
 import { absoluteUrl, compactDescription, safeJsonLd } from '@/lib/seo';
-import { rewardFirstModView } from '@/lib/cultivation-service';
+import CultivationModViewTracker from '@/components/CultivationModViewTracker';
+import RichTextRenderer from '@/components/rich-text/RichTextRenderer';
+import ModErrorReportPanel from '@/components/mod-reports/ModErrorReportPanel';
+import { getVisibleModErrorReports } from '@/lib/mod-error-reports';
 
 type ModDetailProps = {
   params: Promise<{
@@ -153,9 +154,6 @@ export default async function ModDetail({
   }
 
   const viewer = await getCurrentUser();
-  if (viewer) {
-    await rewardFirstModView(viewer.id, mod.id);
-  }
 
   const [
   allMods,
@@ -178,23 +176,26 @@ await ensureCurrentVersion(
   mod.authorId,
 );
 
+const canManageModReports = Boolean(
+  user && (user.role === 'ADMIN' || user.id === mod.authorId),
+);
+
 const [
   versions,
   dependencies,
+  modErrorReports,
 ] = await Promise.all([
   getVersionsByModId(mod.id),
   getDependenciesByModId(mod.id),
+  getVisibleModErrorReports({
+    modId: mod.id,
+    viewerUserId: user?.id,
+    canManage: canManageModReports,
+  }),
 ]);
 
 const reviewStats =
   calculateReviewStats(reviews);
-
-const currentUserReview = user
-  ? reviews.find(
-      (review) =>
-        review.userId === user.id,
-    )
-  : undefined;
 
 const adminUserIds = new Set(
   users
@@ -292,7 +293,7 @@ const [
     author: { '@type': 'Person', name: mod.author },
     datePublished: mod.createdAt,
     dateModified: mod.updatedAt || mod.createdAt,
-    downloadUrl: absoluteUrl(`/api/mods/${mod.id}/download`),
+    downloadUrl: absoluteUrl(`/api/download/${mod.id}`),
     interactionStatistic: {
       '@type': 'InteractionCounter',
       interactionType: 'https://schema.org/DownloadAction',
@@ -324,6 +325,9 @@ const [
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd(structuredData) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumbData) }} />
+      {viewer && viewer.id !== mod.authorId ? (
+        <CultivationModViewTracker modId={mod.id} />
+      ) : null}
       <section className="mx-auto max-w-6xl px-5 py-12">
       <nav aria-label="Breadcrumb" className="mb-6">
         <ol className="flex flex-wrap items-center gap-2 text-sm text-slate-400">
@@ -443,17 +447,17 @@ const [
           <section className="rounded-2xl border border-white/10 bg-slate-900 p-6">
             <h2 className="text-xl font-bold">Giới thiệu bí thuật</h2>
 
-            <p className="mt-4 whitespace-pre-line leading-7 text-slate-300">
-              {mod.description}
-            </p>
+            <div className="mt-4 break-words leading-7 text-slate-300">
+              <RichTextRenderer content={mod.description} />
+            </div>
           </section>
 
           <section className="rounded-2xl border border-white/10 bg-slate-900 p-6">
             <h2 className="text-xl font-bold">Hướng dẫn giải cấm</h2>
 
-            <p className="mt-4 whitespace-pre-line leading-7 text-slate-300">
-              {mod.installation}
-            </p>
+            <div className="mt-4 break-words leading-7 text-slate-300">
+              <RichTextRenderer content={mod.installation} />
+            </div>
           </section>
 
           <ModDependencies
@@ -490,14 +494,19 @@ const [
           </div>
 
           <p className="mt-4 break-all font-semibold text-slate-200">
-            {mod.fileName}
+            {mod.downloadSource === 'EXTERNAL' || mod.externalDownloadUrl
+              ? 'Liên kết tải ngoài'
+              : mod.fileName}
           </p>
 
           <div className="mt-3 grid grid-cols-2 gap-3 rounded-xl bg-slate-950/60 p-3 text-sm">
             <div>
               <p className="text-xs text-slate-500">Dung lượng</p>
               <p className="mt-1 font-semibold text-slate-200">
-                {formatFileSize(mod.fileSize)}
+                {mod.downloadSource === 'EXTERNAL' ||
+                mod.externalDownloadUrl
+                  ? 'Lưu trữ bên ngoài'
+                  : formatFileSize(mod.fileSize)}
               </p>
             </div>
 
@@ -514,8 +523,16 @@ const [
               href={`/api/download/${mod.id}`}
               className="mt-6 flex items-center justify-center gap-3 rounded-2xl bg-amber-400 px-4 py-4 text-lg font-bold text-slate-950 transition hover:scale-[1.02] hover:bg-amber-300"
             >
-              <Download className="h-5 w-5" />
-              Tu luyện
+              {mod.downloadSource === 'EXTERNAL' ||
+              mod.externalDownloadUrl ? (
+                <ExternalLink className="h-5 w-5" />
+              ) : (
+                <Download className="h-5 w-5" />
+              )}
+              {mod.downloadSource === 'EXTERNAL' ||
+              mod.externalDownloadUrl
+                ? 'Mở bí thuật'
+                : 'Tu luyện'}
             </a>
           ) : (
             <div className="mt-6 rounded-xl border border-amber-400/20 bg-amber-400/5 p-4 text-sm text-slate-300">
@@ -581,7 +598,16 @@ const [
         </aside>
       </div>
 
-<section
+      <ModErrorReportPanel
+        modId={mod.id}
+        modSlug={mod.slug}
+        currentVersion={mod.version}
+        isLoggedIn={Boolean(user)}
+        canManage={canManageModReports}
+        initialReports={modErrorReports}
+      />
+
+      <section
   id="reviews"
   className="mt-12 scroll-mt-24 rounded-3xl border border-white/10 bg-slate-900 p-5 md:p-7"
 >
@@ -632,54 +658,19 @@ const [
     </div>
   )}
 
-  <div className="mt-6">
-    <ReviewSummary
-      average={reviewStats.average}
-      count={reviewStats.count}
-      distribution={reviewStats.distribution}
-    />
-  </div>
-
-  <div className="mt-6">
-    <ReviewForm
-      modId={mod.id}
-      modSlug={mod.slug}
-      isLoggedIn={Boolean(user)}
-      userName={
-        user?.name ||
-        user?.email
-      }
-      existingReview={currentUserReview}
-    />
-  </div>
-
-  <div className="mt-8 space-y-4">
-    {reviews.map((review) => (
-      <ReviewCard
-        key={review.id}
-        review={review}
-        canDelete={
-          user?.role === 'ADMIN' ||
-          user?.id === review.userId
-        }
-        isAdminReview={adminUserIds.has(
-          review.userId,
-        )}
-      />
-    ))}
-
-    {reviews.length === 0 && (
-      <div className="rounded-2xl border border-dashed border-white/10 px-5 py-12 text-center">
-        <p className="font-semibold text-slate-300">
-          Chưa có đánh giá
-        </p>
-
-        <p className="mt-2 text-sm text-slate-500">
-          Hãy là người đầu tiên giám định bí thuật này.
-        </p>
-      </div>
-    )}
-  </div>
+  <ReviewSectionClient
+    initialReviews={reviews}
+    modId={mod.id}
+    modSlug={mod.slug}
+    isLoggedIn={Boolean(user)}
+    currentUserId={user?.id}
+    userName={
+      user?.name ||
+      user?.email
+    }
+    isAdmin={user?.role === 'ADMIN'}
+    adminUserIds={Array.from(adminUserIds)}
+  />
 </section>
 
 <section
@@ -711,11 +702,6 @@ const [
         Luận bàn
       </h2>
 
-      <p className="mt-2 text-sm text-slate-400">
-        {comments.length === 0
-          ? 'Chưa có ai luận bàn.'
-          : `${comments.length} lời luận bàn về bản mod này.`}
-      </p>
     </div>
   </div>
 
@@ -802,31 +788,21 @@ const [
     </div>
   )}
 
-  <div className="mt-6">
-    <CommentForm
-      modId={mod.id}
-      modSlug={mod.slug}
-      isLoggedIn={Boolean(user)}
-      userName={
-        user?.name ||
-        user?.email
-      }
-    />
-  </div>
-
-  <div className="mt-8">
-    <CommentThread
-      comments={comments}
-      modId={mod.id}
-      modSlug={mod.slug}
-      isLoggedIn={Boolean(user)}
-      currentUserId={user?.id}
-      isAdmin={user?.role === 'ADMIN'}
-      adminUserIds={Array.from(adminUserIds)}
-      reactionSummaries={reactionSummaries}
-      mentionCandidates={mentionCandidates}
-    />
-  </div>
+  <CommentSectionClient
+    initialComments={comments}
+    modId={mod.id}
+    modSlug={mod.slug}
+    isLoggedIn={Boolean(user)}
+    currentUserId={user?.id}
+    userName={
+      user?.name ||
+      user?.email
+    }
+    isAdmin={user?.role === 'ADMIN'}
+    adminUserIds={Array.from(adminUserIds)}
+    reactionSummaries={reactionSummaries}
+    mentionCandidates={mentionCandidates}
+  />
 </section>
       {relatedMods.length > 0 && (
         <section className="mt-16 border-t border-white/10 pt-12">

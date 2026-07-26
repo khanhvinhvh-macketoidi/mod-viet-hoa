@@ -2,6 +2,8 @@ import { redirect } from 'next/navigation';
 import { getCurrentUser } from '@/lib/auth';
 import UploadFields from '@/components/UploadFields';
 import GalleryUploadFields from '@/components/GalleryUploadFields';
+import ChunkedModUploadForm from '@/components/ChunkedModUploadForm';
+import RichTextField from '@/components/rich-text/RichTextField';
 
 type UploadPageProps = {
   searchParams: Promise<{
@@ -47,12 +49,7 @@ export default async function UploadPage({
         </p>
       )}
 
-      <form
-        action="/api/mods"
-        method="post"
-        encType="multipart/form-data"
-        className="mt-8 grid gap-5"
-      >
+      <ChunkedModUploadForm>
         <input
           name="title"
           placeholder="Tên mod"
@@ -93,17 +90,21 @@ export default async function UploadPage({
           required
         />
 
-        <textarea
+        <RichTextField
           name="description"
+          label="Mô tả"
           placeholder="Mô tả"
           rows={6}
+          maxLength={20_000}
           required
         />
 
-        <textarea
+        <RichTextField
           name="installation"
+          label="Hướng dẫn cài đặt"
           placeholder="Hướng dẫn cài đặt"
           rows={5}
+          maxLength={20_000}
           required
         />
 
@@ -125,17 +126,7 @@ export default async function UploadPage({
 
         <GalleryUploadFields />
 
-        <button
-          type="submit"
-          className="
-            rounded-xl bg-amber-400 p-3 font-bold
-            text-slate-950 transition
-            hover:bg-amber-300
-          "
-        >
-          Đăng mod
-        </button>
-      </form>
+      </ChunkedModUploadForm>
     </section>
   );
 }

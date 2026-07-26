@@ -1,4 +1,4 @@
-import type { User, UserProfile } from './types';
+import type { ReputationProgress, User, UserProfile } from './types';
 
 export const DEFAULT_AVATAR_URL = '/images/default-avatar.png';
 
@@ -47,12 +47,27 @@ export function normalizeProfile(user: User): UserProfile {
   };
 }
 
+export function normalizeReputation(user: User): ReputationProgress {
+  const totalPoints = Math.max(
+    0,
+    Math.round(Number(user.reputation?.totalPoints) || 0),
+  );
+
+  return {
+    totalPoints,
+    tierId: user.reputation?.tierId ?? 'KHONG_CHUT_TIENG_TAM',
+    status: user.reputation?.status ?? 'ACTIVE',
+    updatedAt: user.reputation?.updatedAt ?? user.updatedAt ?? user.createdAt,
+  };
+}
+
 export function normalizeUser(user: User, profileSlug?: string): User {
   return {
     ...user,
     profileSlug:
       profileSlug || user.profileSlug?.trim() || createProfileSlug(user.name),
     profile: normalizeProfile(user),
+    reputation: normalizeReputation(user),
     updatedAt: user.updatedAt ?? user.createdAt,
     isActive: user.isActive ?? true,
   };

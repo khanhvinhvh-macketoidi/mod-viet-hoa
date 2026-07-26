@@ -1,13 +1,16 @@
 import type { ModItem } from './types';
 import { modsPath } from './data-paths';
-import { readJson, writeJson } from './json-store';
+import {
+  readJsonAtomic,
+  writeJsonAtomic,
+} from './stability/atomic-json';
 
 export async function getMods(): Promise<ModItem[]> {
-  return readJson<ModItem[]>(modsPath, []);
+  return readJsonAtomic<ModItem[]>(modsPath, []);
 }
 
 export async function saveMods(mods: ModItem[]): Promise<void> {
-  await writeJson(modsPath, mods);
+  await writeJsonAtomic(modsPath, mods);
 }
 
 export async function getModBySlug(
@@ -25,6 +28,7 @@ export async function getModsByAuthorId(authorId: string): Promise<ModItem[]> {
     .filter((mod) => mod.authorId === authorId)
     .sort(
       (a, b) =>
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+        new Date(b.createdAt).getTime() -
+        new Date(a.createdAt).getTime(),
     );
 }

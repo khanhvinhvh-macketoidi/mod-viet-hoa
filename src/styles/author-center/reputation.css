@@ -1,0 +1,162 @@
+/* Reputation card */
+.reputation-summary {
+  --reputation-color: #7b8794;
+  position: relative;
+  display: grid;
+  gap: .28rem;
+  overflow: hidden;
+  min-height: 132px;
+  align-content: center;
+  border: 1px solid color-mix(in srgb, var(--reputation-color) 42%, transparent);
+  border-radius: 16px;
+  background:
+    radial-gradient(circle at 18% 16%, color-mix(in srgb, var(--reputation-color) 15%, transparent), transparent 58%),
+    linear-gradient(145deg, rgb(8 24 39 / 92%), rgb(4 14 25 / 94%));
+  padding: 1rem;
+  box-shadow:
+    inset 0 0 24px color-mix(in srgb, var(--reputation-color) 7%, transparent),
+    0 10px 30px rgb(0 0 0 / 16%);
+  isolation: isolate;
+}
+
+.reputation-summary::before,
+.reputation-summary::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+}
+
+.reputation-summary::before {
+  inset: 8px;
+  border: 1px solid color-mix(in srgb, var(--reputation-color) 18%, transparent);
+  border-radius: 11px;
+}
+
+.reputation-summary::after {
+  right: -18px;
+  bottom: -34px;
+  width: 110px;
+  height: 110px;
+  border-radius: 999px;
+  background: radial-gradient(circle, color-mix(in srgb, var(--reputation-color) 20%, transparent), transparent 70%);
+  filter: blur(8px);
+}
+
+.reputation-summary > *:not(.reputation-summary__aura):not(.reputation-summary__spark) {
+  position: relative;
+  z-index: 2;
+}
+
+.reputation-summary small {
+  color: #8299aa;
+  font-size: .69rem;
+  font-weight: 900;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.reputation-summary strong {
+  color: var(--reputation-color);
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.08rem;
+  line-height: 1.25;
+  text-shadow:
+    0 1px 0 rgb(255 255 255 / 20%),
+    0 0 14px color-mix(in srgb, var(--reputation-color) 65%, transparent);
+}
+
+.reputation-summary > span:not(.reputation-summary__aura):not(.reputation-summary__spark) {
+  color: #c4d4de;
+  font-size: .78rem;
+  font-weight: 800;
+}
+
+.reputation-summary em {
+  margin-top: .2rem;
+  color: #ffbd79;
+  font-size: .7rem;
+  font-style: normal;
+}
+
+.reputation-summary__aura {
+  position: absolute;
+  inset: -50%;
+  z-index: -1;
+  background: conic-gradient(
+    from 0deg,
+    transparent,
+    color-mix(in srgb, var(--reputation-color) 18%, transparent),
+    transparent 28%,
+    transparent 65%,
+    color-mix(in srgb, var(--reputation-color) 13%, transparent),
+    transparent
+  );
+  filter: blur(20px);
+  opacity: .65;
+  animation: reputation-aura-rotate 18s linear infinite;
+}
+
+.reputation-summary__spark {
+  position: absolute;
+  z-index: 1;
+  width: 4px;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--reputation-color);
+  box-shadow: 0 0 10px var(--reputation-color);
+  opacity: 0;
+}
+
+.reputation-summary__spark--one { top: 22%; right: 18%; }
+.reputation-summary__spark--two { right: 30%; bottom: 23%; animation-delay: 1.4s !important; }
+
+.reputation-green-spark .reputation-summary__spark,
+.reputation-blue-spark .reputation-summary__spark,
+.reputation-gold-spark .reputation-summary__spark,
+.reputation-magenta-spark .reputation-summary__spark,
+.reputation-orange-ember .reputation-summary__spark,
+.reputation-orange-flame .reputation-summary__spark,
+.reputation-red-flame .reputation-summary__spark,
+.reputation-crimson-fire .reputation-summary__spark,
+.reputation-immortal-flame .reputation-summary__spark {
+  animation: reputation-spark 3.2s ease-in-out infinite;
+}
+
+.reputation-purple-mist::after,
+.reputation-purple-glow::after,
+.reputation-crimson-rune::after {
+  filter: blur(14px);
+  animation: reputation-mist 5.6s ease-in-out infinite alternate;
+}
+
+.reputation-orange-flame,
+.reputation-red-flame,
+.reputation-crimson-fire,
+.reputation-immortal-flame {
+  box-shadow:
+    inset 0 0 30px color-mix(in srgb, var(--reputation-color) 12%, transparent),
+    0 0 22px color-mix(in srgb, var(--reputation-color) 13%, transparent);
+}
+
+@keyframes reputation-aura-rotate {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes reputation-spark {
+  0%, 100% { opacity: 0; transform: translateY(5px) scale(.55); }
+  42% { opacity: .95; transform: translateY(-5px) scale(1); }
+  72% { opacity: .25; transform: translateY(-10px) scale(.7); }
+}
+
+@keyframes reputation-mist {
+  from { transform: translate3d(0, 0, 0) scale(.92); opacity: .55; }
+  to { transform: translate3d(-10px, -7px, 0) scale(1.08); opacity: .9; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reputation-summary__aura,
+  .reputation-summary__spark,
+  .reputation-summary::after {
+    animation: none !important;
+  }
+}

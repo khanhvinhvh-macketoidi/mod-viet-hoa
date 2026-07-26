@@ -12,6 +12,7 @@ import { getModById } from '@/lib/store';
 import { canManageMod } from '@/lib/permissions';
 import EditUploadFields from '@/components/EditUploadFields';
 import EditModReleaseActions from '@/components/versions/EditModReleaseActions';
+import RichTextField from '@/components/rich-text/RichTextField';
 
 type EditModPageProps = {
   params: Promise<{
@@ -191,39 +192,23 @@ export default async function EditModPage({
           />
         </div>
 
-        <div className="grid gap-2">
-          <label
-            htmlFor="description"
-            className="text-sm font-bold text-slate-200"
-          >
-            Mô tả
-          </label>
+        <RichTextField
+          name="description"
+          initialValue={mod.description}
+          label="Mô tả"
+          rows={8}
+          maxLength={20_000}
+          required
+        />
 
-          <textarea
-            id="description"
-            name="description"
-            defaultValue={mod.description}
-            rows={8}
-            required
-          />
-        </div>
-
-        <div className="grid gap-2">
-          <label
-            htmlFor="installation"
-            className="text-sm font-bold text-slate-200"
-          >
-            Hướng dẫn cài đặt
-          </label>
-
-          <textarea
-            id="installation"
-            name="installation"
-            defaultValue={mod.installation}
-            rows={7}
-            required
-          />
-        </div>
+        <RichTextField
+          name="installation"
+          initialValue={mod.installation}
+          label="Hướng dẫn cài đặt"
+          rows={7}
+          maxLength={20_000}
+          required
+        />
 
         <div className="grid gap-2">
           <label

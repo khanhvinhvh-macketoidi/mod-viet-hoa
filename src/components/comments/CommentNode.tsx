@@ -3,23 +3,26 @@
 import {
   ChevronDown,
   ChevronRight,
+  EyeOff,
   Heart,
   Link2,
   Lock,
   MessageCircleReply,
   ShieldCheck,
   Trash2,
-  UserRound,
-  EyeOff,
   Unlock,
+  UserRound,
 } from 'lucide-react';
 import {
+  useEffect,
   useMemo,
   useState,
 } from 'react';
 
 import type { CommentTreeNode } from '@/lib/comment-tree';
-import MentionText from './MentionText';
+import type { CommentItem } from '@/lib/types';
+import RichTextRenderer from '@/components/rich-text/RichTextRenderer';
+import CommunityMediaDisplay from '@/components/rich-text/CommunityMediaDisplay';
 import ReplyCommentForm from './ReplyCommentForm';
 import type { MentionCandidate } from './MentionTextarea';
 
@@ -40,6 +43,21 @@ type Props = {
   reactionSummaries: Record<string, ReactionSummary>;
   mentionCandidates: MentionCandidate[];
   initialVisibleChildren?: number;
+  onCommentCreated: (comment: CommentItem) => void;
+  onCommentUpdated: (comment: CommentItem) => void;
+  onCommentDeleted: (commentId: string) => void;
+  onMutationMessage: (
+    message: string,
+    kind?: 'success' | 'error',
+  ) => void;
+};
+
+type CommentMutationResult = {
+  ok?: boolean;
+  message?: string;
+  requestId?: string;
+  removed?: boolean;
+  comment?: CommentItem;
 };
 
 function formatDate(value: string): string {
@@ -72,6 +90,33 @@ function getVisibleContent(node: CommentTreeNode): {
   }
 }
 
+async function readMutationResult(
+  response: Response,
+): Promise<CommentMutationResult | null> {
+  const bodyText = await response.text();
+
+  if (!bodyText.trim()) return null;
+
+  try {
+    return JSON.parse(bodyText) as CommentMutationResult;
+  } catch {
+    return null;
+  }
+}
+
+function errorFromResult(
+  response: Response,
+  result: CommentMutationResult | null,
+): Error {
+  const requestSuffix = result?.requestId
+    ? ` (mã ${result.requestId})`
+    : '';
+
+  return new Error(
+    `${result?.message || `Máy chủ trả về lỗi HTTP ${response.status}.`}${requestSuffix}`,
+  );
+}
+
 export default function CommentNode({
   node,
   modId,
@@ -84,6 +129,10 @@ export default function CommentNode({
   reactionSummaries,
   mentionCandidates,
   initialVisibleChildren = 3,
+  onCommentCreated,
+  onCommentUpdated,
+  onCommentDeleted,
+  onMutationMessage,
 }: Props) {
   const [replying, setReplying] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
@@ -97,6 +146,17 @@ export default function CommentNode({
   );
   const [reacting, setReacting] = useState(false);
   const [likePulse, setLikePulse] = useState(false);
+  const [mutationAction, setMutationAction] =
+    useState('');
+
+  useEffect(() => {
+    setReaction(
+      reactionSummary ?? {
+        count: 0,
+        likedByCurrentUser: false,
+      },
+    );
+  }, [reactionSummary]);
 
   const content = useMemo(
     () => getVisibleContent(node),
@@ -117,6 +177,14 @@ export default function CommentNode({
     0,
     visibleChildren,
   );
+
+  function handleReplyCreated(comment: CommentItem): void {
+    onCommentCreated(comment);
+    setCollapsed(false);
+    setVisibleChildren((value) =>
+      Math.max(value, node.children.length + 1),
+    );
+  }
 
   async function toggleLike() {
     if (!isLoggedIn || reacting) return;
@@ -147,6 +215,12 @@ export default function CommentNode({
         `/api/comments/${node.id}/reaction`,
         {
           method: 'POST',
+          credentials: 'same-origin',
+          cache: 'no-store',
+          headers: {
+            Accept: 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+          },
         },
       );
 
@@ -171,6 +245,111 @@ export default function CommentNode({
       setReaction(previous);
     } finally {
       setReacting(false);
+    }
+  }
+
+  async function deleteComment(): Promise<void> {
+    if (mutationAction) return;
+
+    const confirmed = window.confirm(
+      'Xóa luận bàn này? Thao tác sẽ hoàn lại phần thưởng liên quan.',
+    );
+
+    if (!confirmed) return;
+
+    setMutationAction('delete');
+
+    try {
+      const response = await fetch(
+        `/api/comments/${node.id}/delete`,
+        {
+          method: 'POST',
+          credentials: 'same-origin',
+          cache: 'no-store',
+          headers: {
+            Accept: 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+          },
+        },
+      );
+      const result = await readMutationResult(response);
+
+      if (!response.ok || !result?.ok) {
+        throw errorFromResult(response, result);
+      }
+
+      if (result.removed) {
+        onCommentDeleted(node.id);
+      } else if (result.comment) {
+        onCommentUpdated(result.comment);
+      }
+
+      onMutationMessage(
+        'Đã xóa luận bàn.',
+        'success',
+      );
+    } catch (error) {
+      onMutationMessage(
+        error instanceof Error
+          ? error.message
+          : 'Không thể xóa luận bàn.',
+        'error',
+      );
+    } finally {
+      setMutationAction('');
+    }
+  }
+
+  async function moderateComment(
+    action: 'hide' | 'show' | 'lock' | 'unlock',
+  ): Promise<void> {
+    if (mutationAction) return;
+
+    setMutationAction(action);
+
+    try {
+      const formData = new FormData();
+      formData.set('action', action);
+
+      const response = await fetch(
+        `/api/comments/${node.id}/moderate`,
+        {
+          method: 'POST',
+          body: formData,
+          credentials: 'same-origin',
+          cache: 'no-store',
+          headers: {
+            Accept: 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+          },
+        },
+      );
+      const result = await readMutationResult(response);
+
+      if (!response.ok || !result?.ok || !result.comment) {
+        throw errorFromResult(response, result);
+      }
+
+      onCommentUpdated(result.comment);
+      onMutationMessage(
+        action === 'hide'
+          ? 'Đã ẩn luận bàn.'
+          : action === 'show'
+            ? 'Đã hiện lại luận bàn.'
+            : action === 'lock'
+              ? 'Đã khóa nhánh luận bàn.'
+              : 'Đã mở khóa nhánh luận bàn.',
+        'success',
+      );
+    } catch (error) {
+      onMutationMessage(
+        error instanceof Error
+          ? error.message
+          : 'Không thể cập nhật luận bàn.',
+        'error',
+      );
+    } finally {
+      setMutationAction('');
     }
   }
 
@@ -245,34 +424,39 @@ export default function CommentNode({
           </div>
 
           {canDelete && (
-            <form
-              action={`/api/comments/${node.id}/delete`}
-              method="post"
+            <button
+              type="button"
+              onClick={() => void deleteComment()}
+              disabled={Boolean(mutationAction)}
+              className="inline-flex shrink-0 items-center gap-1.5 rounded-xl border border-red-400/20 bg-red-500/10 px-3 py-2 text-xs font-semibold text-red-200 transition hover:bg-red-500/20 disabled:opacity-50"
             >
-              <button
-                type="submit"
-                className="inline-flex shrink-0 items-center gap-1.5 rounded-xl border border-red-400/20 bg-red-500/10 px-3 py-2 text-xs font-semibold text-red-200 transition hover:bg-red-500/20"
-              >
-                <Trash2 className="h-3.5 w-3.5" />
-                Xóa
-              </button>
-            </form>
+              <Trash2 className="h-3.5 w-3.5" />
+              {mutationAction === 'delete'
+                ? 'Đang xóa...'
+                : 'Xóa'}
+            </button>
           )}
         </div>
 
-        <p
-          className={
-            content.muted
-              ? 'mt-4 italic leading-7 text-slate-500'
-              : 'mt-4 whitespace-pre-wrap break-words leading-7 text-slate-300'
-          }
-        >
-          {content.muted ? (
-            content.text
-          ) : (
-            <MentionText content={content.text} />
-          )}
-        </p>
+        {(content.text || content.muted) && (
+          <div
+            className={
+              content.muted
+                ? 'mt-4 italic leading-7 text-slate-500'
+                : 'mt-4 break-words leading-7 text-slate-300'
+            }
+          >
+            {content.muted ? (
+              content.text
+            ) : (
+              <RichTextRenderer content={content.text} enableMentions />
+            )}
+          </div>
+        )}
+
+        {!content.muted && (
+          <CommunityMediaDisplay assetId={node.mediaAssetId} />
+        )}
 
         <div className="mt-4 flex flex-wrap items-center gap-2">
           <button
@@ -340,51 +524,41 @@ export default function CommentNode({
 
         {isAdmin && (
           <div className="mt-3 flex flex-wrap gap-2 border-t border-white/10 pt-3">
-            <form
-              action={`/api/comments/${node.id}/moderate`}
-              method="post"
-            >
-              <input
-                type="hidden"
-                name="action"
-                value={
+            <button
+              type="button"
+              onClick={() =>
+                void moderateComment(
                   node.moderationStatus === 'HIDDEN'
                     ? 'show'
-                    : 'hide'
-                }
-              />
-              <button
-                type="submit"
-                className="inline-flex items-center gap-1.5 rounded-xl border border-white/10 px-3 py-2 text-xs font-semibold text-slate-300"
-              >
-                <EyeOff className="h-3.5 w-3.5" />
-                {node.moderationStatus === 'HIDDEN'
-                  ? 'Hiện lại'
-                  : 'Ẩn'}
-              </button>
-            </form>
-
-            <form
-              action={`/api/comments/${node.id}/moderate`}
-              method="post"
+                    : 'hide',
+                )
+              }
+              disabled={Boolean(mutationAction)}
+              className="inline-flex items-center gap-1.5 rounded-xl border border-white/10 px-3 py-2 text-xs font-semibold text-slate-300 disabled:opacity-50"
             >
-              <input
-                type="hidden"
-                name="action"
-                value={node.isLocked ? 'unlock' : 'lock'}
-              />
-              <button
-                type="submit"
-                className="inline-flex items-center gap-1.5 rounded-xl border border-white/10 px-3 py-2 text-xs font-semibold text-slate-300"
-              >
-                {node.isLocked ? (
-                  <Unlock className="h-3.5 w-3.5" />
-                ) : (
-                  <Lock className="h-3.5 w-3.5" />
-                )}
-                {node.isLocked ? 'Mở khóa' : 'Khóa'}
-              </button>
-            </form>
+              <EyeOff className="h-3.5 w-3.5" />
+              {node.moderationStatus === 'HIDDEN'
+                ? 'Hiện lại'
+                : 'Ẩn'}
+            </button>
+
+            <button
+              type="button"
+              onClick={() =>
+                void moderateComment(
+                  node.isLocked ? 'unlock' : 'lock',
+                )
+              }
+              disabled={Boolean(mutationAction)}
+              className="inline-flex items-center gap-1.5 rounded-xl border border-white/10 px-3 py-2 text-xs font-semibold text-slate-300 disabled:opacity-50"
+            >
+              {node.isLocked ? (
+                <Unlock className="h-3.5 w-3.5" />
+              ) : (
+                <Lock className="h-3.5 w-3.5" />
+              )}
+              {node.isLocked ? 'Mở khóa' : 'Khóa'}
+            </button>
           </div>
         )}
 
@@ -395,6 +569,7 @@ export default function CommentNode({
             parentId={node.id}
             parentUserName={node.userName}
             mentionCandidates={mentionCandidates}
+            onCreated={handleReplyCreated}
             onCancel={() => setReplying(false)}
           />
         )}
@@ -420,6 +595,10 @@ export default function CommentNode({
               initialVisibleChildren={
                 initialVisibleChildren
               }
+              onCommentCreated={onCommentCreated}
+              onCommentUpdated={onCommentUpdated}
+              onCommentDeleted={onCommentDeleted}
+              onMutationMessage={onMutationMessage}
             />
           ))}
 

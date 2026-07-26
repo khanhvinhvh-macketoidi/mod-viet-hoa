@@ -67,7 +67,7 @@ export default async function FollowingPage() {
               Mở đạo tịch tác giả và nhấn Kết giao để thêm họ vào danh sách.
             </p>
             <Link href="/mods">
-              Khám phá thư viện mod
+              Khám phá Tàng Kinh Các
             </Link>
           </section>
         )}

@@ -2,7 +2,10 @@ import { NextResponse } from 'next/server';
 import { getCurrentUser } from '@/lib/auth';
 import { getModById } from '@/lib/mods';
 import { toggleModFavorite } from '@/lib/favorites';
-import { grantCultivation, revokeCultivation } from '@/lib/cultivation-service';
+import {
+  rewardModLike,
+  revokeModLike,
+} from '@/lib/cultivation-service';
 
 export async function POST(
   _request: Request,
@@ -31,31 +34,46 @@ export async function POST(
     );
   }
 
-  const result = await toggleModFavorite(
-    id,
-    user.id,
-  );
+  const result = await toggleModFavorite(id, user.id);
 
   if (mod.authorId && mod.authorId !== user.id) {
-    const key = `MOD_LIKE:${id}:${user.id}`;
-    if (result.favorited) {
-      await grantCultivation({
-        userId: mod.authorId,
-        type: 'MOD_LIKED',
-        points: 20,
-        targetId: id,
-        uniqueKey: key,
-        metadata: { likerUserId: user.id },
-      });
-    } else {
-      await revokeCultivation({
-        userId: mod.authorId,
-        uniqueKey: key,
-        type: 'MOD_UNLIKED',
-        points: 20,
-        targetId: id,
-        metadata: { likerUserId: user.id },
-      });
+    try {
+      if (result.favorited) {
+        await rewardModLike({
+          ownerUserId: mod.authorId,
+          likerUserId: user.id,
+          modId: id,
+        });
+      } else {
+        await revokeModLike({
+          ownerUserId: mod.authorId,
+          likerUserId: user.id,
+          modId: id,
+        });
+      }
+    } catch (error) {
+      // Restore the cultivation state first, then restore the favorite record.
+      if (result.favorited) {
+        await revokeModLike({
+          ownerUserId: mod.authorId,
+          likerUserId: user.id,
+          modId: id,
+        }).catch(() => undefined);
+      } else {
+        await rewardModLike({
+          ownerUserId: mod.authorId,
+          likerUserId: user.id,
+          modId: id,
+        }).catch(() => undefined);
+      }
+
+      await toggleModFavorite(id, user.id).catch(() => undefined);
+      console.error('Không thể đồng bộ XP yêu thích mod:', error);
+
+      return NextResponse.json(
+        { ok: false, message: 'Không thể cập nhật yêu thích.' },
+        { status: 500 },
+      );
     }
   }
 
