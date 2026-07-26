@@ -11,7 +11,6 @@ import type {
 import { dataDir } from './data-paths';
 import { readJson, writeJson } from './json-store';
 
-console.log('[CULTIVATION MODULE LOADED]', __filename);
 
 export type CultivationPhaseId = 'SO_KY' | 'TRUNG_KY' | 'HAU_KY';
 
@@ -137,18 +136,11 @@ function clampNumber(value: number, min: number, max: number): number {
 }
 
 export async function getCultivationSettings(): Promise<CultivationSettings> {
-  console.log('[CULTIVATION SETTINGS] FUNCTION CALLED');
-  
   const current = await readJson<CultivationSettings>(
     cultivationSettingsPath,
     DEFAULT_CULTIVATION_SETTINGS,
   );
 
-  console.log('[CULTIVATION SETTINGS]', {
-  path: cultivationSettingsPath,
-  firstRealm: current.realms?.[0],
-  secondRealm: current.realms?.[1],
-});
 
   const early = clampNumber(
     Number(current.earlyPhasePercent) ||
@@ -336,8 +328,6 @@ export function getCultivationView(
   settings: CultivationSettings,
 ): CultivationView {
   const stored = user.cultivation;
-  const normalized = normalizeCultivationProgress(stored, settings);
-
   /**
    * XP legacy chỉ dùng khi user chưa có dữ liệu cultivation riêng.
    */

@@ -1,0 +1,538 @@
+.achievement-announcement {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+}
+
+.achievement-announcement__backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background:
+    radial-gradient(circle at 50% 38%, rgb(21 64 78 / 28%), transparent 28rem),
+    rgb(1 6 12 / 82%);
+  backdrop-filter: blur(10px);
+}
+
+.achievement-announcement__modal {
+  --announcement-color: #54dfff;
+  position: relative;
+  width: min(560px, 100%);
+  max-height: calc(100dvh - 2rem);
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: 1px solid color-mix(in srgb, var(--announcement-color) 52%, transparent);
+  border-radius: 26px;
+  background:
+    linear-gradient(145deg, rgb(9 26 42 / 97%), rgb(3 12 24 / 98%)),
+    radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--announcement-color) 18%, transparent), transparent 65%);
+  padding: clamp(1.45rem, 5vw, 2.35rem);
+  box-shadow:
+    0 36px 110px rgb(0 0 0 / 62%),
+    0 0 46px color-mix(in srgb, var(--announcement-color) 18%, transparent),
+    inset 0 0 48px color-mix(in srgb, var(--announcement-color) 7%, transparent);
+  text-align: center;
+  isolation: isolate;
+  animation: achievement-modal-enter 440ms cubic-bezier(.2,.78,.24,1) both;
+}
+
+.achievement-announcement__modal::before,
+.achievement-announcement__modal::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+}
+
+.achievement-announcement__modal::before {
+  inset: 12px;
+  border: 1px solid color-mix(in srgb, var(--announcement-color) 22%, transparent);
+  border-radius: 19px;
+}
+
+.achievement-announcement__modal::after {
+  inset: auto 9% 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--announcement-color), transparent);
+  box-shadow: 0 0 18px var(--announcement-color);
+}
+
+.achievement-announcement__aura {
+  position: absolute;
+  inset: -25%;
+  z-index: -2;
+  background:
+    conic-gradient(
+      from 0deg,
+      transparent,
+      color-mix(in srgb, var(--announcement-color) 22%, transparent),
+      transparent 24%,
+      transparent 48%,
+      color-mix(in srgb, var(--announcement-color) 18%, transparent),
+      transparent 72%
+    );
+  filter: blur(32px);
+  animation: achievement-aura-spin 16s linear infinite;
+}
+
+.achievement-announcement__runes {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: .26;
+  background-image:
+    radial-gradient(circle, var(--announcement-color) 0 1px, transparent 1.7px),
+    radial-gradient(circle, white 0 1px, transparent 1.5px);
+  background-size: 83px 83px, 127px 127px;
+  background-position: 0 0, 28px 46px;
+  mask-image: radial-gradient(circle at 50% 40%, black, transparent 72%);
+  animation: achievement-runes-float 12s linear infinite;
+}
+
+.achievement-announcement__close {
+  position: absolute;
+  top: .8rem;
+  right: .8rem;
+  z-index: 3;
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border: 1px solid rgb(255 255 255 / 10%);
+  border-radius: 999px;
+  background: rgb(2 10 19 / 70%);
+  color: #9db0bf;
+}
+
+.achievement-announcement__close:hover {
+  border-color: color-mix(in srgb, var(--announcement-color) 35%, transparent);
+  color: white;
+}
+
+.achievement-announcement__kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  margin: 0;
+  color: var(--announcement-color);
+  font-size: .74rem;
+  font-weight: 900;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+
+.achievement-announcement h2 {
+  max-width: 440px;
+  margin: .8rem auto 1rem;
+  color: #f2f8fb;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(1.35rem, 5vw, 2rem);
+  line-height: 1.3;
+}
+
+.achievement-announcement__label {
+  margin: 0 0 .55rem;
+  color: #7891a5;
+  font-size: .78rem;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.achievement-announcement__current {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: .28rem;
+  width: min(390px, 100%);
+  margin: 0 auto;
+  border: 1px solid color-mix(in srgb, var(--announcement-color) 45%, transparent);
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 50% 12%, color-mix(in srgb, var(--announcement-color) 20%, transparent), transparent 60%),
+    rgb(5 17 29 / 72%);
+  padding: 1.2rem 1rem;
+  color: var(--announcement-color);
+  box-shadow:
+    0 0 32px color-mix(in srgb, var(--announcement-color) 14%, transparent),
+    inset 0 0 25px color-mix(in srgb, var(--announcement-color) 8%, transparent);
+}
+
+.achievement-announcement__current strong {
+  color: var(--announcement-color);
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(1.45rem, 6vw, 2.4rem);
+  text-shadow:
+    0 1px 0 rgb(255 255 255 / 18%),
+    0 0 18px color-mix(in srgb, var(--announcement-color) 70%, transparent);
+}
+
+.achievement-announcement__current span {
+  color: #e6f3f8;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.achievement-announcement__current--title,
+.achievement-announcement__current--identity {
+  min-height: 126px;
+  align-content: center;
+}
+
+.achievement-announcement__previous {
+  display: grid;
+  gap: .25rem;
+  max-width: 330px;
+  margin: 1rem auto 0;
+  color: #7e91a0;
+  opacity: .72;
+}
+
+.achievement-announcement__previous small {
+  font-size: .72rem;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.achievement-announcement__previous strong {
+  color: #b6c4cf;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.05rem;
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+
+.achievement-announcement__previous span {
+  font-size: .82rem;
+}
+
+.achievement-announcement__error {
+  position: relative;
+  z-index: 2;
+  width: min(100%, 34rem);
+  margin: .2rem auto 0;
+  border: 1px solid rgb(255 135 115 / 35%);
+  border-radius: 10px;
+  background: rgb(88 20 20 / 42%);
+  padding: .62rem .78rem;
+  color: #ffd1ca;
+  font-size: .78rem;
+  line-height: 1.45;
+  text-align: center;
+}
+
+.achievement-announcement__confirm {
+  min-width: 138px;
+  min-height: 44px;
+  margin-top: 1.25rem;
+  border: 1px solid color-mix(in srgb, var(--announcement-color) 55%, transparent);
+  border-radius: 13px;
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--announcement-color) 72%, #164b67),
+    color-mix(in srgb, var(--announcement-color) 45%, #09243b)
+  );
+  color: white;
+  font-weight: 900;
+  box-shadow: 0 12px 32px color-mix(in srgb, var(--announcement-color) 15%, transparent);
+}
+
+.achievement-announcement__confirm:disabled {
+  cursor: wait;
+  opacity: .58;
+}
+
+.achievement-announcement__queue {
+  display: block;
+  margin-top: .65rem;
+  color: #70889a;
+}
+
+.identity-nhan-kiet { --announcement-color: #b9d5df; }
+.identity-thien-kieu { --announcement-color: #f2cc63; }
+.identity-than-thoai { --announcement-color: #ff4d3f; }
+.realm-luyen-khi { --announcement-color: #d8e4ef; }
+.realm-truc-co { --announcement-color: #3cff78; }
+.realm-ket-tinh { --announcement-color: #4aa3ff; }
+.realm-kim-dan { --announcement-color: #f4d55d; }
+.realm-cu-linh { --announcement-color: #b765ff; }
+.realm-nguyen-anh { --announcement-color: #ff62dc; }
+.realm-hoa-than { --announcement-color: #ff793f; }
+.realm-ngo-dao { --announcement-color: #ff4038; }
+.realm-vu-hoa { --announcement-color: #ffe7ad; }
+.realm-dang-tien { --announcement-color: #ffffff; }
+
+.reputation-orange-ember .achievement-announcement__aura,
+.reputation-orange-flame .achievement-announcement__aura,
+.reputation-red-flame .achievement-announcement__aura,
+.reputation-crimson-fire .achievement-announcement__aura,
+.reputation-immortal-flame .achievement-announcement__aura {
+  filter: blur(25px) saturate(1.45);
+  animation-duration: 9s;
+}
+
+@keyframes achievement-modal-enter {
+  from { opacity: 0; transform: translateY(18px) scale(.94); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes achievement-aura-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes achievement-runes-float {
+  to { background-position: 0 -83px, 28px -81px; }
+}
+
+@media (max-width: 600px) {
+  .achievement-announcement { padding: .7rem; }
+  .achievement-announcement__modal { max-height: calc(100dvh - 1.4rem); border-radius: 20px; padding: 1.5rem 1rem 1.25rem; }
+  .achievement-announcement__current { border-radius: 16px; }
+  .achievement-announcement__runes { opacity: .14; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .achievement-announcement__modal,
+  .achievement-announcement__aura,
+  .achievement-announcement__runes {
+    animation: none !important;
+  }
+}
+
+.achievement-announcement__identity-badge {
+  width: 92px;
+  height: 70px;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 14px rgb(0 0 0 / 42%));
+}
+
+.identity-member { --announcement-color: #aa8158; }
+
+.achievement-announcement__previous {
+  --previous-color: #8497a6;
+  border: 1px solid color-mix(in srgb, var(--previous-color) 25%, transparent);
+  border-radius: 13px;
+  background: color-mix(in srgb, var(--previous-color) 5%, rgb(3 13 23 / 70%));
+  padding: .65rem .8rem;
+}
+
+.achievement-announcement__previous strong {
+  color: color-mix(in srgb, var(--previous-color) 65%, #b6c4cf);
+  text-shadow: 0 0 9px color-mix(in srgb, var(--previous-color) 25%, transparent);
+}
+
+/* Popup tụt cấp: bảng màu xám cũ, trầm và ít bão hòa hơn popup thăng cấp. */
+.achievement-announcement--demotion .achievement-announcement__backdrop {
+  background:
+    radial-gradient(circle at 50% 38%, rgb(117 109 95 / 15%), transparent 28rem),
+    rgb(7 8 10 / 88%);
+  backdrop-filter: blur(11px) grayscale(.35);
+}
+
+.achievement-announcement__modal--demotion {
+  border-color: rgb(156 148 135 / 38%);
+  background:
+    linear-gradient(150deg, rgb(28 27 27 / 98%), rgb(13 14 16 / 99%)),
+    radial-gradient(circle at 50% 0%, rgb(151 142 126 / 10%), transparent 66%);
+  box-shadow:
+    0 36px 110px rgb(0 0 0 / 72%),
+    0 0 44px rgb(121 114 101 / 12%),
+    inset 0 0 38px rgb(166 156 138 / 7%);
+}
+
+.achievement-announcement__modal--demotion::before {
+  border-color: rgb(177 168 151 / 17%);
+}
+
+.achievement-announcement__modal--demotion::after {
+  background: linear-gradient(90deg, transparent, rgb(142 134 120 / 72%), transparent);
+  box-shadow: 0 0 14px rgb(142 134 120 / 30%);
+}
+
+.achievement-announcement__modal--demotion .achievement-announcement__aura {
+  opacity: .48;
+  filter: blur(38px) saturate(.35);
+}
+
+.achievement-announcement__modal--demotion .achievement-announcement__runes {
+  opacity: .13;
+  filter: grayscale(.55);
+}
+
+.achievement-announcement__modal--demotion .achievement-announcement__kicker,
+.achievement-announcement__modal--demotion .achievement-announcement__label {
+  color: #a9a196;
+}
+
+.achievement-announcement__current--somber {
+  border-color: rgb(164 155 140 / 25%);
+  background:
+    radial-gradient(circle at 50% 12%, rgb(154 145 130 / 9%), transparent 62%),
+    linear-gradient(180deg, rgb(34 33 32 / 92%), rgb(16 17 19 / 94%));
+  color: #b8b0a4;
+  box-shadow:
+    0 0 26px rgb(133 125 112 / 10%),
+    inset 0 0 20px rgb(142 133 117 / 8%);
+  filter: saturate(.58);
+}
+
+.achievement-announcement__current--somber strong,
+.achievement-announcement__current--somber svg {
+  color: #b8b0a4;
+  text-shadow: 0 0 14px rgb(166 157 143 / 22%);
+}
+
+.achievement-announcement__current--vanishing {
+  overflow: hidden;
+  filter: saturate(.72);
+}
+
+.achievement-announcement__current--vanishing::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 18% 72%, currentColor 0 1px, transparent 2px),
+    radial-gradient(circle at 34% 54%, currentColor 0 1.2px, transparent 2.2px),
+    radial-gradient(circle at 53% 66%, currentColor 0 1px, transparent 2px),
+    radial-gradient(circle at 71% 48%, currentColor 0 1.3px, transparent 2.3px),
+    radial-gradient(circle at 84% 70%, currentColor 0 1px, transparent 2px);
+  opacity: 0;
+  animation: achievement-title-dust 2.2s ease-out .18s forwards;
+}
+
+.achievement-announcement__current--vanishing strong,
+.achievement-announcement__current--vanishing svg {
+  animation: achievement-lost-title 2.2s ease-out both;
+}
+
+.achievement-announcement__modal--demotion .achievement-announcement__confirm {
+  border-color: rgb(180 171 156 / 27%);
+  background: linear-gradient(135deg, rgb(113 107 97 / 76%), rgb(63 61 59 / 94%));
+  box-shadow: 0 12px 26px rgb(120 112 99 / 12%);
+}
+
+/* Popup Thân phận: badge là nội dung chính, không lặp lại tên bên ngoài. */
+.achievement-announcement__current--identity {
+  width: min(430px, 100%);
+  min-height: 220px;
+  overflow: visible;
+  border-color: transparent;
+  background: transparent;
+  padding: 1.25rem 1rem;
+  box-shadow: none;
+}
+
+.achievement-announcement__identity-stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: min(330px, 100%);
+  min-height: 176px;
+  margin: 0 auto;
+}
+
+.achievement-announcement__identity-badge {
+  position: relative;
+  z-index: 2;
+  width: 188px;
+  height: 142px;
+  object-fit: contain;
+  filter:
+    drop-shadow(0 10px 18px rgb(0 0 0 / 38%))
+    drop-shadow(0 0 30px color-mix(in srgb, var(--announcement-color) 36%, transparent));
+  animation: achievement-badge-float 4.8s ease-in-out infinite;
+}
+
+.achievement-announcement__spirit-thread {
+  position: absolute;
+  z-index: 1;
+  display: block;
+  width: 194px;
+  height: 76px;
+  border: 1px solid color-mix(in srgb, var(--announcement-color) 44%, transparent);
+  border-bottom-color: transparent;
+  border-left-color: transparent;
+  border-radius: 999px;
+  box-shadow:
+    0 0 22px color-mix(in srgb, var(--announcement-color) 16%, transparent),
+    inset 0 0 18px color-mix(in srgb, var(--announcement-color) 12%, transparent);
+  opacity: .72;
+}
+
+.achievement-announcement__spirit-thread--one {
+  transform: rotate(10deg);
+  animation: achievement-thread-drift-one 7.5s ease-in-out infinite;
+}
+
+.achievement-announcement__spirit-thread--two {
+  width: 218px;
+  height: 94px;
+  opacity: .58;
+  transform: rotate(-14deg);
+  animation: achievement-thread-drift-two 8.8s ease-in-out infinite;
+}
+
+.achievement-announcement__spirit-thread--three {
+  width: 242px;
+  height: 116px;
+  opacity: .38;
+  transform: rotate(4deg);
+  animation: achievement-thread-drift-three 10s ease-in-out infinite;
+}
+
+@keyframes achievement-lost-title {
+  0% { opacity: 0; filter: blur(10px); transform: translateY(8px) scale(.96); }
+  28% { opacity: 1; filter: blur(0); transform: translateY(0) scale(1); }
+  72% { opacity: 1; filter: blur(0); transform: translateY(0) scale(1); }
+  100% { opacity: .42; filter: blur(3px); transform: translateY(-5px) scale(1.03); }
+}
+
+@keyframes achievement-title-dust {
+  0% { opacity: 0; transform: translateY(12px) scale(.92); }
+  35% { opacity: .68; }
+  100% { opacity: 0; transform: translateY(-30px) scale(1.08); }
+}
+
+@keyframes achievement-badge-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-7px); }
+}
+
+@keyframes achievement-thread-drift-one {
+  0%, 100% { transform: rotate(10deg) scale(.98); }
+  50% { transform: rotate(17deg) translateY(-4px) scale(1.03); }
+}
+
+@keyframes achievement-thread-drift-two {
+  0%, 100% { transform: rotate(-14deg) scale(1); }
+  50% { transform: rotate(-7deg) translateY(3px) scale(1.05); }
+}
+
+@keyframes achievement-thread-drift-three {
+  0%, 100% { transform: rotate(4deg) scale(.96); }
+  50% { transform: rotate(-3deg) translateY(-3px) scale(1.02); }
+}
+
+@media (max-width: 600px) {
+  .achievement-announcement__current--identity { min-height: 190px; }
+  .achievement-announcement__identity-badge { width: 156px; height: 118px; }
+  .achievement-announcement__spirit-thread--one { width: 158px; height: 62px; }
+  .achievement-announcement__spirit-thread--two { width: 178px; height: 76px; }
+  .achievement-announcement__spirit-thread--three { width: 196px; height: 92px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .achievement-announcement__identity-badge,
+  .achievement-announcement__spirit-thread,
+  .achievement-announcement__current--vanishing::after,
+  .achievement-announcement__current--vanishing strong,
+  .achievement-announcement__current--vanishing svg {
+    animation: none !important;
+  }
+}

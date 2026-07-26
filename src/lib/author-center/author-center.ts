@@ -1,6 +1,6 @@
 import 'server-only';
 
-import type { CultivationProgress } from '@/lib/types';
+import type { CultivationProgress, ReputationProgress } from '@/lib/types';
 
 export type AvatarFrameTier =
   | 'MEMBER'
@@ -41,6 +41,7 @@ export type CultivationRealm = {
 };
 
 export type AuthorCenterCultivation = CultivationProgress;
+export type AuthorCenterReputation = ReputationProgress;
 
 export type AuthorCenterUser = {
   id: string;
@@ -51,6 +52,7 @@ export type AuthorCenterUser = {
   profileSlug?: string;
   avatarFrameTier?: AvatarFrameTier;
   cultivation?: AuthorCenterCultivation;
+  reputation?: AuthorCenterReputation;
   profile?: {
     displayName?: string;
     avatar?: string;

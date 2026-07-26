@@ -79,7 +79,14 @@ export async function POST(request: Request) {
     }
 
     await createSession(user);
-    await rewardDailyLogin(user.id);
+
+    try {
+      await rewardDailyLogin(user.id);
+    } catch (cultivationError) {
+      // A valid login must never be reported as invalid only because the
+      // optional daily cultivation reward could not be synchronized.
+      console.error('Đăng nhập thành công nhưng không thể cộng XP ngày:', cultivationError);
+    }
 
     const response = NextResponse.redirect(
       createSafeRedirectUrl('/', request),

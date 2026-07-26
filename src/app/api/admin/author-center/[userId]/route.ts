@@ -5,6 +5,7 @@ import { getUsers, saveUsers } from '@/lib/users';
 import type { AvatarFrameTier, Role } from '@/lib/types';
 import { createSafeRedirectUrl } from '@/lib/production/url';
 import { isEligibleForAutomaticCreatorRole } from '@/lib/creator-role-sync';
+import { announceIdentityPromotion } from '@/lib/achievement-announcement-service';
 
 const VALID_TIERS = new Set<AvatarFrameTier>([
   'MEMBER',
@@ -48,6 +49,8 @@ export async function POST(request: Request, context: RouteContext) {
     return new Response('Không tìm thấy người dùng', { status: 404 });
   }
 
+  const previousTier = users[index].avatarFrameTier ?? 'MEMBER';
+
   // Thành viên đã đạt Trúc Cơ Sơ kỳ luôn được giữ tối thiểu ở role MODDER.
   if (role === 'MEMBER' && await isEligibleForAutomaticCreatorRole(userId)) {
     role = 'MODDER';
@@ -61,6 +64,15 @@ export async function POST(request: Request, context: RouteContext) {
   };
 
   await saveUsers(users);
+
+  await announceIdentityPromotion({
+    userId,
+    previousTier,
+    currentTier: tier,
+    triggerId: users[index].updatedAt ?? new Date().toISOString(),
+  }).catch((error) => {
+    console.error('Không thể tạo popup thăng Thân phận:', error);
+  });
 
   revalidatePath('/admin/author-center');
   revalidatePath('/creator');

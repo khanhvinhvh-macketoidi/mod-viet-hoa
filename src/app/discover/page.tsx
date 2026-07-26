@@ -111,11 +111,11 @@ export default async function DiscoverPage() {
     <main className="mx-auto max-w-7xl px-5 py-12">
       <section className="rounded-3xl border border-white/10 bg-gradient-to-br from-amber-400/10 via-slate-900 to-slate-950 p-6 md:p-9">
         <p className="text-sm font-bold uppercase tracking-wider text-amber-400">
-          Milestone 10
+          Bí thuật tinh chọn
         </p>
 
         <h1 className="mt-2 text-4xl font-black md:text-5xl">
-          Khám phá mod phù hợp với đạo hữu
+          Khám phá bí thuật phù hợp với đạo hữu
         </h1>
 
         <p className="mt-3 max-w-3xl leading-7 text-slate-400">

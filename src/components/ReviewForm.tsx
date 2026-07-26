@@ -2,6 +2,7 @@
 
 import {
   FormEvent,
+  useEffect,
   useState,
 } from 'react';
 
@@ -11,18 +12,16 @@ import {
   Star,
 } from 'lucide-react';
 
-import type {
-  ReviewItem,
-} from '@/lib/types';
+import type { ReviewItem } from '@/lib/types';
+import RichTextComposer from '@/components/rich-text/RichTextComposer';
 
 type ReviewFormProps = {
   modId: string;
   modSlug: string;
-
   isLoggedIn: boolean;
   userName?: string;
-
   existingReview?: ReviewItem;
+  onSaved: (review: ReviewItem) => void;
 };
 
 const MAX_LENGTH = 2000;
@@ -41,20 +40,25 @@ export default function ReviewForm({
   isLoggedIn,
   userName,
   existingReview,
+  onSaved,
 }: ReviewFormProps) {
   const [rating, setRating] = useState(
     existingReview?.rating ?? 0,
   );
-
   const [hoverRating, setHoverRating] =
     useState(0);
-
   const [content, setContent] = useState(
     existingReview?.content ?? '',
   );
-
   const [submitting, setSubmitting] =
     useState(false);
+  const [errorMessage, setErrorMessage] =
+    useState('');
+
+  useEffect(() => {
+    setRating(existingReview?.rating ?? 0);
+    setContent(existingReview?.content ?? '');
+  }, [existingReview]);
 
   if (!isLoggedIn) {
     return (
@@ -89,15 +93,73 @@ export default function ReviewForm({
     );
   }
 
-  function handleSubmit(
+  async function handleSubmit(
     event: FormEvent<HTMLFormElement>,
-  ): void {
-    if (rating < 1 || rating > 5) {
-      event.preventDefault();
+  ): Promise<void> {
+    event.preventDefault();
+
+    if (
+      rating < 1 ||
+      rating > 5 ||
+      submitting
+    ) {
       return;
     }
 
     setSubmitting(true);
+    setErrorMessage('');
+
+    try {
+      const formData = new FormData(event.currentTarget);
+      formData.set('rating', String(rating));
+      formData.set('content', content.trim());
+
+      const response = await fetch('/api/reviews/upsert', {
+        method: 'POST',
+        body: formData,
+        credentials: 'same-origin',
+        cache: 'no-store',
+        headers: {
+          Accept: 'application/json',
+          'X-Requested-With': 'XMLHttpRequest',
+        },
+      });
+      const bodyText = await response.text();
+      const result = (() => {
+        if (!bodyText.trim()) return null;
+
+        try {
+          return JSON.parse(bodyText) as {
+            ok?: boolean;
+            message?: string;
+            requestId?: string;
+            review?: ReviewItem;
+          };
+        } catch {
+          return null;
+        }
+      })();
+
+      if (!response.ok || !result?.ok || !result.review) {
+        const requestSuffix = result?.requestId
+          ? ` (mã ${result.requestId})`
+          : '';
+
+        throw new Error(
+          `${result?.message || `Máy chủ trả về lỗi HTTP ${response.status}.`}${requestSuffix}`,
+        );
+      }
+
+      onSaved(result.review);
+    } catch (error) {
+      setErrorMessage(
+        error instanceof Error
+          ? error.message
+          : 'Không thể lưu đánh giá.',
+      );
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   const visibleRating =
@@ -206,17 +268,26 @@ export default function ReviewForm({
         </div>
       </fieldset>
 
-      <textarea
-        name="content"
-        value={content}
-        onChange={(event) =>
-          setContent(event.target.value)
-        }
-        maxLength={MAX_LENGTH}
-        rows={5}
-        placeholder="Viết nhận xét về chất lượng bản mod, độ ổn định hoặc mức độ hoàn thiện... (không bắt buộc)"
-        className="mt-5 min-h-32 w-full resize-y rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-slate-100 outline-none transition placeholder:text-slate-600 focus:border-amber-400/50 focus:ring-2 focus:ring-amber-400/10"
-      />
+      <div className="mt-5">
+        <RichTextComposer
+          name="content"
+          value={content}
+          onChange={setContent}
+          maxLength={MAX_LENGTH}
+          rows={5}
+          placeholder="Viết nhận xét về chất lượng bản mod, độ ổn định hoặc mức độ hoàn thiện... (không bắt buộc)"
+          className="min-h-32 w-full resize-y rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-slate-100 outline-none transition placeholder:text-slate-600 focus:border-amber-400/50 focus:ring-2 focus:ring-amber-400/10"
+        />
+      </div>
+
+      {errorMessage && (
+        <p
+          role="alert"
+          className="mt-3 text-sm font-semibold text-red-300"
+        >
+          {errorMessage}
+        </p>
+      )}
 
       <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <p

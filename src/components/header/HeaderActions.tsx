@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import NotificationBell from '@/components/notifications/NotificationBell';
-import ThemeSwitcher from '@/components/theme/ThemeSwitcher';
 import UserDropdown from '@/components/header/UserDropdown';
 
 type UserRole = 'MEMBER' | 'MODDER' | 'ADMIN';
@@ -24,7 +23,6 @@ export default function HeaderActions({ user }: HeaderActionsProps) {
         </div>
       )}
 
-      <ThemeSwitcher />
 
       {user ? (
         <UserDropdown user={user} />

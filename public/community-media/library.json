@@ -1,0 +1,50 @@
+[
+  {
+    "id": "icon-heart-seal",
+    "label": "Tâm ấn",
+    "kind": "ICON",
+    "src": "/community-media/icons/heart-seal.svg"
+  },
+  {
+    "id": "icon-jade-sword",
+    "label": "Ngọc kiếm",
+    "kind": "ICON",
+    "src": "/community-media/icons/jade-sword.svg"
+  },
+  {
+    "id": "icon-scroll",
+    "label": "Bí tịch",
+    "kind": "ICON",
+    "src": "/community-media/icons/scroll.svg"
+  },
+  {
+    "id": "icon-bug",
+    "label": "Báo lỗi",
+    "kind": "ICON",
+    "src": "/community-media/icons/bug.svg"
+  },
+  {
+    "id": "gif-applause",
+    "label": "Tán thưởng",
+    "kind": "GIF",
+    "src": "/community-media/gifs/applause.gif"
+  },
+  {
+    "id": "gif-sparkle",
+    "label": "Linh quang",
+    "kind": "GIF",
+    "src": "/community-media/gifs/sparkle.gif"
+  },
+  {
+    "id": "gif-thinking",
+    "label": "Suy ngẫm",
+    "kind": "GIF",
+    "src": "/community-media/gifs/thinking.gif"
+  },
+  {
+    "id": "gif-cheer",
+    "label": "Cổ vũ",
+    "kind": "GIF",
+    "src": "/community-media/gifs/cheer.gif"
+  }
+]

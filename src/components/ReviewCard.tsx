@@ -1,19 +1,22 @@
+'use client';
+
 import {
   ShieldCheck,
   Trash2,
   UserRound,
 } from 'lucide-react';
 
-import type {
-  ReviewItem,
-} from '@/lib/types';
+import type { ReviewItem } from '@/lib/types';
 
 import StarRatingDisplay from '@/components/StarRatingDisplay';
+import RichTextRenderer from '@/components/rich-text/RichTextRenderer';
 
 type ReviewCardProps = {
   review: ReviewItem;
   canDelete: boolean;
   isAdminReview?: boolean;
+  onDeleted: (reviewId: string) => void;
+  onDeleteError: (message: string) => void;
 };
 
 function formatReviewDate(
@@ -32,9 +35,66 @@ export default function ReviewCard({
   review,
   canDelete,
   isAdminReview = false,
+  onDeleted,
+  onDeleteError,
 }: ReviewCardProps) {
   const wasEdited =
     review.updatedAt !== review.createdAt;
+
+  async function deleteReview(): Promise<void> {
+    const confirmed = window.confirm(
+      'Xóa đánh giá này? Phần thưởng liên quan sẽ được hoàn lại.',
+    );
+
+    if (!confirmed) return;
+
+    try {
+      const response = await fetch(
+        `/api/reviews/${review.id}/delete`,
+        {
+          method: 'POST',
+          credentials: 'same-origin',
+          cache: 'no-store',
+          headers: {
+            Accept: 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+          },
+        },
+      );
+      const bodyText = await response.text();
+      const result = (() => {
+        if (!bodyText.trim()) return null;
+
+        try {
+          return JSON.parse(bodyText) as {
+            ok?: boolean;
+            message?: string;
+            requestId?: string;
+          };
+        } catch {
+          return null;
+        }
+      })();
+
+      if (!response.ok || !result?.ok) {
+        const requestSuffix = result?.requestId
+          ? ` (mã ${result.requestId})`
+          : '';
+
+        throw new Error(
+          `${result?.message || `Máy chủ trả về lỗi HTTP ${response.status}.`}${requestSuffix}`,
+        );
+      }
+
+      onDeleted(review.id);
+    } catch (error) {
+      onDeleteError(
+        error instanceof Error
+          ? error.message
+          : 'Không thể xóa đánh giá.',
+      );
+    }
+  }
 
   return (
     <article className="rounded-2xl border border-white/10 bg-slate-950/45 p-5">
@@ -69,19 +129,15 @@ export default function ReviewCard({
         </div>
 
         {canDelete && (
-          <form
-            action={`/api/reviews/${review.id}/delete`}
-            method="post"
+          <button
+            type="button"
+            onClick={() => void deleteReview()}
+            className="inline-flex shrink-0 items-center gap-1.5 rounded-xl border border-red-400/20 bg-red-500/10 px-3 py-2 text-xs font-semibold text-red-200 transition hover:bg-red-500/20"
+            title="Xóa đánh giá"
           >
-            <button
-              type="submit"
-              className="inline-flex shrink-0 items-center gap-1.5 rounded-xl border border-red-400/20 bg-red-500/10 px-3 py-2 text-xs font-semibold text-red-200 transition hover:bg-red-500/20"
-              title="Xóa đánh giá"
-            >
-              <Trash2 className="h-3.5 w-3.5" />
-              Xóa
-            </button>
-          </form>
+            <Trash2 className="h-3.5 w-3.5" />
+            Xóa
+          </button>
         )}
       </div>
 
@@ -93,9 +149,9 @@ export default function ReviewCard({
       </div>
 
       {review.content && (
-        <p className="mt-4 whitespace-pre-wrap break-words leading-7 text-slate-300">
-          {review.content}
-        </p>
+        <div className="mt-4 break-words leading-7 text-slate-300">
+          <RichTextRenderer content={review.content} enableMentions />
+        </div>
       )}
     </article>
   );

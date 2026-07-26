@@ -560,3 +560,203 @@ transparent 100%
     transition: none;
   }
 }
+
+
+/* ==========================================================
+   Community support banner + floating contact actions
+========================================================== */
+
+.iv2-support-banner {
+  position: relative;
+  z-index: 34;
+  border-block: 1px solid rgba(255, 198, 105, .14);
+  background:
+    linear-gradient(90deg, rgba(60, 34, 14, .92), rgba(9, 31, 45, .94), rgba(60, 34, 14, .92));
+  box-shadow: 0 12px 34px rgba(0, 0, 0, .16);
+}
+
+.iv2-support-banner-inner {
+  display: flex;
+  min-height: 46px;
+  align-items: center;
+  justify-content: center;
+  gap: .7rem;
+  padding-block: .55rem;
+  color: #d6e3e9;
+  font-size: .82rem;
+}
+
+.iv2-support-banner-inner p {
+  margin: 0;
+}
+
+.iv2-support-banner-icon {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 999px;
+  color: #ffd08a;
+  background: rgba(255, 185, 84, .12);
+  box-shadow: 0 0 24px rgba(255, 185, 84, .13);
+}
+
+.iv2-support-banner-inner a {
+  display: inline-flex;
+  min-height: 32px;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: .4rem;
+  border: 1px solid rgba(255, 202, 119, .3);
+  border-radius: 999px;
+  padding: .35rem .75rem;
+  color: #ffe0ad;
+  background: rgba(98, 55, 21, .35);
+  font-weight: 900;
+  text-decoration: none;
+  transition: border-color 180ms ease, background-color 180ms ease;
+}
+
+.iv2-support-banner-inner a:hover {
+  border-color: rgba(255, 216, 151, .58);
+  background: rgba(117, 68, 26, .58);
+}
+
+.iv2-floating-actions {
+  position: fixed;
+  right: clamp(18px, 3vw, 42px);
+  bottom: clamp(18px, 3vw, 42px);
+  z-index: 60;
+  display: grid;
+  justify-items: end;
+  gap: .65rem;
+  pointer-events: none;
+}
+
+.iv2-floating-actions .iv2-back-to-top {
+  position: static;
+  right: auto;
+  bottom: auto;
+}
+
+.iv2-support-float {
+  position: relative;
+  pointer-events: auto;
+}
+
+.iv2-support-float-button {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  gap: .55rem;
+  border: 1px solid rgba(255, 195, 100, .28);
+  border-radius: 999px;
+  padding: .7rem 1rem;
+  color: #ffe0ad;
+  background: rgba(41, 28, 17, .9);
+  box-shadow:
+    0 14px 38px rgba(0, 0, 0, .3),
+    0 0 26px rgba(255, 183, 77, .08);
+  backdrop-filter: blur(18px) saturate(140%);
+  font: inherit;
+  font-size: .82rem;
+  font-weight: 850;
+  cursor: pointer;
+  transition: border-color 180ms ease, background-color 180ms ease, transform 180ms ease;
+}
+
+.iv2-support-float-button:hover,
+.iv2-support-float-button.is-open {
+  border-color: rgba(255, 213, 146, .56);
+  background: rgba(67, 43, 23, .96);
+  transform: translateY(-1px);
+}
+
+.iv2-support-float-button:focus-visible {
+  outline: 2px solid #ffd18c;
+  outline-offset: 3px;
+}
+
+.iv2-support-float-menu {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 10px);
+  width: 210px;
+  overflow: hidden;
+  border: 1px solid rgba(54, 215, 255, .18);
+  border-radius: 16px;
+  padding: .4rem;
+  background: rgba(5, 18, 31, .97);
+  box-shadow: 0 20px 54px rgba(0, 0, 0, .42);
+  backdrop-filter: blur(18px);
+}
+
+.iv2-support-float-menu a {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  min-height: 42px;
+  align-items: center;
+  gap: .6rem;
+  border-radius: 11px;
+  padding: .55rem .7rem;
+  color: #bcd2df;
+  font-size: .82rem;
+  font-weight: 800;
+  text-decoration: none;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+.iv2-support-float-menu a:hover {
+  color: #fff;
+  background: rgba(54, 215, 255, .08);
+}
+
+.iv2-floating-actions .iv2-back-to-top {
+  pointer-events: none;
+}
+
+.iv2-floating-actions .iv2-back-to-top.is-visible {
+  pointer-events: auto;
+}
+
+@media (max-width: 700px) {
+  .iv2-support-banner-inner {
+    justify-content: flex-start;
+    gap: .5rem;
+    overflow-x: auto;
+    padding-inline: 1rem;
+    white-space: nowrap;
+    scrollbar-width: none;
+  }
+
+  .iv2-support-banner-inner::-webkit-scrollbar {
+    display: none;
+  }
+
+  .iv2-support-banner-inner p {
+    font-size: .76rem;
+  }
+
+  .iv2-floating-actions {
+    right: 16px;
+    bottom: 16px;
+  }
+
+  .iv2-support-float-button {
+    min-width: 44px;
+    justify-content: center;
+    padding: .7rem;
+  }
+
+  .iv2-support-float-button span {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .iv2-support-float-button,
+  .iv2-support-banner-inner a {
+    transition: none;
+  }
+}

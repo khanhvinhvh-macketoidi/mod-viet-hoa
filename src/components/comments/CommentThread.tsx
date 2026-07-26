@@ -19,6 +19,13 @@ type Props = {
   adminUserIds: string[];
   reactionSummaries: Record<string, ReactionSummary>;
   mentionCandidates: MentionCandidate[];
+  onCommentCreated: (comment: CommentItem) => void;
+  onCommentUpdated: (comment: CommentItem) => void;
+  onCommentDeleted: (commentId: string) => void;
+  onMutationMessage: (
+    message: string,
+    kind?: 'success' | 'error',
+  ) => void;
 };
 
 export default function CommentThread({
@@ -31,6 +38,10 @@ export default function CommentThread({
   adminUserIds,
   reactionSummaries,
   mentionCandidates,
+  onCommentCreated,
+  onCommentUpdated,
+  onCommentDeleted,
+  onMutationMessage,
 }: Props) {
   const roots = buildCommentTree(comments);
 
@@ -51,21 +62,25 @@ export default function CommentThread({
     <>
       <CommentHashFocus />
       <div className="space-y-5">
-      {roots.map((node) => (
-        <CommentNode
-          key={node.id}
-          node={node}
-          modId={modId}
-          modSlug={modSlug}
-          isLoggedIn={isLoggedIn}
-          currentUserId={currentUserId}
-          isAdmin={isAdmin}
-          adminUserIds={adminUserIds}
-          reactionSummary={reactionSummaries[node.id]}
-          reactionSummaries={reactionSummaries}
-          mentionCandidates={mentionCandidates}
-        />
-      ))}
+        {roots.map((node) => (
+          <CommentNode
+            key={node.id}
+            node={node}
+            modId={modId}
+            modSlug={modSlug}
+            isLoggedIn={isLoggedIn}
+            currentUserId={currentUserId}
+            isAdmin={isAdmin}
+            adminUserIds={adminUserIds}
+            reactionSummary={reactionSummaries[node.id]}
+            reactionSummaries={reactionSummaries}
+            mentionCandidates={mentionCandidates}
+            onCommentCreated={onCommentCreated}
+            onCommentUpdated={onCommentUpdated}
+            onCommentDeleted={onCommentDeleted}
+            onMutationMessage={onMutationMessage}
+          />
+        ))}
       </div>
     </>
   );

@@ -2,15 +2,20 @@ import 'server-only';
 
 import { randomUUID } from 'node:crypto';
 import { getUserById, getUsers, saveUsers } from './users';
-import type { CultivationProgress, User } from './types';
+import type { AuthorStats, CultivationProgress, User } from './types';
 import {
+  calculateCultivationXpFromLogs,
+  getCultivationLogs,
   grantCultivationLog,
-  recordFirstModView,
   reverseCultivationLog,
   type CultivationLog,
   type CultivationLogType,
 } from './cultivation-repository';
 import { getCultivationSettings, getCultivationView } from './cultivation';
+import {
+  announceCultivationDemotion,
+  announceCultivationPromotion,
+} from './achievement-announcement-service';
 
 export const CULTIVATION_POINTS = {
   DAILY_LOGIN: 5,
@@ -30,6 +35,35 @@ export const CULTIVATION_POINTS = {
   REFERRAL: 200,
 } as const;
 
+const EMPTY_AUTHOR_STATS: AuthorStats = {
+  publishedModCount: 0,
+  totalDownloads: 0,
+  totalReviews: 0,
+  totalComments: 0,
+  averageRating: 0,
+};
+
+let cultivationMutationQueue: Promise<void> = Promise.resolve();
+
+function withCultivationMutationLock<T>(
+  operation: () => Promise<T>,
+): Promise<T> {
+  const previous = cultivationMutationQueue;
+  let release!: () => void;
+
+  cultivationMutationQueue = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+
+  return previous.then(async () => {
+    try {
+      return await operation();
+    } finally {
+      release();
+    }
+  });
+}
+
 function createLog(input: {
   userId: string;
   type: CultivationLogType;
@@ -45,6 +79,68 @@ function createLog(input: {
   };
 }
 
+
+async function announceCultivationRealmChangeIfNeeded(input: {
+  userId: string;
+  triggerId: string;
+  previousUser: User;
+  currentUser: User;
+}): Promise<void> {
+  const settings = await getCultivationSettings();
+  const previousView = getCultivationView(
+    input.previousUser,
+    EMPTY_AUTHOR_STATS,
+    settings,
+  );
+  const currentView = getCultivationView(
+    input.currentUser,
+    EMPTY_AUTHOR_STATS,
+    settings,
+  );
+  const previousIndex = settings.realms.findIndex(
+    (realm) => realm.id === previousView.realm.id,
+  );
+  const currentIndex = settings.realms.findIndex(
+    (realm) => realm.id === currentView.realm.id,
+  );
+
+  if (
+    previousIndex < 0 ||
+    currentIndex < 0 ||
+    currentIndex === previousIndex
+  ) {
+    return;
+  }
+
+  const payload = {
+    userId: input.userId,
+    triggerId: input.triggerId,
+    previous: {
+      realmId: previousView.realm.id,
+      realmName: previousView.realm.name,
+      phaseName: previousView.phaseName,
+      className: previousView.realm.className,
+    },
+    current: {
+      realmId: currentView.realm.id,
+      realmName: currentView.realm.name,
+      phaseName: currentView.phaseName,
+      className: currentView.realm.className,
+    },
+  };
+
+  if (currentIndex > previousIndex) {
+    await announceCultivationPromotion(payload).catch((error) => {
+      console.error('Không thể tạo popup phá cảnh:', error);
+    });
+    return;
+  }
+
+  await announceCultivationDemotion(payload).catch((error) => {
+    console.error('Không thể tạo popup tụt cảnh giới:', error);
+  });
+}
+
 function dateKey(date = new Date()): string {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -58,41 +154,88 @@ function previousDateKey(date = new Date()): string {
   return dateKey(previous);
 }
 
-function updateProgressFromTotalXp(
+function applyTotalXpToUser(
   user: User,
   totalXp: number,
+  settings: Awaited<ReturnType<typeof getCultivationSettings>>,
 ): User {
-  return user;
-}
-
-async function applyDeltaToUser(userId: string, delta: number): Promise<void> {
-  if (!delta) return;
-
-  const users = await getUsers();
-  const index = users.findIndex((user) => user.id === userId);
-  if (index < 0) return;
-
-  const settings = await getCultivationSettings();
-  const current = users[index].cultivation;
-  const currentTotal = Math.max(0, Number(current?.totalXp ?? current?.realmXp ?? 0));
-  const nextTotal = Math.max(0, currentTotal + delta);
+  const current = user.cultivation;
+  const safeTotalXp = Math.max(0, Math.round(totalXp));
 
   const view = getCultivationView(
-    { ...users[index], cultivation: { ...current, totalXp: nextTotal } as CultivationProgress },
-    { publishedModCount: 0, totalDownloads: 0, totalReviews: 0, totalComments: 0, averageRating: 0 },
+    {
+      ...user,
+      cultivation: {
+        ...(current ?? {}),
+        totalXp: safeTotalXp,
+      } as CultivationProgress,
+    },
+    EMPTY_AUTHOR_STATS,
     settings,
   );
 
-  users[index] = {
-    ...users[index],
+  return {
+    ...user,
     cultivation: {
       realmId: view.realm.id,
       realmXp: view.realmXp,
-      totalXp: nextTotal,
+      totalXp: safeTotalXp,
       breakthroughStatus: view.isRealmComplete ? 'READY' : 'CULTIVATING',
       completedQuestIds: current?.completedQuestIds ?? [],
       updatedAt: new Date().toISOString(),
       login: current?.login,
+    },
+    updatedAt: new Date().toISOString(),
+  };
+}
+
+async function syncUserCultivationFromLogsUnsafe(
+  userId: string,
+): Promise<number> {
+  const [users, logs, settings] = await Promise.all([
+    getUsers(),
+    getCultivationLogs(),
+    getCultivationSettings(),
+  ]);
+
+  const index = users.findIndex((user) => user.id === userId);
+  if (index < 0) {
+    throw new Error(`Không tìm thấy user cultivation: ${userId}`);
+  }
+
+  const hasLedgerEntries = logs.some((log) => log.userId === userId);
+  if (!hasLedgerEntries) {
+    throw new Error(`Không có cultivation log cho user: ${userId}`);
+  }
+
+  const totalXp = calculateCultivationXpFromLogs(logs, userId);
+  users[index] = applyTotalXpToUser(users[index], totalXp, settings);
+  await saveUsers(users);
+  return totalXp;
+}
+
+async function updateLoginStateUnsafe(
+  userId: string,
+  login: NonNullable<CultivationProgress['login']>,
+): Promise<void> {
+  const users = await getUsers();
+  const index = users.findIndex((user) => user.id === userId);
+  if (index < 0) return;
+
+  const current = users[index].cultivation;
+  users[index] = {
+    ...users[index],
+    cultivation: {
+      ...(current ?? {
+        realmId: 'LUYEN_KHI',
+        realmXp: 0,
+        totalXp: 0,
+        breakthroughStatus: 'CULTIVATING' as const,
+        completedQuestIds: [],
+        updatedAt: new Date().toISOString(),
+      }),
+      login,
+      updatedAt: new Date().toISOString(),
     },
     updatedAt: new Date().toISOString(),
   };
@@ -110,12 +253,30 @@ export async function grantCultivation(input: {
 }): Promise<{ granted: boolean; points: number }> {
   if (input.points <= 0) return { granted: false, points: 0 };
 
-  const log = createLog(input);
-  const result = await grantCultivationLog(log);
-  if (!result.granted) return { granted: false, points: 0 };
+  return withCultivationMutationLock(async () => {
+    const previousUser = await getUserById(input.userId);
+    if (!previousUser) {
+      throw new Error(`Không tìm thấy user cultivation: ${input.userId}`);
+    }
 
-  await applyDeltaToUser(input.userId, input.points);
-  return { granted: true, points: input.points };
+    const log = createLog(input);
+    const result = await grantCultivationLog(log);
+    if (!result.granted) return { granted: false, points: 0 };
+
+    await syncUserCultivationFromLogsUnsafe(input.userId);
+    const currentUser = await getUserById(input.userId);
+
+    if (currentUser) {
+      await announceCultivationRealmChangeIfNeeded({
+        userId: input.userId,
+        triggerId: log.id,
+        previousUser,
+        currentUser,
+      });
+    }
+
+    return { granted: true, points: input.points };
+  });
 }
 
 export async function revokeCultivation(input: {
@@ -128,25 +289,267 @@ export async function revokeCultivation(input: {
 }): Promise<{ reversed: boolean; points: number }> {
   if (input.points <= 0) return { reversed: false, points: 0 };
 
-  const log = createLog({
-    userId: input.userId,
-    type: input.type,
-    points: -input.points,
-    targetId: input.targetId,
-    uniqueKey: `${input.uniqueKey}:REVERSAL:${randomUUID()}`,
-    metadata: input.metadata,
+  return withCultivationMutationLock(async () => {
+    const previousUser = await getUserById(input.userId);
+    if (!previousUser) {
+      throw new Error(`Không tìm thấy user cultivation: ${input.userId}`);
+    }
+
+    const log = createLog({
+      userId: input.userId,
+      type: input.type,
+      points: -input.points,
+      targetId: input.targetId,
+      uniqueKey: `${input.uniqueKey}:REVERSAL:${randomUUID()}`,
+      metadata: input.metadata,
+    });
+
+    const result = await reverseCultivationLog(
+      input.userId,
+      input.uniqueKey,
+      log,
+    );
+
+    if (!result.reversed) return { reversed: false, points: 0 };
+
+    await syncUserCultivationFromLogsUnsafe(input.userId);
+    const currentUser = await getUserById(input.userId);
+
+    if (currentUser) {
+      await announceCultivationRealmChangeIfNeeded({
+        userId: input.userId,
+        triggerId: log.id,
+        previousUser,
+        currentUser,
+      });
+    }
+
+    return { reversed: true, points: input.points };
   });
+}
 
-  const result = await reverseCultivationLog(
-    input.userId,
-    input.uniqueKey,
-    log,
-  );
 
-  if (!result.reversed) return { reversed: false, points: 0 };
+/**
+ * Ghi một bút toán điều chỉnh thủ công bởi Admin vào cultivation ledger.
+ *
+ * Điểm âm được giới hạn bằng tổng XP hiện có để tổng ledger không rơi xuống
+ * dưới 0. Điều này tránh tạo "nợ XP" khiến các reward tương lai bị nuốt mất.
+ */
+export async function adjustCultivationByAdmin(input: {
+  userId: string;
+  adminUserId: string;
+  points: number;
+  reason: string;
+}): Promise<{
+  requestedPoints: number;
+  appliedPoints: number;
+  totalXp: number;
+  logId?: string;
+}> {
+  const requestedPoints = Math.round(Number(input.points) || 0);
 
-  await applyDeltaToUser(input.userId, -input.points);
-  return { reversed: true, points: input.points };
+  if (!requestedPoints) {
+    throw new Error('Số XP điều chỉnh phải khác 0.');
+  }
+
+  return withCultivationMutationLock(async () => {
+    const [logs, user] = await Promise.all([
+      getCultivationLogs(),
+      getUserById(input.userId),
+    ]);
+
+    if (!user) {
+      throw new Error(`Không tìm thấy user cultivation: ${input.userId}`);
+    }
+
+    const hasLedgerEntries = logs.some(
+      (log) => log.userId === input.userId,
+    );
+    const storedTotalXp = Math.max(
+      0,
+      Math.round(
+        Number(
+          user.cultivation?.totalXp ??
+            user.cultivation?.realmXp ??
+            0,
+        ) || 0,
+      ),
+    );
+
+    if (!hasLedgerEntries && storedTotalXp > 0) {
+      const bootstrapLog = createLog({
+        userId: input.userId,
+        type: 'ADMIN_ADJUSTMENT',
+        points: storedTotalXp,
+        targetId: input.userId,
+        uniqueKey: `CULTIVATION_LEDGER_BOOTSTRAP:${input.userId}`,
+        metadata: {
+          reason: 'Bootstrap cultivation ledger từ totalXp đang lưu',
+          adminUserId: input.adminUserId,
+          source: 'storedTotalXp',
+        },
+      });
+      const bootstrap = await grantCultivationLog(bootstrapLog);
+
+      if (!bootstrap.granted) {
+        throw new Error('Không thể bootstrap cultivation ledger.');
+      }
+
+      logs.push(bootstrapLog);
+    }
+
+    const currentTotalXp = calculateCultivationXpFromLogs(
+      logs,
+      input.userId,
+    );
+    const appliedPoints =
+      requestedPoints < 0
+        ? -Math.min(currentTotalXp, Math.abs(requestedPoints))
+        : requestedPoints;
+
+    if (!appliedPoints) {
+      return {
+        requestedPoints,
+        appliedPoints: 0,
+        totalXp: currentTotalXp,
+      };
+    }
+
+    const log = createLog({
+      userId: input.userId,
+      type: 'ADMIN_ADJUSTMENT',
+      points: appliedPoints,
+      targetId: input.userId,
+      uniqueKey: `ADMIN_ADJUSTMENT:${input.userId}:${randomUUID()}`,
+      metadata: {
+        reason: input.reason,
+        adminUserId: input.adminUserId,
+        requestedPoints,
+        appliedPoints,
+      },
+    });
+
+    const result = await grantCultivationLog(log);
+
+    if (!result.granted) {
+      throw new Error('Không thể ghi bút toán điều chỉnh cultivation.');
+    }
+
+    const previousUser = user;
+    const totalXp = await syncUserCultivationFromLogsUnsafe(input.userId);
+    const currentUser = await getUserById(input.userId);
+
+    if (currentUser) {
+      await announceCultivationRealmChangeIfNeeded({
+        userId: input.userId,
+        triggerId: log.id,
+        previousUser,
+        currentUser,
+      });
+    }
+
+    return {
+      requestedPoints,
+      appliedPoints,
+      totalXp,
+      logId: log.id,
+    };
+  });
+}
+
+export async function getCultivationIntegrityReport(
+  userId?: string,
+): Promise<{
+  checkedUsers: number;
+  mismatches: Array<{
+    userId: string;
+    storedTotalXp: number;
+    ledgerTotalXp: number;
+    delta: number;
+  }>;
+}> {
+  return withCultivationMutationLock(async () => {
+    const [users, logs] = await Promise.all([
+      getUsers(),
+      getCultivationLogs(),
+    ]);
+
+    const targets = userId
+      ? users.filter((user) => user.id === userId)
+      : users;
+
+    const mismatches = targets
+      .map((user) => {
+        const storedTotalXp = Math.max(
+          0,
+          Math.round(
+            Number(
+              user.cultivation?.totalXp ??
+                user.cultivation?.realmXp ??
+                0,
+            ) || 0,
+          ),
+        );
+        const ledgerTotalXp = calculateCultivationXpFromLogs(
+          logs,
+          user.id,
+        );
+
+        return {
+          userId: user.id,
+          storedTotalXp,
+          ledgerTotalXp,
+          delta: ledgerTotalXp - storedTotalXp,
+        };
+      })
+      .filter((item) => item.delta !== 0);
+
+    return {
+      checkedUsers: targets.length,
+      mismatches,
+    };
+  });
+}
+
+export async function rebuildUserCultivationFromLogs(
+  userId: string,
+): Promise<{ userId: string; totalXp: number }> {
+  return withCultivationMutationLock(async () => ({
+    userId,
+    totalXp: await syncUserCultivationFromLogsUnsafe(userId),
+  }));
+}
+
+export async function rebuildAllCultivationFromLogs(): Promise<{
+  updatedUsers: number;
+  skippedUsers: number;
+  results: Array<{ userId: string; totalXp: number }>;
+}> {
+  return withCultivationMutationLock(async () => {
+    const [users, logs, settings] = await Promise.all([
+      getUsers(),
+      getCultivationLogs(),
+      getCultivationSettings(),
+    ]);
+
+    const usersWithLogs = new Set(logs.map((log) => log.userId));
+    const results: Array<{ userId: string; totalXp: number }> = [];
+
+    const nextUsers = users.map((user) => {
+      if (!usersWithLogs.has(user.id)) return user;
+
+      const totalXp = calculateCultivationXpFromLogs(logs, user.id);
+      results.push({ userId: user.id, totalXp });
+      return applyTotalXpToUser(user, totalXp, settings);
+    });
+
+    await saveUsers(nextUsers);
+    return {
+      updatedUsers: results.length,
+      skippedUsers: users.length - results.length,
+      results,
+    };
+  });
 }
 
 export async function rewardDailyLogin(userId: string): Promise<void> {
@@ -170,50 +573,103 @@ export async function rewardDailyLogin(userId: string): Promise<void> {
     uniqueKey: `DAILY_LOGIN:${userId}:${today}`,
   });
 
+  // A concurrent request may already have granted today's reward.
+  if (!daily.granted) return;
+
   if (streak % 3 === 0) {
     await grantCultivation({
       userId,
       type: 'LOGIN_STREAK_BONUS',
       points: CULTIVATION_POINTS.LOGIN_STREAK_BONUS,
-      uniqueKey: `LOGIN_STREAK_BONUS:${userId}:${streak}`,
-      metadata: { streak },
+      uniqueKey: `LOGIN_STREAK_BONUS:${userId}:${today}`,
+      metadata: { streak, rewardDate: today },
     });
   }
 
-  const users = await getUsers();
-  const index = users.findIndex((item) => item.id === userId);
-  if (index < 0) return;
-
-  users[index] = {
-    ...users[index],
-    cultivation: {
-      ...(users[index].cultivation ?? {
-        realmId: 'LUYEN_KHI',
-        realmXp: 0,
-        totalXp: 0,
-        breakthroughStatus: 'CULTIVATING' as const,
-        completedQuestIds: [],
-        updatedAt: new Date().toISOString(),
-      }),
-      login: { lastRewardDate: today, streak },
-      updatedAt: new Date().toISOString(),
-    },
-  };
-  await saveUsers(users);
-
-  void daily;
+  await withCultivationMutationLock(() =>
+    updateLoginStateUnsafe(userId, {
+      lastRewardDate: today,
+      streak,
+    }),
+  );
 }
 
-export async function rewardFirstModView(userId: string, modId: string): Promise<void> {
-  const firstView = await recordFirstModView(userId, modId);
-  if (!firstView) return;
-
-  await grantCultivation({
+export async function rewardFirstModView(
+  userId: string,
+  modId: string,
+): Promise<boolean> {
+  const result = await grantCultivation({
     userId,
     type: 'MOD_VIEWED',
     points: CULTIVATION_POINTS.MOD_VIEWED,
     targetId: modId,
     uniqueKey: `MOD_VIEWED:${userId}:${modId}`,
+  });
+
+  return result.granted;
+}
+
+export async function rewardModPublished(
+  userId: string,
+  modId: string,
+): Promise<{ granted: boolean; points: number }> {
+  return grantCultivation({
+    userId,
+    type: 'MOD_PUBLISHED',
+    points: CULTIVATION_POINTS.MOD_PUBLISHED,
+    targetId: modId,
+    uniqueKey: `MOD_PUBLISHED:${modId}`,
+  });
+}
+
+export async function revokeModPublished(
+  userId: string,
+  modId: string,
+): Promise<{ reversed: boolean; points: number }> {
+  return revokeCultivation({
+    userId,
+    uniqueKey: `MOD_PUBLISHED:${modId}`,
+    type: 'MOD_DELETED',
+    points: CULTIVATION_POINTS.MOD_PUBLISHED,
+    targetId: modId,
+  });
+}
+
+export async function rewardModLike(input: {
+  ownerUserId: string;
+  likerUserId: string;
+  modId: string;
+}): Promise<{ granted: boolean; points: number }> {
+  if (input.ownerUserId === input.likerUserId) {
+    return { granted: false, points: 0 };
+  }
+
+  return grantCultivation({
+    userId: input.ownerUserId,
+    type: 'MOD_LIKED',
+    points: CULTIVATION_POINTS.MOD_LIKED,
+    targetId: input.modId,
+    uniqueKey: `MOD_LIKE:${input.modId}:${input.likerUserId}`,
+    metadata: { likerUserId: input.likerUserId },
+  });
+}
+
+export async function revokeModLike(input: {
+  ownerUserId: string;
+  likerUserId: string;
+  modId: string;
+}): Promise<{ reversed: boolean; points: number }> {
+  if (input.ownerUserId === input.likerUserId) {
+    return { reversed: false, points: 0 };
+  }
+
+  return revokeCultivation({
+    userId: input.ownerUserId,
+    uniqueKey: `MOD_LIKE:${input.modId}:${input.likerUserId}`,
+    type: 'MOD_UNLIKED',
+    points: CULTIVATION_POINTS.MOD_LIKED,
+    targetId: input.modId,
+    metadata: { likerUserId: input.likerUserId },
   });
 }
 
@@ -230,6 +686,22 @@ export async function rewardCommentCreated(input: {
       : CULTIVATION_POINTS.COMMENT_CREATED,
     targetId: input.commentId,
     uniqueKey: `COMMENT_CREATED:${input.commentId}`,
+  });
+}
+
+export async function revokeCommentCreated(input: {
+  userId: string;
+  commentId: string;
+  isReply: boolean;
+}): Promise<{ reversed: boolean; points: number }> {
+  return revokeCultivation({
+    userId: input.userId,
+    uniqueKey: `COMMENT_CREATED:${input.commentId}`,
+    type: input.isReply ? 'REPLY_DELETED' : 'COMMENT_DELETED',
+    points: input.isReply
+      ? CULTIVATION_POINTS.REPLY_CREATED
+      : CULTIVATION_POINTS.COMMENT_CREATED,
+    targetId: input.commentId,
   });
 }
 
@@ -262,6 +734,38 @@ export async function rewardCommentLike(input: {
       metadata: { likerUserId: input.likerUserId },
     });
   }
+}
+
+export async function rewardCommentHelpful(input: {
+  userId: string;
+  commentId: string;
+  markedByUserId: string;
+}): Promise<{ granted: boolean; points: number }> {
+  if (input.userId === input.markedByUserId) {
+    return { granted: false, points: 0 };
+  }
+
+  return grantCultivation({
+    userId: input.userId,
+    type: 'COMMENT_HELPFUL',
+    points: CULTIVATION_POINTS.COMMENT_HELPFUL,
+    targetId: input.commentId,
+    uniqueKey: `COMMENT_HELPFUL:${input.commentId}`,
+    metadata: { markedByUserId: input.markedByUserId },
+  });
+}
+
+export async function revokeCommentHelpful(input: {
+  userId: string;
+  commentId: string;
+}): Promise<{ reversed: boolean; points: number }> {
+  return revokeCultivation({
+    userId: input.userId,
+    uniqueKey: `COMMENT_HELPFUL:${input.commentId}`,
+    type: 'COMMENT_HELPFUL_REMOVED',
+    points: CULTIVATION_POINTS.COMMENT_HELPFUL,
+    targetId: input.commentId,
+  });
 }
 
 export async function rewardReviewCreated(input: {
@@ -322,8 +826,14 @@ export async function rewardAvatarTransition(input: {
   previousAvatar?: string;
   nextAvatar?: string;
 }): Promise<void> {
-  const hadAvatar = Boolean(input.previousAvatar && !input.previousAvatar.includes('default-avatar'));
-  const hasAvatar = Boolean(input.nextAvatar && !input.nextAvatar.includes('default-avatar'));
+  const hadAvatar = Boolean(
+    input.previousAvatar &&
+      !input.previousAvatar.includes('default-avatar'),
+  );
+  const hasAvatar = Boolean(
+    input.nextAvatar &&
+      !input.nextAvatar.includes('default-avatar'),
+  );
   if (hadAvatar === hasAvatar) return;
 
   const key = `AVATAR_STATE:${input.userId}`;

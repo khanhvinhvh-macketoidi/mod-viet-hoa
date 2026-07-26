@@ -1,14 +1,19 @@
 import 'server-only';
 
 import path from 'node:path';
+import {
+  MAX_GALLERY_FILES,
+  MAX_IMAGE_FILE_BYTES,
+  MAX_MOD_FILE_BYTES,
+  MAX_MOD_METADATA_REQUEST_BYTES,
+} from '@/lib/upload-limits';
 
-export const MAX_MOD_FILE_BYTES = 200 * 1024 * 1024;
-export const MAX_IMAGE_FILE_BYTES = 2 * 1024 * 1024;
-export const MAX_GALLERY_FILES = 10;
-export const MAX_UPLOAD_REQUEST_BYTES =
-  MAX_MOD_FILE_BYTES +
-  MAX_IMAGE_FILE_BYTES * (MAX_GALLERY_FILES + 1) +
-  2 * 1024 * 1024;
+export {
+  MAX_GALLERY_FILES,
+  MAX_IMAGE_FILE_BYTES,
+  MAX_MOD_FILE_BYTES,
+  MAX_MOD_METADATA_REQUEST_BYTES,
+};
 
 const ALLOWED_ARCHIVE_EXTENSIONS = new Set([
   '.zip',
@@ -34,18 +39,29 @@ export function safeFileName(value: string): string {
   return cleaned || 'upload.bin';
 }
 
-export function validateArchiveFile(file: File): void {
-  if (file.size <= 0 || file.size > MAX_MOD_FILE_BYTES) {
-    throw new Error('Dung lượng file mod không hợp lệ.');
+export function validateArchiveMetadata(
+  fileName: string,
+  fileSize: number,
+): void {
+  if (
+    !Number.isSafeInteger(fileSize) ||
+    fileSize <= 0 ||
+    fileSize > MAX_MOD_FILE_BYTES
+  ) {
+    throw new Error('Dung lượng file mod không hợp lệ hoặc vượt quá 500 MB.');
   }
 
-  const extension = path.extname(file.name).toLowerCase();
+  const extension = path.extname(fileName).toLowerCase();
 
   if (!ALLOWED_ARCHIVE_EXTENSIONS.has(extension)) {
     throw new Error(
       'File mod phải được đóng gói ở định dạng ZIP, RAR hoặc 7Z.',
     );
   }
+}
+
+export function validateArchiveFile(file: File): void {
+  validateArchiveMetadata(file.name, file.size);
 }
 
 function looksLikeJpeg(buffer: Uint8Array): boolean {

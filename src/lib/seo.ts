@@ -1,3 +1,5 @@
+import { richTextToPlainText } from '@/lib/rich-text';
+
 export const SITE_NAME = 'MOD Việt Hóa';
 const rawSiteUrl =
   process.env.APP_URL?.trim() ||
@@ -20,7 +22,7 @@ export function absoluteUrl(pathOrUrl?: string | null): string {
 }
 
 export function compactDescription(value?: string | null, maxLength = 160): string {
-  const normalized = (value || DEFAULT_DESCRIPTION)
+  const normalized = richTextToPlainText(value || DEFAULT_DESCRIPTION)
     .replace(/\s+/g, ' ')
     .trim();
 

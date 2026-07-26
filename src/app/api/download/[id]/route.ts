@@ -1,2 +1,78 @@
-import fs from 'node:fs/promises';import path from 'node:path';import { getCurrentUser } from '@/lib/auth';import { getModById, getMods, saveMods } from '@/lib/store';
-export async function GET(_:Request,{params}:{params:Promise<{id:string}>}){const {id}=await params;const mod=await getModById(id);if(!mod)return new Response('Not found',{status:404});const user=await getCurrentUser();const allowed=mod.accessLevel==='PUBLIC'||(mod.accessLevel==='MEMBER'&&!!user)||(mod.accessLevel==='VIP'&&!!user?.isVip)||user?.role==='ADMIN';if(!allowed)return new Response('Unauthorized',{status:403});try{const buffer=await fs.readFile(path.join(process.cwd(),'storage','uploads',mod.storedFileName));const mods=await getMods();const target=mods.find(m=>m.id===id);if(target){target.downloads+=1;await saveMods(mods);}return new Response(buffer,{headers:{'Content-Type':'application/octet-stream','Content-Disposition':`attachment; filename*=UTF-8''${encodeURIComponent(mod.fileName)}`,'Content-Length':String(buffer.length)}});}catch{return new Response('File missing',{status:404});}}
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import { getCurrentUser } from '@/lib/auth';
+import { getModById, getMods, saveMods } from '@/lib/store';
+import {
+  getDownloadSource,
+  normalizeExternalDownloadUrl,
+} from '@/lib/download-source';
+
+export async function GET(
+  _request: Request,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  const { id } = await params;
+  const mod = await getModById(id);
+
+  if (!mod) {
+    return new Response('Not found', { status: 404 });
+  }
+
+  const user = await getCurrentUser();
+  const allowed =
+    mod.accessLevel === 'PUBLIC' ||
+    (mod.accessLevel === 'MEMBER' && Boolean(user)) ||
+    (mod.accessLevel === 'VIP' && Boolean(user?.isVip)) ||
+    user?.role === 'ADMIN';
+
+  if (!allowed) {
+    return new Response('Unauthorized', { status: 403 });
+  }
+
+  const mods = await getMods();
+  const nextMods = mods.map((item) =>
+    item.id === id
+      ? { ...item, downloads: item.downloads + 1 }
+      : item,
+  );
+
+  if (getDownloadSource(mod) === 'EXTERNAL') {
+    let externalUrl: string;
+
+    try {
+      externalUrl = normalizeExternalDownloadUrl(mod.externalDownloadUrl);
+    } catch {
+      return new Response('External link missing', { status: 404 });
+    }
+
+    await saveMods(nextMods);
+
+    return new Response(null, {
+      status: 302,
+      headers: {
+        Location: externalUrl,
+        'Cache-Control': 'no-store',
+        'Referrer-Policy': 'no-referrer',
+      },
+    });
+  }
+
+  try {
+    const buffer = await fs.readFile(
+      path.join(process.cwd(), 'storage', 'uploads', mod.storedFileName),
+    );
+
+    await saveMods(nextMods);
+
+    return new Response(new Uint8Array(buffer), {
+      headers: {
+        'Content-Type': 'application/octet-stream',
+        'Content-Disposition':
+          `attachment; filename*=UTF-8''${encodeURIComponent(mod.fileName)}`,
+        'Content-Length': String(buffer.length),
+      },
+    });
+  } catch {
+    return new Response('File missing', { status: 404 });
+  }
+}

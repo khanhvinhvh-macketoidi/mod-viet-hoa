@@ -17,6 +17,7 @@ type Props = {
   initialAvatar: string;
   initialCover: string;
   initialCoverPosition: CoverPosition;
+  coverUploadEnabled: boolean;
 };
 
 type ApiResponse = {
@@ -37,6 +38,7 @@ export default function ProfileMediaEditor({
   initialAvatar,
   initialCover,
   initialCoverPosition,
+  coverUploadEnabled,
 }: Props) {
   const [avatar, setAvatar] = useState(initialAvatar);
   const [cover, setCover] = useState(initialCover);
@@ -304,8 +306,9 @@ export default function ProfileMediaEditor({
       <div className={styles.sectionTitle}>
         <h2>Pháp tướng đạo tịch</h2>
         <p>
-          Tải ảnh đại diện và ảnh bìa. Đạo hữu có thể kéo ảnh bìa để
-          chọn vị trí hiển thị phù hợp.
+          {coverUploadEnabled
+            ? 'Tải ảnh đại diện và ảnh bìa. Đạo hữu có thể kéo ảnh bìa để chọn vị trí hiển thị phù hợp.'
+            : 'Tải ảnh đại diện dùng trên Đạo Tịch và hồ sơ tác giả công khai.'}
         </p>
       </div>
 
@@ -343,7 +346,8 @@ export default function ProfileMediaEditor({
         </div>
       </div>
 
-      <div className={styles.coverSection}>
+      {coverUploadEnabled && (
+        <div className={styles.coverSection}>
         <div className={styles.coverHeader}>
           <div>
             <strong>Ảnh bìa</strong>
@@ -423,7 +427,8 @@ export default function ProfileMediaEditor({
             </button>
           </div>
         )}
-      </div>
+        </div>
+      )}
     </section>
   );
 }

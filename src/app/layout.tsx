@@ -9,6 +9,8 @@ import ThemeScript from '@/lib/theme/ThemeScript';
 import LiveNotificationToaster from '@/components/notifications/LiveNotificationToaster';
 import WelcomeGate from '@/components/beta/WelcomeGate';
 import ScrollChrome from '@/components/ScrollChrome';
+import AchievementAnnouncementProvider from '@/components/announcements/AchievementAnnouncementProvider';
+import SupportBanner from '@/components/support/SupportBanner';
 import { DEFAULT_DESCRIPTION, SITE_NAME, SITE_URL } from '@/lib/seo';
 
 const bodyFont = Be_Vietnam_Pro({
@@ -111,9 +113,11 @@ export default function RootLayout({
       <body>
         <div className="iv2-shell">
           <LiveNotificationToaster />
+          <AchievementAnnouncementProvider />
           <WelcomeGate />
           <Header />
           <ScrollChrome />
+          <SupportBanner />
           <main className="relative z-10">{children}</main>
           <Footer />
           <PublicFooterLinks />

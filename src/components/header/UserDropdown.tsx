@@ -3,12 +3,18 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import {
+  Activity,
+  Award,
   ChevronDown,
   CircleUserRound,
+  ClipboardCheck,
+  Heart,
   LayoutDashboard,
   LogOut,
+  MessageSquarePlus,
   Settings,
   Shield,
+  Wrench,
 } from 'lucide-react';
 
 type UserRole = 'MEMBER' | 'MODDER' | 'ADMIN';
@@ -79,7 +85,7 @@ export default function UserDropdown({ user }: UserDropdownProps) {
       {isOpen && (
         <div
           role="menu"
-          className="absolute right-0 top-[calc(100%+10px)] z-50 w-[min(290px,calc(100vw-24px))] overflow-hidden rounded-2xl border border-[#36d7ff]/15 bg-[#071321]/[0.98] p-2 shadow-[0_24px_70px_rgba(0,0,0,0.5)] backdrop-blur-xl"
+          className="absolute right-0 top-[calc(100%+10px)] z-50 max-h-[calc(100vh-92px)] w-[min(290px,calc(100vw-24px))] overflow-y-auto rounded-2xl border border-[#36d7ff]/15 bg-[#071321]/[0.98] p-2 shadow-[0_24px_70px_rgba(0,0,0,0.5)] backdrop-blur-xl"
         >
           <div className="border-b border-[#36d7ff]/10 px-3 py-3">
             <p className="truncate font-black text-white">{user.name}</p>
@@ -103,12 +109,41 @@ export default function UserDropdown({ user }: UserDropdownProps) {
             <DropdownLink href="/profile/edit" icon={<Settings size={16} />}>
               Thiết lập Đạo Tịch
             </DropdownLink>
+
+            <DropdownLink
+              href="/mod-requests"
+              icon={<MessageSquarePlus size={16} />}
+            >
+              Yêu Cầu Mod
+            </DropdownLink>
+
+            <DropdownLink href="/support" icon={<Heart size={16} />}>
+              Ủng hộ hệ thống
+            </DropdownLink>
           </div>
 
           {user.role === 'ADMIN' && (
             <div className="border-t border-[#36d7ff]/10 py-2">
               <DropdownLink href="/admin/mods" icon={<Shield size={16} />}>
                 Quản trị Tiên Môn
+              </DropdownLink>
+              <DropdownLink href="/admin/cultivation" icon={<Activity size={16} />}>
+                Quản trị Tu Vi
+              </DropdownLink>
+              <DropdownLink href="/admin/reputation" icon={<Award size={16} />}>
+                Quản trị Danh vọng
+              </DropdownLink>
+              <DropdownLink href="/admin/support" icon={<Heart size={16} />}>
+                Quản trị ủng hộ
+              </DropdownLink>
+              <DropdownLink href="/admin/system" icon={<Wrench size={16} />}>
+                Trung tâm vận hành
+              </DropdownLink>
+              <DropdownLink
+                href="/admin/release-center"
+                icon={<ClipboardCheck size={16} />}
+              >
+                Kiểm thử & phát hành
               </DropdownLink>
             </div>
           )}

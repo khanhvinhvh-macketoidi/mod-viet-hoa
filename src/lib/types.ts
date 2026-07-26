@@ -5,6 +5,34 @@ export type AvatarFrameTier =
   | 'THAN_THOAI';
 export type Role = 'MEMBER' | 'MODDER' | 'ADMIN';
 export type AccessLevel = 'PUBLIC' | 'MEMBER' | 'VIP';
+export type ModDownloadSource = 'LOCAL' | 'EXTERNAL';
+
+export type ReputationTierId =
+  | 'KHONG_CHUT_TIENG_TAM'
+  | 'SO_LO_PHONG_MANG'
+  | 'BOC_LO_TAI_NANG'
+  | 'DANH_CHAN_NHAT_THOI'
+  | 'TIENG_TAM_LAY_LUNG'
+  | 'KINH_THIEN_DONG_DIA'
+  | 'DAI_DANH_DINH_DINH'
+  | 'THANH_DANH_VANG_DOI'
+  | 'DANH_CHAN_THIEN_HA'
+  | 'CU_THE_VAN_DANH'
+  | 'CHAN_NHIEP_QUAN_HUNG'
+  | 'VANG_DOI_BAT_HOANG'
+  | 'UY_CHAN_BAT_HOANG'
+  | 'LUU_DANH_TIEN_GIOI'
+  | 'LUNG_DANH_TAM_GIOI'
+  | 'UY_CHAN_TAM_GIOI';
+
+export type ReputationStatus = 'ACTIVE' | 'FROZEN';
+
+export interface ReputationProgress {
+  totalPoints: number;
+  tierId: ReputationTierId;
+  status: ReputationStatus;
+  updatedAt: string;
+}
 
 
 export type CultivationRealmId =
@@ -105,6 +133,7 @@ export interface User {
   isVip: boolean;
   avatarFrameTier?: AvatarFrameTier;
   cultivation?: CultivationProgress;
+  reputation?: ReputationProgress;
 
   /**
    * Slug dùng cho URL hồ sơ công khai.
@@ -146,6 +175,7 @@ export interface PublicUserProfile {
   isVip: boolean;
   avatarFrameTier?: AvatarFrameTier;
   cultivation?: CultivationProgress;
+  reputation?: ReputationProgress;
   profile: UserProfile;
   createdAt: string;
 }
@@ -188,6 +218,14 @@ export interface ModItem {
   fileName: string;
   storedFileName: string;
   fileSize: number;
+  downloadSource?: ModDownloadSource;
+  externalDownloadUrl?: string;
+
+  /**
+   * Khóa idempotency do client tạo khi đăng mod.
+   * Trường tùy chọn để tương thích dữ liệu production cũ.
+   */
+  clientSubmissionId?: string;
 
   coverUrl: string;
   coverPositionX?: number;
@@ -232,6 +270,12 @@ export interface CommentItem {
   mentionedUserIds?: string[];
 
   content: string;
+
+  /**
+   * Sticker/icon/GIF nội bộ đi kèm luận bàn.
+   * Chỉ lưu ID nằm trong allowlist ở src/lib/community-media.ts.
+   */
+  mediaAssetId?: string;
 
   /**
    * Trạng thái kiểm duyệt. Comment cũ không có trường này được xem là VISIBLE.
@@ -324,6 +368,8 @@ export interface ModVersion {
   fileName: string;
   storedFileName: string;
   fileSize: number;
+  downloadSource?: ModDownloadSource;
+  externalDownloadUrl?: string;
   downloads: number;
   isCurrent: boolean;
   createdByUserId: string;
